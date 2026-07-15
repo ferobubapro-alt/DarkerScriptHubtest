@@ -207,24 +207,21 @@ SideBarLine.Size = UDim2.new(0, 1, 1, 0); SideBarLine.Position = UDim2.new(1, -1
 SideBarLine.BackgroundColor3 = Color3.fromRGB(255, 255, 255); SideBarLine.BackgroundTransparency = 0.96; SideBarLine.BorderSizePixel = 0
 
 local ButtonList = Instance.new("Frame", SideBar)
-ButtonList.Size = UDim2.new(1, 0, 0, 318) -- Sabit dikey alan belirlendi (Dengeli yerleşim)
-ButtonList.Position = UDim2.new(0, 0, 0, 6) -- Üstten hafif boşluk
-ButtonList.BackgroundTransparency = 1
+ButtonList.Size = UDim2.new(1, 0, 1, -60); ButtonList.Position = UDim2.new(0, 0, 0, 12); ButtonList.BackgroundTransparency = 1
 local ButtonLayout = Instance.new("UIListLayout", ButtonList)
-ButtonLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-ButtonLayout.Padding = UDim.new(0, 4) -- Butonlar arası boşluk 4px yapıldı (Taşmayı önlemek için)
+ButtonLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center; ButtonLayout.Padding = UDim.new(0, 10)
 
 local TabButtons = {Selected = nil}
 
 local function CreateNavButton(name, iconId)
     local BtnContainer = Instance.new("Frame", ButtonList)
-    BtnContainer.Size = UDim2.new(0, 42, 0, 42); BtnContainer.BackgroundTransparency = 1 -- 38'den 42'ye çıkarıldı
-    Instance.new("UICorner", BtnContainer).CornerRadius = UDim.new(0, 10)
+    BtnContainer.Size = UDim2.new(0, 34, 0, 34); BtnContainer.BackgroundTransparency = 1
+    Instance.new("UICorner", BtnContainer).CornerRadius = UDim.new(0, 8)
     local Stroke = Instance.new("UIStroke", BtnContainer)
     Stroke.Thickness = 1; Stroke.Color = Color3.fromRGB(255, 255, 255); Stroke.Transparency = 1
 
     local Icon = Instance.new("ImageButton", BtnContainer)
-    Icon.Size = UDim2.new(0, 28, 0, 28); Icon.Position = UDim2.new(0.5, -14, 0.5, -14) -- Simgeler 20'den 28'e çıkarıldı ve ortalandı!
+    Icon.Size = UDim2.new(0, 16, 0, 16); Icon.Position = UDim2.new(0.5, -8, 0.5, -8)
     Icon.BackgroundTransparency = 1; Icon.Image = iconId; Icon.ImageColor3 = Color3.fromRGB(150, 151, 160)
     
     TabButtons[name] = Icon
@@ -248,12 +245,12 @@ local BellBtn = CreateNavButton("Notify", "rbxassetid://111094391421625")
 local SettingBtn = CreateNavButton("Settings", "rbxassetid://10734950020")
 
 local SideAvatarFrame = Instance.new("Frame", SideBar)
-SideAvatarFrame.Size = UDim2.new(0, 42, 0, 42); SideAvatarFrame.Position = UDim2.new(0.5, -21, 1, -46) -- Butonlarla uyumlu olarak 42x42 yapıldı
+SideAvatarFrame.Size = UDim2.new(0, 34, 0, 34); SideAvatarFrame.Position = UDim2.new(0.5, -17, 1, -45)
 SideAvatarFrame.BackgroundColor3 = Color3.fromRGB(20, 21, 26)
-Instance.new("UICorner", SideAvatarFrame).CornerRadius = UDim.new(0, 10)
+Instance.new("UICorner", SideAvatarFrame).CornerRadius = UDim.new(0, 8)
 local SideAvatar = Instance.new("ImageLabel", SideAvatarFrame)
 SideAvatar.Size = UDim2.new(1, 0, 1, 0); SideAvatar.BackgroundTransparency = 1
-Instance.new("UICorner", SideAvatar).CornerRadius = UDim.new(0, 10)
+Instance.new("UICorner", SideAvatar).CornerRadius = UDim.new(0, 8)
 task.spawn(function()
     local content, ready = Players:GetUserThumbnailAsync(LocalPlayer.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420)
     if ready then SideAvatar.Image = content end
@@ -514,7 +511,6 @@ TpLastBtn.BackgroundColor3 = Color3.fromRGB(40, 42, 50); TpLastBtn.Text = "Son H
 Instance.new("UICorner", TpLastBtn).CornerRadius = UDim.new(0, 6)
 
 local TpRandomBtn = Instance.new("TextButton", TpCard)
-Keep = Instance.new("TextButton", TpCard)
 TpRandomBtn.Size = UDim2.new(0, 170, 0, 40); TpRandomBtn.Position = UDim2.new(0, 190, 0, 80)
 TpRandomBtn.BackgroundColor3 = Color3.fromRGB(40, 42, 50); TpRandomBtn.Text = "Rastgele Işınlan"; TpRandomBtn.TextColor3 = Color3.fromRGB(200, 200, 200); TpRandomBtn.Font = Enum.Font.GothamBold; TpRandomBtn.TextSize = 12
 Instance.new("UICorner", TpRandomBtn).CornerRadius = UDim.new(0, 6)
@@ -742,7 +738,7 @@ SpecLastBtn.MouseButton1Click:Connect(function() if lastLookatTarget then SetSpe
 SpecRandomBtn.MouseButton1Click:Connect(function() local plrs, valid = Players:GetPlayers(), {}; for _, p in ipairs(plrs) do if p ~= LocalPlayer then table.insert(valid, p) end end; if #valid > 0 then SetSpectate(valid[math.random(1, #valid)]) else ShowNotification("Error", "No other players found!", 2) end end)
 
 -- ==========================================
--- [5] FRIENDS TAB - TÜM ARKADAŞLARI VE DURUMLARINI GÖSTERME
+-- [5] FRIENDS TAB - TÜM ARKADAŞLARI VE DURUMLARINI GÖSTERME (DETAYLANDIRILMIŞ & SIRALANMIŞ YENİ SÜRÜM)
 -- ==========================================
 local FriendsTabTitle = Instance.new("TextLabel", FriendsTabPage)
 FriendsTabTitle.Size = UDim2.new(1, 0, 0, 30); FriendsTabTitle.BackgroundTransparency = 1; FriendsTabTitle.Text = "Arkadaşlar"
@@ -754,28 +750,34 @@ FriendsScroll.BackgroundTransparency = 1; FriendsScroll.BorderSizePixel = 0; Fri
 local FriendsListLayout = Instance.new("UIListLayout", FriendsScroll); FriendsListLayout.Padding = UDim.new(0, 8); FriendsListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 
 local function PopulateFriendsList()
-    for _, child in ipairs(FriendsScroll:GetChildren()) do if child:IsA("Frame") then child:Destroy() end end
+    -- Eski elemanları temizle
+    for _, child in ipairs(FriendsScroll:GetChildren()) do 
+        if child:IsA("Frame") then child:Destroy() end 
+    end
     
     task.spawn(function()
-        -- Çevrimiçi olanları hızlı detaylarıyla (oyun vs.) çekelim
+        -- Çevrimiçi arkadaşların anlık detaylarını çek (LocationType, PlaceId, GameName)
         local onlineData = {}
         pcall(function()
             local friendsOnline = LocalPlayer:GetFriendsOnline(200) or {}
-            for _, f in ipairs(friendsOnline) do onlineData[f.VisitorId] = f end
+            for _, f in ipairs(friendsOnline) do 
+                onlineData[f.VisitorId] = f 
+            end
         end)
         
-        -- TÜM arkadaş listesini çek (offline dahil)
+        -- Tüm arkadaşları (Offline dahil) sayfalar halinde çek
         local success, friendPages = pcall(function() return Players:GetFriendsAsync(LocalPlayer.UserId) end)
         if not success then return end
         
-        local idx = 0
+        local rawFriendsList = {}
+        
+        -- Arkadaşları bir tabloya toplayalım
         while true do
             for _, friend in ipairs(friendPages:GetCurrentPage()) do
-                idx = idx + 1
                 local fId = friend.Id
                 local username = friend.Username
+                local displayName = friend.DisplayName or username
                 
-                -- Eğer online ise online verisini al, değilse offline
                 local isOnline = false
                 local locationType = 0
                 local gameName = ""
@@ -788,42 +790,124 @@ local function PopulateFriendsList()
                     placeId = onlineData[fId].PlaceId
                 end
                 
-                local Row = Instance.new("Frame", FriendsScroll)
-                Row.Size = UDim2.new(1, -10, 0, 55); Row.LayoutOrder = idx
-                ApplyWaveGradient(Row, Color3.fromRGB(0, 70, 0), Color3.fromRGB(15, 15, 20)) -- Koyu Yeşil Wave
-                Instance.new("UICorner", Row).CornerRadius = UDim.new(0, 8)
-                local rStr = Instance.new("UIStroke", Row); rStr.Color = Color3.fromRGB(100, 255, 100); rStr.Transparency = 0.8
+                -- Durumları tespit et
+                local isGame = (locationType == 2)
+                local isStudio = (locationType == 3)
                 
-                local Avatar = Instance.new("ImageLabel", Row)
-                Avatar.Size = UDim2.new(0, 40, 0, 40); Avatar.Position = UDim2.new(0, 8, 0.5, -20); Avatar.BackgroundTransparency = 1
-                Instance.new("UICorner", Avatar).CornerRadius = UDim.new(0, 6)
-                task.spawn(function() local thumb, ready = Players:GetUserThumbnailAsync(fId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size100x100); if ready then Avatar.Image = thumb end end)
-                
-                local NameLbl = Instance.new("TextLabel", Row)
-                NameLbl.Size = UDim2.new(0.4, 0, 0, 20); NameLbl.Position = UDim2.new(0, 56, 0, 8)
-                NameLbl.BackgroundTransparency = 1; NameLbl.Text = username
-                NameLbl.TextColor3 = Color3.fromRGB(255, 255, 255); NameLbl.Font = Enum.Font.GothamBold; NameLbl.TextSize = 12; NameLbl.TextXAlignment = Enum.TextXAlignment.Left
-                
-                local StatusLbl = Instance.new("TextLabel", Row)
-                StatusLbl.Size = UDim2.new(0.4, 0, 0, 15); StatusLbl.Position = UDim2.new(0, 56, 0, 28)
-                StatusLbl.BackgroundTransparency = 1; StatusLbl.Font = Enum.Font.GothamMedium; StatusLbl.TextSize = 9; StatusLbl.TextXAlignment = Enum.TextXAlignment.Left
-                
-                if locationType == 2 then 
-                    StatusLbl.Text = (CurrentLanguage == "TR" and "Oyunda: " or "In Game: ") .. (gameName ~= "" and gameName or "Unknown")
-                    StatusLbl.TextColor3 = Color3.fromRGB(46, 204, 113)
-                    local JoinBtn = Instance.new("TextButton", Row)
-                    JoinBtn.Size = UDim2.new(0, 70, 0, 28); JoinBtn.Position = UDim2.new(1, -78, 0.5, -14); JoinBtn.BackgroundColor3 = Color3.fromRGB(46, 204, 113)
-                    JoinBtn.Text = Translates[CurrentLanguage].JoinFriend; JoinBtn.TextColor3 = Color3.fromRGB(255, 255, 255); JoinBtn.Font = Enum.Font.GothamBold; JoinBtn.TextSize = 11
-                    Instance.new("UICorner", JoinBtn).CornerRadius = UDim.new(0, 6)
-                    JoinBtn.MouseButton1Click:Connect(function() if placeId and placeId ~= 0 then TeleportService:Teleport(placeId, LocalPlayer) end end)
-                elseif isOnline then 
-                    StatusLbl.Text = Translates[CurrentLanguage].FriendStatusOnline; StatusLbl.TextColor3 = Color3.fromRGB(52, 152, 219)
-                else 
-                    StatusLbl.Text = Translates[CurrentLanguage].FriendStatusOffline; StatusLbl.TextColor3 = Color3.fromRGB(149, 165, 166)
-                end
+                table.insert(rawFriendsList, {
+                    Id = fId,
+                    Username = username,
+                    DisplayName = displayName,
+                    IsOnline = isOnline,
+                    IsGame = isGame,
+                    IsStudio = isStudio,
+                    GameName = gameName,
+                    PlaceId = placeId
+                })
             end
             if friendPages.IsFinished then break end
-            friendPages:AdvanceToNextPageAsync()
+            pcall(function() friendPages:AdvanceToNextPageAsync() end)
+        end
+        
+        -- Sıralama Mantığı: Oyunda > Studio'da > Çevrimiçi > Çevrimdışı, ardından Alfabetik isim
+        table.sort(rawFriendsList, function(a, b)
+            local aScore = a.IsGame and 4 or (a.IsStudio and 3 or (a.IsOnline and 2 or 1))
+            local bScore = b.IsGame and 4 or (b.IsStudio and 3 or (b.IsOnline and 2 or 1))
+            if aScore ~= bScore then
+                return aScore > bScore
+            else
+                return a.Username:lower() < b.Username:lower()
+            end
+        end)
+        
+        -- Sıralanmış listeye göre UI nesnelerini oluştur
+        for idx, friend in ipairs(rawFriendsList) do
+            local Row = Instance.new("Frame", FriendsScroll)
+            Row.Size = UDim2.new(1, -10, 0, 55)
+            Row.LayoutOrder = idx
+            
+            -- Duruma göre Dinamik Wave Gradient ve Kenarlık Rengi Belirleme
+            if friend.IsGame then
+                -- Canlı Yeşil Wave (Oyundakiler için)
+                ApplyWaveGradient(Row, Color3.fromRGB(0, 110, 30), Color3.fromRGB(15, 20, 15))
+                local rStr = Instance.new("UIStroke", Row)
+                rStr.Color = Color3.fromRGB(0, 255, 100); rStr.Transparency = 0.6
+            elseif friend.IsStudio then
+                -- Yaratıcı Turuncu Wave (Roblox Studio'da çalışanlar için)
+                ApplyWaveGradient(Row, Color3.fromRGB(140, 60, 0), Color3.fromRGB(20, 15, 15))
+                local rStr = Instance.new("UIStroke", Row)
+                rStr.Color = Color3.fromRGB(255, 150, 0); rStr.Transparency = 0.6
+            elseif friend.IsOnline then
+                -- Tatlı Mavi Wave (Roblox App/Sitede takılanlar için)
+                ApplyWaveGradient(Row, Color3.fromRGB(0, 70, 120), Color3.fromRGB(15, 15, 20))
+                local rStr = Instance.new("UIStroke", Row)
+                rStr.Color = Color3.fromRGB(100, 200, 255); rStr.Transparency = 0.8
+            else
+                -- Koyu Gri/Siyah Wave (Çevrimdışı arkadaşlar için)
+                ApplyWaveGradient(Row, Color3.fromRGB(35, 35, 40), Color3.fromRGB(15, 15, 15))
+                local rStr = Instance.new("UIStroke", Row)
+                rStr.Color = Color3.fromRGB(110, 110, 110); rStr.Transparency = 0.9
+            end
+            
+            Instance.new("UICorner", Row).CornerRadius = UDim.new(0, 8)
+            
+            -- Profil Resmi
+            local Avatar = Instance.new("ImageLabel", Row)
+            Avatar.Size = UDim2.new(0, 40, 0, 40); Avatar.Position = UDim2.new(0, 8, 0.5, -20); Avatar.BackgroundTransparency = 1
+            Instance.new("UICorner", Avatar).CornerRadius = UDim.new(0, 6)
+            task.spawn(function() 
+                local thumb, ready = Players:GetUserThumbnailAsync(friend.Id, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size100x100)
+                if ready then Avatar.Image = thumb end 
+            end)
+            
+            -- Ekran İsmi + Kullanıcı Adı
+            local NameLbl = Instance.new("TextLabel", Row)
+            NameLbl.Size = UDim2.new(0.5, 0, 0, 18); NameLbl.Position = UDim2.new(0, 56, 0, 8); NameLbl.BackgroundTransparency = 1
+            if friend.DisplayName ~= friend.Username then
+                NameLbl.Text = friend.DisplayName .. " (@" .. friend.Username .. ")"
+            else
+                NameLbl.Text = "@" .. friend.Username
+            end
+            NameLbl.TextColor3 = Color3.fromRGB(255, 255, 255); NameLbl.Font = Enum.Font.GothamBold; NameLbl.TextSize = 11; NameLbl.TextXAlignment = Enum.TextXAlignment.Left
+            NameLbl.TextTruncate = Enum.TextTruncate.AtEnd
+            
+            -- Detaylı Durum Yazısı (Oyun isimleri için uzunluk korumalı)
+            local StatusLbl = Instance.new("TextLabel", Row)
+            StatusLbl.Size = UDim2.new(1, -150, 0, 15); StatusLbl.Position = UDim2.new(0, 56, 0, 26); StatusLbl.BackgroundTransparency = 1
+            StatusLbl.Font = Enum.Font.GothamMedium; StatusLbl.TextSize = 9; StatusLbl.TextXAlignment = Enum.TextXAlignment.Left
+            StatusLbl.TextTruncate = Enum.TextTruncate.AtEnd
+            
+            -- Durum kontrolü ve detayların yazdırılması
+            if friend.IsGame then
+                local displayGame = (friend.GameName ~= "" and friend.GameName or "Unknown Game")
+                StatusLbl.Text = (CurrentLanguage == "TR" and "🎮 Oyunda: " or "🎮 In Game: ") .. displayGame
+                StatusLbl.TextColor3 = Color3.fromRGB(85, 255, 120)
+                
+                -- KATIL (JOIN) BUTONU
+                local JoinBtn = Instance.new("TextButton", Row)
+                JoinBtn.Size = UDim2.new(0, 70, 0, 28); JoinBtn.Position = UDim2.new(1, -78, 0.5, -14); JoinBtn.BackgroundColor3 = Color3.fromRGB(46, 204, 113)
+                JoinBtn.Text = Translates[CurrentLanguage].JoinFriend; JoinBtn.TextColor3 = Color3.fromRGB(255, 255, 255); JoinBtn.Font = Enum.Font.GothamBold; JoinBtn.TextSize = 11
+                Instance.new("UICorner", JoinBtn).CornerRadius = UDim.new(0, 6)
+                
+                local btnStr = Instance.new("UIStroke", JoinBtn)
+                btnStr.Color = Color3.fromRGB(255, 255, 255); btnStr.Transparency = 0.8
+                
+                JoinBtn.MouseButton1Click:Connect(function() 
+                    if friend.PlaceId and friend.PlaceId ~= 0 then 
+                        TeleportService:Teleport(friend.PlaceId, LocalPlayer) 
+                    end 
+                end)
+            elseif friend.IsStudio then
+                local displayStudio = (friend.GameName ~= "" and friend.GameName or "Unknown Place")
+                StatusLbl.Text = (CurrentLanguage == "TR" and "🛠️ Studio: " or "🛠️ Studio: ") .. displayStudio
+                StatusLbl.TextColor3 = Color3.fromRGB(255, 180, 50)
+            elseif friend.IsOnline then
+                StatusLbl.Text = (CurrentLanguage == "TR" and "📱 Çevrimiçi" or "📱 Online")
+                StatusLbl.TextColor3 = Color3.fromRGB(100, 200, 255)
+            else
+                StatusLbl.Text = (CurrentLanguage == "TR" and "💤 Çevrimdışı" or "💤 Offline")
+                StatusLbl.TextColor3 = Color3.fromRGB(160, 160, 160)
+            end
         end
     end)
 end
