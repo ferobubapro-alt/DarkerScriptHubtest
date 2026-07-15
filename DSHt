@@ -464,7 +464,7 @@ CodeBox.ClearTextOnFocus = false; CodeBox.MultiLine = true; CodeBox.TextXAlignme
 
 local ExecActBtn = Instance.new("TextButton", ExecutorTab)
 ExecActBtn.Size = UDim2.new(0, 110, 0, 35); ExecActBtn.Position = UDim2.new(0, 5, 0, 280)
-ExecActBtn.BackgroundColor3 = Color3.fromRGB(30, 110, 60); ExecActBtn.Text = "Çalıştır"; ExecActBtn.TextColor3 = Color3.fromRGB(255, 255, 255); ExecActBtn.Font = Enum.Font.GothamBold; ExecActBtn.TextSize = 12
+ExecActBtn.BackgroundColor3 = Color3.fromRGB(30, 110, 60); ExecActBtn.Text = "Çaimtır"; ExecActBtn.TextColor3 = Color3.fromRGB(255, 255, 255); ExecActBtn.Font = Enum.Font.GothamBold; ExecActBtn.TextSize = 12
 Instance.new("UICorner", ExecActBtn).CornerRadius = UDim.new(0, 8)
 ExecActBtn.MouseButton1Click:Connect(function()
     local s, e = pcall(function() loadstring(CodeBox.Text)() end)
@@ -737,9 +737,9 @@ SpecToggleBtn.MouseButton1Click:Connect(function() if spectating then SetSpectat
 SpecLastBtn.MouseButton1Click:Connect(function() if lastLookatTarget then SetSpectate(lastLookatTarget) else ShowNotification("Error", "No last target found!", 2) end end)
 SpecRandomBtn.MouseButton1Click:Connect(function() local plrs, valid = Players:GetPlayers(), {}; for _, p in ipairs(plrs) do if p ~= LocalPlayer then table.insert(valid, p) end end; if #valid > 0 then SetSpectate(valid[math.random(1, #valid)]) else ShowNotification("Error", "No other players found!", 2) end end)
 
--- ==========================================
--- [5] FRIENDS TAB - TÜM ARKADAŞLARI VE DURUMLARINI GÖSTERME (DETAYLANDIRILMIŞ & SIRALANMIŞ YENİ SÜRÜM)
--- ==========================================
+-- =========================================================================
+-- [5] FRIENDS TAB - TÜM ARKADAŞLARI VE DURUMLARINI GÖSTERME (HATA DÜZELTİLMİŞ)
+-- =========================================================================
 local FriendsTabTitle = Instance.new("TextLabel", FriendsTabPage)
 FriendsTabTitle.Size = UDim2.new(1, 0, 0, 30); FriendsTabTitle.BackgroundTransparency = 1; FriendsTabTitle.Text = "Arkadaşlar"
 FriendsTabTitle.TextColor3 = Color3.fromRGB(255, 255, 255); FriendsTabTitle.Font = Enum.Font.GothamBold; FriendsTabTitle.TextSize = 16; FriendsTabTitle.TextXAlignment = Enum.TextXAlignment.Left
@@ -779,20 +779,26 @@ local function PopulateFriendsList()
                 local displayName = friend.DisplayName or username
                 
                 local isOnline = false
-                local locationType = 0
+                local isGame = false
+                local isStudio = false
                 local gameName = ""
                 local placeId = 0
                 
                 if onlineData[fId] then
                     isOnline = true
-                    locationType = onlineData[fId].LocationType
-                    gameName = onlineData[fId].LastLocation
-                    placeId = onlineData[fId].PlaceId
+                    placeId = onlineData[fId].PlaceId or 0
+                    gameName = onlineData[fId].LastLocation or ""
+                    local locationType = onlineData[fId].LocationType
+                    
+                    -- DOĞRU AKTİFLİK FİLTRESİ:
+                    -- Roblox web/mobil kullanıcılarını da LocationType = 2 yapabildiğinden 
+                    -- gerçekten oyunda olanları "placeId > 0" ve LastLocation filtreleriyle buluyoruz.
+                    if placeId > 0 and gameName ~= "" and gameName ~= "Website" and gameName ~= "Mobile" then
+                        isGame = true
+                    elseif locationType == 3 or string.find(string.lower(gameName), "studio") then
+                        isStudio = true
+                    end
                 end
-                
-                -- Durumları tespit et
-                local isGame = (locationType == 2)
-                local isStudio = (locationType == 3)
                 
                 table.insert(rawFriendsList, {
                     Id = fId,
@@ -809,7 +815,7 @@ local function PopulateFriendsList()
             pcall(function() friendPages:AdvanceToNextPageAsync() end)
         end
         
-        -- Sıralama Mantığı: Oyunda > Studio'da > Çevrimiçi > Çevrimdışı, ardından Alfabetik isim
+        -- Sıralama Mantığı: Oyunda > Studio'da > Çevrimiçi > Çevrimdışı
         table.sort(rawFriendsList, function(a, b)
             local aScore = a.IsGame and 4 or (a.IsStudio and 3 or (a.IsOnline and 2 or 1))
             local bScore = b.IsGame and 4 or (b.IsStudio and 3 or (b.IsOnline and 2 or 1))
@@ -820,31 +826,27 @@ local function PopulateFriendsList()
             end
         end)
         
-        -- Sıralanmış listeye göre UI nesnelerini oluştur
+        -- Sıralanmış listeye göre UI oluştur
         for idx, friend in ipairs(rawFriendsList) do
             local Row = Instance.new("Frame", FriendsScroll)
             Row.Size = UDim2.new(1, -10, 0, 55)
             Row.LayoutOrder = idx
             
-            -- Duruma göre Dinamik Wave Gradient ve Kenarlık Rengi Belirleme
+            -- Duruma göre Dinamik Arka Plan Wave ve Çerçeve Renkleri
             if friend.IsGame then
-                -- Canlı Yeşil Wave (Oyundakiler için)
-                ApplyWaveGradient(Row, Color3.fromRGB(0, 110, 30), Color3.fromRGB(15, 20, 15))
+                ApplyWaveGradient(Row, Color3.fromRGB(0, 110, 30), Color3.fromRGB(15, 20, 15)) -- Yeşil Wave
                 local rStr = Instance.new("UIStroke", Row)
                 rStr.Color = Color3.fromRGB(0, 255, 100); rStr.Transparency = 0.6
             elseif friend.IsStudio then
-                -- Yaratıcı Turuncu Wave (Roblox Studio'da çalışanlar için)
-                ApplyWaveGradient(Row, Color3.fromRGB(140, 60, 0), Color3.fromRGB(20, 15, 15))
+                ApplyWaveGradient(Row, Color3.fromRGB(140, 60, 0), Color3.fromRGB(20, 15, 15)) -- Turuncu Wave
                 local rStr = Instance.new("UIStroke", Row)
                 rStr.Color = Color3.fromRGB(255, 150, 0); rStr.Transparency = 0.6
             elseif friend.IsOnline then
-                -- Tatlı Mavi Wave (Roblox App/Sitede takılanlar için)
-                ApplyWaveGradient(Row, Color3.fromRGB(0, 70, 120), Color3.fromRGB(15, 15, 20))
+                ApplyWaveGradient(Row, Color3.fromRGB(0, 70, 120), Color3.fromRGB(15, 15, 20)) -- Mavi Wave
                 local rStr = Instance.new("UIStroke", Row)
                 rStr.Color = Color3.fromRGB(100, 200, 255); rStr.Transparency = 0.8
             else
-                -- Koyu Gri/Siyah Wave (Çevrimdışı arkadaşlar için)
-                ApplyWaveGradient(Row, Color3.fromRGB(35, 35, 40), Color3.fromRGB(15, 15, 15))
+                ApplyWaveGradient(Row, Color3.fromRGB(35, 35, 40), Color3.fromRGB(15, 15, 15)) -- Gri Wave
                 local rStr = Instance.new("UIStroke", Row)
                 rStr.Color = Color3.fromRGB(110, 110, 110); rStr.Transparency = 0.9
             end
@@ -871,19 +873,19 @@ local function PopulateFriendsList()
             NameLbl.TextColor3 = Color3.fromRGB(255, 255, 255); NameLbl.Font = Enum.Font.GothamBold; NameLbl.TextSize = 11; NameLbl.TextXAlignment = Enum.TextXAlignment.Left
             NameLbl.TextTruncate = Enum.TextTruncate.AtEnd
             
-            -- Detaylı Durum Yazısı (Oyun isimleri için uzunluk korumalı)
+            -- Detaylı Durum Yazısı
             local StatusLbl = Instance.new("TextLabel", Row)
             StatusLbl.Size = UDim2.new(1, -150, 0, 15); StatusLbl.Position = UDim2.new(0, 56, 0, 26); StatusLbl.BackgroundTransparency = 1
             StatusLbl.Font = Enum.Font.GothamMedium; StatusLbl.TextSize = 9; StatusLbl.TextXAlignment = Enum.TextXAlignment.Left
             StatusLbl.TextTruncate = Enum.TextTruncate.AtEnd
             
-            -- Durum kontrolü ve detayların yazdırılması
+            -- Durumu Ekrana Yazma
             if friend.IsGame then
                 local displayGame = (friend.GameName ~= "" and friend.GameName or "Unknown Game")
                 StatusLbl.Text = (CurrentLanguage == "TR" and "🎮 Oyunda: " or "🎮 In Game: ") .. displayGame
                 StatusLbl.TextColor3 = Color3.fromRGB(85, 255, 120)
                 
-                -- KATIL (JOIN) BUTONU
+                -- KATIL (JOIN) BUTONU (Yalnızca Gerçekten Oyunda Olanlar İçin)
                 local JoinBtn = Instance.new("TextButton", Row)
                 JoinBtn.Size = UDim2.new(0, 70, 0, 28); JoinBtn.Position = UDim2.new(1, -78, 0.5, -14); JoinBtn.BackgroundColor3 = Color3.fromRGB(46, 204, 113)
                 JoinBtn.Text = Translates[CurrentLanguage].JoinFriend; JoinBtn.TextColor3 = Color3.fromRGB(255, 255, 255); JoinBtn.Font = Enum.Font.GothamBold; JoinBtn.TextSize = 11
@@ -1092,7 +1094,9 @@ task.spawn(function()
             local onlineCount = 0; local gameCount = 0
             for _, info in ipairs(friendsOnline) do
                 onlineCount = onlineCount + 1
-                if info.LocationType == 2 then gameCount = gameCount + 1 end
+                if info.LocationType == 2 and info.PlaceId and info.PlaceId > 0 and info.LastLocation ~= "Website" and info.LastLocation ~= "Mobile" then 
+                    gameCount = gameCount + 1 
+                end
             end
             InServerFr.Text = tostring(gameCount) .. " " .. (CurrentLanguage == "TR" and "arkadaş" or "friends")
             OnlineFr.Text = tostring(onlineCount) .. " " .. (CurrentLanguage == "TR" and "Çevrimiçi" or "Online")
