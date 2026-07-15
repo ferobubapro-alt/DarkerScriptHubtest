@@ -1832,7 +1832,8 @@ ChangelogText.Text = [[
 ]]
 
 -- ==========================================
--- =========================================
+-- [7] AYARLAR (SETTINGS TAB) 
+-- ==========================================
 local SettingsTitleLbl = Instance.new("TextLabel", SettingsTab)
 SettingsTitleLbl.Size = UDim2.new(1, 0, 0, 30)
 SettingsTitleLbl.BackgroundTransparency = 1
