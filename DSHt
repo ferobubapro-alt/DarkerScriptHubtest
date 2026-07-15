@@ -211,7 +211,7 @@ local function ShowNotification(title, text, duration)
         TweenService:Create(TitleLbl, TweenInfo.new(0.3), {TextTransparency = 1}):Play()
         TweenService:Create(TextLbl, TweenInfo.new(0.3), {TextTransparency = 1}):Play()
         task.wait(0.3)
-        Frame:Destroy()
+        if Frame then Frame:Destroy() end
     end)
 end
 
@@ -346,10 +346,10 @@ ButtonLayout.Padding = UDim.new(0, 10)
 
 local TabButtons = {Selected = nil}
 
--- BUTON BOYUTLARI CİDDİ ORANDA BÜYÜTÜLDÜ (28x28 maksimum güvenli taşmama boyutu)
-local function CreateNavButton(name, iconId)
+-- İSTENİLEN İKONLARIN BOYUTU BÜYÜTÜLDÜ (overrideSize eklendi)
+local function CreateNavButton(name, iconId, overrideSize)
     local BtnContainer = Instance.new("Frame", ButtonList)
-    BtnContainer.Size = UDim2.new(0, 34, 0, 34)
+    BtnContainer.Size = UDim2.new(0, 36, 0, 36)
     BtnContainer.BackgroundTransparency = 1
     Instance.new("UICorner", BtnContainer).CornerRadius = UDim.new(0, 8)
     
@@ -359,7 +359,7 @@ local function CreateNavButton(name, iconId)
     Stroke.Transparency = 1
 
     local Icon = Instance.new("ImageButton", BtnContainer)
-    local size = 28 -- Hepsi büyük yapıldı
+    local size = overrideSize or 28 
     Icon.Size = UDim2.new(0, size, 0, size)
     Icon.Position = UDim2.new(0.5, -(size/2), 0.5, -(size/2))
     Icon.BackgroundTransparency = 1
@@ -382,13 +382,13 @@ local function CreateNavButton(name, iconId)
     return Icon
 end
 
-local HomeBtn = CreateNavButton("Home", "rbxassetid://94035720579249")
-local ExecBtn = CreateNavButton("Executor", "rbxassetid://125081190503235") 
-local MapBtn = CreateNavButton("Teleport", "rbxassetid://86143271250497")
-local FriendBtn = CreateNavButton("Friends", "rbxassetid://82208832868901")     
-local StarBtn = CreateNavButton("Stars", "rbxassetid://86950770485410")
-local BellBtn = CreateNavButton("Notify", "rbxassetid://111094391421625")        
-local SettingBtn = CreateNavButton("Settings", "rbxassetid://10734950020")   
+local HomeBtn = CreateNavButton("Home", "rbxassetid://94035720579249", 28)
+local ExecBtn = CreateNavButton("Executor", "rbxassetid://125081190503235", 34) 
+local MapBtn = CreateNavButton("Teleport", "rbxassetid://86143271250497", 34)
+local FriendBtn = CreateNavButton("Friends", "rbxassetid://82208832868901", 28)     
+local StarBtn = CreateNavButton("Stars", "rbxassetid://86950770485410", 34)
+local BellBtn = CreateNavButton("Notify", "rbxassetid://111094391421625", 34)        
+local SettingBtn = CreateNavButton("Settings", "rbxassetid://10734950020", 28)   
 
 local SideAvatarFrame = Instance.new("Frame", SideBar)
 SideAvatarFrame.Size = UDim2.new(0, 34, 0, 34)
@@ -431,8 +431,14 @@ local NotifyTab = CreatePage("Notify")
 local SettingsTab = CreatePage("Settings")
 
 -- =======================================================
--- SMOOTH MİNİMİZE SİSTEMİ (MERKEZE OTURTULMUŞ BÜYÜK LOGO)
+-- TEMA FONKSİYONLARI VE PİCKER REFERANSLARI
+-- TEMA FONKSİYONLARI VE PİCKER REFERANSLARI
 -- =======================================================
+local TracerPickerFrame = nil
+local ESPPickerFrame = nil
+local wasTracerPickerVisible = false
+local wasEspPickerVisible = false
+
 local isMinimized = false
 local originalSize = UDim2.new(0, 680, 0, 420)
 local minimizedSize = UDim2.new(0, 60, 0, 60)
@@ -444,6 +450,15 @@ MinimizeBtn.MouseButton1Click:Connect(function()
     MainFrame:SetAttribute("Minimized", isMinimized)
     
     if isMinimized then
+        if TracerPickerFrame then 
+            wasTracerPickerVisible = TracerPickerFrame.Visible
+            TracerPickerFrame.Visible = false 
+        end
+        if ESPPickerFrame then 
+            wasEspPickerVisible = ESPPickerFrame.Visible
+            ESPPickerFrame.Visible = false 
+        end
+        
         TopBarLine.BackgroundTransparency = 1
         TopBarCornerFix.BackgroundTransparency = 1
         TitleLabel.TextTransparency = 1
@@ -453,10 +468,8 @@ MinimizeBtn.MouseButton1Click:Connect(function()
         SideBar.Visible = false
         PagesContainer.Visible = false
         
-        -- TopBar tüm çerçeveyi kaplasın
         TopBar.Size = UDim2.new(1, 0, 1, 0)
         
-        -- Logo tam merkezde büyük dursun
         MinimizeBtn.Position = UDim2.new(0.5, -20, 0.5, -20)
         MinimizeBtn.Size = UDim2.new(0, 40, 0, 40)
         MinimizeBtn.Image = "rbxassetid://94035720579249"
@@ -488,14 +501,14 @@ MinimizeBtn.MouseButton1Click:Connect(function()
                 CloseBtn.ImageTransparency = 0
                 SideBar.Visible = true
                 PagesContainer.Visible = true
+                
+                if TracerPickerFrame and wasTracerPickerVisible then TracerPickerFrame.Visible = true end
+                if ESPPickerFrame and wasEspPickerVisible then ESPPickerFrame.Visible = true end
             end
         end)
     end
 end)
 
--- ==========================================
--- TEMA (DALGALI ARKA PLAN) FONKSİYONLARI
--- ==========================================
 local function ApplyWaveTheme(frame, color1, color2, strokeColor)
     frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255) 
     local gradient = Instance.new("UIGradient", frame)
@@ -512,7 +525,6 @@ local function ApplyWaveTheme(frame, color1, color2, strokeColor)
     stroke.Transparency = 0.8
 end
 
--- 3 Renkli, Sol'dan Sağa Düz Gradient Fonksiyonu (Yeni İstenen)
 local function Apply3ColorGradient(frame, c1, c2, c3, strokeColor)
     frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255) 
     local gradient = Instance.new("UIGradient", frame)
@@ -521,12 +533,10 @@ local function Apply3ColorGradient(frame, c1, c2, c3, strokeColor)
         ColorSequenceKeypoint.new(0.5, c2),
         ColorSequenceKeypoint.new(1, c3)
     })
-    gradient.Rotation = 0 -- Soldan sağa
+    gradient.Rotation = 0
 
     local stroke = frame:FindFirstChildOfClass("UIStroke")
-    if not stroke and strokeColor then 
-        stroke = Instance.new("UIStroke", frame) 
-    end
+    if not stroke and strokeColor then stroke = Instance.new("UIStroke", frame) end
     if stroke then
         stroke.Color = strokeColor
         stroke.Thickness = 1.2
@@ -747,16 +757,16 @@ DiscordBtn.MouseButton1Click:Connect(function()
 end)
 
 -- ==========================================
--- [2] EXECUTOR TAB (Yeni Arkaplan eklendi)
+-- [2] EXECUTOR TAB
 -- ==========================================
-local ExecTitle = Instance.new("TextLabel", ExecutorTab)
-ExecTitle.Size = UDim2.new(1, 0, 0, 30)
-ExecTitle.BackgroundTransparency = 1
-ExecTitle.Text = "Script Çalıştırıcı"
-ExecTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
-ExecTitle.Font = Enum.Font.GothamBold
-ExecTitle.TextSize = 16
-ExecTitle.TextXAlignment = Enum.TextXAlignment.Left
+local ExecTitleLbl = Instance.new("TextLabel", ExecutorTab)
+ExecTitleLbl.Size = UDim2.new(1, 0, 0, 30)
+ExecTitleLbl.BackgroundTransparency = 1
+ExecTitleLbl.Text = "Script Çalıştırıcı"
+ExecTitleLbl.TextColor3 = Color3.fromRGB(255, 255, 255)
+ExecTitleLbl.Font = Enum.Font.GothamBold
+ExecTitleLbl.TextSize = 16
+ExecTitleLbl.TextXAlignment = Enum.TextXAlignment.Left
 
 local TextBoxBg = Instance.new("Frame", ExecutorTab)
 TextBoxBg.Size = UDim2.new(1, -10, 0, 230)
@@ -803,16 +813,16 @@ Instance.new("UICorner", ClearActBtn).CornerRadius = UDim.new(0, 8)
 ClearActBtn.MouseButton1Click:Connect(function() CodeBox.Text = "" end)
 
 -- ==========================================
--- [3] TELEPORT TAB (Yeni Kart eklendi)
+-- [3] TELEPORT TAB
 -- ==========================================
-local TpTitle = Instance.new("TextLabel", TeleportTab)
-TpTitle.Size = UDim2.new(1, 0, 0, 30)
-TpTitle.BackgroundTransparency = 1
-TpTitle.Text = "Oyuncu Işınlanma"
-TpTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
-TpTitle.Font = Enum.Font.GothamBold
-TpTitle.TextSize = 16
-TpTitle.TextXAlignment = Enum.TextXAlignment.Left
+local TpTitleText = Instance.new("TextLabel", TeleportTab)
+TpTitleText.Size = UDim2.new(1, 0, 0, 30)
+TpTitleText.BackgroundTransparency = 1
+TpTitleText.Text = "Oyuncu Işınlanma"
+TpTitleText.TextColor3 = Color3.fromRGB(255, 255, 255)
+TpTitleText.Font = Enum.Font.GothamBold
+TpTitleText.TextSize = 16
+TpTitleText.TextXAlignment = Enum.TextXAlignment.Left
 
 local TpCard = Instance.new("Frame", TeleportTab)
 TpCard.Size = UDim2.new(1, -10, 1, -40)
@@ -878,7 +888,7 @@ local function GetPlayerFromPart(str)
 end
 local function ExecuteTP(targetPlayer)
     if not targetPlayer or not targetPlayer.Character or not targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
-        ShowNotification("Teleport Error", Translates[CurrentLanguage].TpError, 3)
+        ShowNotification("Teleport", Translates[CurrentLanguage].TpError, 3)
         return
     end
     local myChar = LocalPlayer.Character
@@ -894,20 +904,20 @@ TpRandomBtn.MouseButton1Click:Connect(function()
     local plrs = Players:GetPlayers()
     local valid = {}
     for _, p in ipairs(plrs) do if p ~= LocalPlayer then table.insert(valid, p) end end
-    if #valid > 0 then ExecuteTP(valid[math.random(1, #valid)]) else ShowNotification("Teleport Error", Translates[CurrentLanguage].NoOtherPlrs, 3) end
+    if #valid > 0 then ExecuteTP(valid[math.random(1, #valid)]) else ShowNotification("Teleport", Translates[CurrentLanguage].NoOtherPlrs, 3) end
 end)
 
 -- ==========================================
--- [4] STARS TAB (ÖZELLİKLER & PAGINATION EKLENDİ)
+-- [4] STARS TAB (ÖZELLİKLER & PAGINATION)
 -- ==========================================
-local StarsTitle = Instance.new("TextLabel", StarsTab)
-StarsTitle.Size = UDim2.new(1, 0, 0, 30)
-StarsTitle.BackgroundTransparency = 1
-StarsTitle.Text = "Özellikler & Hileler"
-StarsTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
-StarsTitle.Font = Enum.Font.GothamBold
-StarsTitle.TextSize = 16
-StarsTitle.TextXAlignment = Enum.TextXAlignment.Left
+local StarsTitleLabel = Instance.new("TextLabel", StarsTab)
+StarsTitleLabel.Size = UDim2.new(1, 0, 0, 30)
+StarsTitleLabel.BackgroundTransparency = 1
+StarsTitleLabel.Text = "Özellikler & Hileler"
+StarsTitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+StarsTitleLabel.Font = Enum.Font.GothamBold
+StarsTitleLabel.TextSize = 16
+StarsTitleLabel.TextXAlignment = Enum.TextXAlignment.Left
 
 -- SAYFA 1
 local StarScroll = Instance.new("ScrollingFrame", StarsTab)
@@ -920,7 +930,7 @@ local StarLayout = Instance.new("UIListLayout", StarScroll)
 StarLayout.Padding = UDim.new(0, 8)
 StarLayout.SortOrder = Enum.SortOrder.LayoutOrder
 
--- SAYFA 2 (Yeni, sağda gizli başlıyor)
+-- SAYFA 2
 local StarScrollPage2 = Instance.new("ScrollingFrame", StarsTab)
 StarScrollPage2.Size = UDim2.new(1, -10, 1, -40)
 StarScrollPage2.Position = UDim2.new(1, 0, 0, 40)
@@ -933,7 +943,7 @@ StarLayout2.Padding = UDim.new(0, 8)
 StarLayout2.SortOrder = Enum.SortOrder.LayoutOrder
 
 -- ESP YENİ FİLTRE SİSTEMİ
-local ESPPickerFrame = Instance.new("Frame", MainFrame)
+ESPPickerFrame = Instance.new("Frame", MainFrame)
 ESPPickerFrame.Size = UDim2.new(0, 240, 0, 170)
 ESPPickerFrame.Position = UDim2.new(0.5, -120, 0.5, -85)
 ESPPickerFrame.BackgroundColor3 = Color3.fromRGB(20, 21, 26)
@@ -989,6 +999,7 @@ end)
 local HueFrame = Instance.new("Frame", ESPPickerFrame)
 HueFrame.Size = UDim2.new(1, -20, 0, 25)
 HueFrame.Position = UDim2.new(0, 10, 0, 70)
+HueFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- EKLENDI (Gradient'in görünmesi için)
 HueFrame.ZIndex = 10
 local HueGrad = Instance.new("UIGradient", HueFrame)
 HueGrad.Color = ColorSequence.new({
@@ -1139,6 +1150,10 @@ local function CreateModPanel(name, parentScroll, hasSlider, maxSliderVal, defau
             TweenService:Create(Container, TweenInfo.new(0.2), {Size = isActive and UDim2.new(1, -6, 0, 75) or UDim2.new(1, -6, 0, 45)}):Play()
         end
         onToggle(isActive)
+        
+        -- EKLENEN KISIM: Bildirim Sistemi
+        local stateMsg = isActive and (CurrentLanguage == "TR" and "Aktif Edildi" or "Enabled") or (CurrentLanguage == "TR" and "Kapatıldı" or "Disabled")
+        ShowNotification("Hile & Özellik", name .. " " .. stateMsg, 2)
     end)
     table.insert(panelsList, {Label = Lbl, Key = name})
     return Switch
@@ -1148,12 +1163,17 @@ end
 CreateModPanel("Fly Hack", StarScroll, true, 500, 50, function(active) if active then StartFly() else StopFly() end end, function(val) flySpeed = val end)
 CreateModPanel("Floating Platform", StarScroll, false, 0, 0, function(active)
     PlatformEnabled = active
-    FloatControls.Visible = active
-    if active then FloatPart.Parent = workspace else FloatPart.Parent = nil end
+    if FloatControls then FloatControls.Visible = active end
+    if active and FloatPart then FloatPart.Parent = workspace elseif FloatPart then FloatPart.Parent = nil end
 end, nil)
 CreateModPanel("ESP", StarScroll, false, 0, 0, function(active)
     espEnabled = active
-    if active then ESPPickerFrame.Visible = true else ESPPickerFrame.Visible = false; ESPFolder:ClearAllChildren() end
+    if active then 
+        ESPPickerFrame.Visible = true 
+    else 
+        ESPPickerFrame.Visible = false 
+        if ESPFolder then ESPFolder:ClearAllChildren() end 
+    end
 end, nil)
 CreateModPanel("Speed Changer", StarScroll, true, 500, 16, function(active)
     local h = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid")
@@ -1183,7 +1203,7 @@ CreateModPanel("Noclip", StarScroll, false, 0, 0, function(active)
     end
 end, nil)
 
--- SPAM MESSAGE PANEL (Page 1'de)
+-- SPAM MESSAGE PANEL (Page 1)
 layoutCounter = layoutCounter + 1
 local SpamPanel = Instance.new("Frame", StarScroll)
 SpamPanel.Size = UDim2.new(1, -6, 0, 55)
@@ -1273,7 +1293,7 @@ SpamToggleBtn.MouseButton1Click:Connect(function()
     end
 end)
 
--- NEXT PAGE BUTONU (Page 1 En Altı)
+-- NEXT PAGE BUTONU (Page 1)
 layoutCounter = layoutCounter + 1
 local NextPageBtn = Instance.new("TextButton", StarScroll)
 NextPageBtn.Size = UDim2.new(1, -6, 0, 45)
@@ -1285,7 +1305,7 @@ NextPageBtn.TextSize = 12
 NextPageBtn.LayoutOrder = layoutCounter
 Instance.new("UICorner", NextPageBtn).CornerRadius = UDim.new(0, 8)
 
--- PREV PAGE BUTONU (Page 2 En Başı)
+-- PREV PAGE BUTONU (Page 2)
 layoutCounter = layoutCounter + 1
 local PrevPageBtn = Instance.new("TextButton", StarScrollPage2)
 PrevPageBtn.Size = UDim2.new(1, -6, 0, 45)
@@ -1297,14 +1317,17 @@ PrevPageBtn.TextSize = 12
 PrevPageBtn.LayoutOrder = layoutCounter
 Instance.new("UICorner", PrevPageBtn).CornerRadius = UDim.new(0, 8)
 
--- PAGE GEÇİŞ MANTIKLARI
+-- DÜZELTİLDİ: SAYFA GEÇİŞ TAŞMALARI ENGELLENDİ
 NextPageBtn.MouseButton1Click:Connect(function()
     StarScrollPage2.Visible = true
-    TweenService:Create(StarScroll, TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Position = UDim2.new(-1, 0, 0, 40)}):Play()
+    local page1Tween = TweenService:Create(StarScroll, TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Position = UDim2.new(-1, 0, 0, 40)})
+    page1Tween:Play()
+    page1Tween.Completed:Connect(function() StarScroll.Visible = false end)
     TweenService:Create(StarScrollPage2, TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Position = UDim2.new(0, 5, 0, 40)}):Play()
 end)
 
 PrevPageBtn.MouseButton1Click:Connect(function()
+    StarScroll.Visible = true
     TweenService:Create(StarScroll, TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Position = UDim2.new(0, 5, 0, 40)}):Play()
     local hideTween = TweenService:Create(StarScrollPage2, TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Position = UDim2.new(1, 0, 0, 40)})
     hideTween:Play()
@@ -1312,7 +1335,7 @@ PrevPageBtn.MouseButton1Click:Connect(function()
 end)
 
 -- SAYFA 2 İÇERİKLERİ (TRACER SİSTEMİ)
-local TracerPickerFrame = Instance.new("Frame", MainFrame)
+TracerPickerFrame = Instance.new("Frame", MainFrame)
 TracerPickerFrame.Size = UDim2.new(0, 180, 0, 100)
 TracerPickerFrame.Position = UDim2.new(0.5, -90, 0.5, -50)
 TracerPickerFrame.BackgroundColor3 = Color3.fromRGB(20, 21, 26)
@@ -1332,6 +1355,7 @@ TPTitle.TextSize = 12
 local THueFrame = Instance.new("Frame", TracerPickerFrame)
 THueFrame.Size = UDim2.new(1, -20, 0, 25)
 THueFrame.Position = UDim2.new(0, 10, 0, 35)
+THueFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- DÜZELTİLDİ (Gradient'in görünmesi için eklendi)
 local THueGrad = Instance.new("UIGradient", THueFrame)
 THueGrad.Color = ColorSequence.new({
     ColorSequenceKeypoint.new(0, Color3.new(1,0,0)), ColorSequenceKeypoint.new(0.16, Color3.new(1,1,0)),
@@ -1367,7 +1391,7 @@ RunService.RenderStepped:Connect(function()
     end
 end)
 
--- Tracer Script (Drawing Api kullanır)
+-- Tracer Script
 local TracerEnabled = false
 local TracerLines = {}
 local Camera = workspace.CurrentCamera
@@ -1389,7 +1413,7 @@ local function UpdateTracers()
                     local hrp = player.Character.HumanoidRootPart
                     local vector, onScreen = Camera:WorldToViewportPoint(hrp.Position)
                     if onScreen then
-                        line.From = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y) -- Ekranın en alt ortasından
+                        line.From = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y) 
                         line.To = Vector2.new(vector.X, vector.Y)
                         line.Color = CurrentTracerColor
                         line.Visible = true
@@ -1414,7 +1438,7 @@ CreateModPanel("Tracer (Lines)", StarScrollPage2, false, 0, 0, function(active)
 end, nil)
 
 -- ==========================================
--- [4] FRIENDS TAB (Yenilenmiş 3 Renkli Rowlar)
+-- [4] FRIENDS TAB
 --==========================================
 local FriendsTabTitle = Instance.new("TextLabel", FriendsTabPage)
 FriendsTabTitle.Size = UDim2.new(1, 0, 0, 30)
@@ -1456,7 +1480,6 @@ local function PopulateFriendsList()
             Row.Size = UDim2.new(1, -10, 0, 55)
             Row.LayoutOrder = idx
             Instance.new("UICorner", Row).CornerRadius = UDim.new(0, 8)
-            -- Arkadaşlar satırı için yeni 3 renkli gradient (koyu yeşil -> açık yeşil -> siyah)
             Apply3ColorGradient(Row, Color3.fromRGB(15, 60, 25), Color3.fromRGB(45, 150, 75), Color3.fromRGB(10, 10, 10), Color3.fromRGB(255,255,255))
             
             local Avatar = Instance.new("ImageLabel", Row)
@@ -1491,7 +1514,6 @@ local function PopulateFriendsList()
                 StatusLbl.Text = (CurrentLanguage == "TR" and "Oyunda: " or "In Game: ") .. (gameName ~= "" and gameName or "Bilinmiyor")
                 StatusLbl.TextColor3 = Color3.fromRGB(200, 255, 200)
                 
-                -- JOIN BUTONU (Daha belirgin yeşil)
                 local JoinBtn = Instance.new("TextButton", Row)
                 JoinBtn.Size = UDim2.new(0, 70, 0, 28)
                 JoinBtn.Position = UDim2.new(1, -78, 0.5, -14)
@@ -1501,7 +1523,17 @@ local function PopulateFriendsList()
                 JoinBtn.Font = Enum.Font.GothamBold
                 JoinBtn.TextSize = 11
                 Instance.new("UICorner", JoinBtn).CornerRadius = UDim.new(0, 6)
-                JoinBtn.MouseButton1Click:Connect(function() if placeId and placeId ~= 0 then TeleportService:Teleport(placeId, LocalPlayer) end end)
+                
+                -- DÜZELTİLDİ: Sadece 'place' değil, sunucuya 'instance' (GameId) olarak ışınlar
+                JoinBtn.MouseButton1Click:Connect(function() 
+                    if placeId and placeId ~= 0 then 
+                        if item.GameId and item.GameId ~= "" then
+                            TeleportService:TeleportToPlaceInstance(placeId, item.GameId, LocalPlayer)
+                        else
+                            TeleportService:Teleport(placeId, LocalPlayer) 
+                        end
+                    end 
+                end)
             elseif isOnline then 
                 StatusLbl.Text = Translates[CurrentLanguage].FriendStatusOnline
                 StatusLbl.TextColor3 = Color3.fromRGB(150, 200, 255)
@@ -1515,16 +1547,16 @@ end
 FriendBtn.MouseButton1Click:Connect(function() PopulateFriendsList() end)
 
 -- ==========================================
--- [6] NOTIFY TAB (Yenilenmiş 3 Renkli Gradient)
+-- [6] NOTIFY TAB
 -- ==========================================
-local NotifyTitle = Instance.new("TextLabel", NotifyTab)
-NotifyTitle.Size = UDim2.new(1, 0, 0, 30)
-NotifyTitle.BackgroundTransparency = 1
-NotifyTitle.Text = "Güncellemeler & Yenilikler"
-NotifyTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
-NotifyTitle.Font = Enum.Font.GothamBold
-NotifyTitle.TextSize = 16
-NotifyTitle.TextXAlignment = Enum.TextXAlignment.Left
+local NotifyTitleText = Instance.new("TextLabel", NotifyTab)
+NotifyTitleText.Size = UDim2.new(1, 0, 0, 30)
+NotifyTitleText.BackgroundTransparency = 1
+NotifyTitleText.Text = "Güncellemeler & Yenilikler"
+NotifyTitleText.TextColor3 = Color3.fromRGB(255, 255, 255)
+NotifyTitleText.Font = Enum.Font.GothamBold
+NotifyTitleText.TextSize = 16
+NotifyTitleText.TextXAlignment = Enum.TextXAlignment.Left
 
 local NotifyScroll = Instance.new("ScrollingFrame", NotifyTab)
 NotifyScroll.Size = UDim2.new(1, -10, 1, -40)
@@ -1538,7 +1570,6 @@ NotifyListLayout.Padding = UDim.new(0, 10)
 local ChangelogFrame = Instance.new("Frame", NotifyScroll)
 ChangelogFrame.Size = UDim2.new(1, -10, 0, 220)
 Instance.new("UICorner", ChangelogFrame).CornerRadius = UDim.new(0, 10)
--- 3 renkli Gri Gradient
 Apply3ColorGradient(ChangelogFrame, Color3.fromRGB(120, 120, 120), Color3.fromRGB(60, 60, 60), Color3.fromRGB(10, 10, 10), Color3.fromRGB(150, 150, 150))
 
 local ChangelogText = Instance.new("TextLabel", ChangelogFrame)
@@ -1553,34 +1584,30 @@ ChangelogText.TextYAlignment = Enum.TextYAlignment.Top
 ChangelogText.TextWrapped = true
 
 ChangelogText.Text = [[
-[Darker Hub V2.5 - Changelog]
+[Darker Hub V2.6 - Changelog]
 
-• 3-Color Dynamic UI Updates:
-  - New Discord-style Gradients added for Teleport, Executor, Updates, and Friends!
+• Bug Fixes & Refinements:
+  - Fixed Friend Join button. Now properly teleports to the specific server.
+  - Fixed Pagination bleed out.
+  - Tracer and ESP color pickers properly render UIGradient now.
+  - Pickers perfectly hide when minimizing the UI.
+  - Restored full Notification System for all features.
 
-• Pagination System Added:
-  - Features tab has been extended! Smoothly switch between pages for endless hacks.
-  
-• Tracer Hack Implemented:
-  - Now available on Page 2! Includes an independent Tracer Color Picker.
-
-• Scaling & Alignment Improvements:
-  - Tab Icons increased drastically.
-  - Minimize logo perfectly centered and upscaled.
-  - Friends page heavily upgraded with direct Join support.
+• Sizing Improvements:
+  - Sidebar icons have been maxed out visually for better access.
 ]]
 
 -- ==========================================
 -- [7] AYARLAR (SETTINGS TAB) 
 -- ==========================================
-local SettingsTitle = Instance.new("TextLabel", SettingsTab)
-SettingsTitle.Size = UDim2.new(1, 0, 0, 30)
-SettingsTitle.BackgroundTransparency = 1
-SettingsTitle.Text = "Dil Seçeneği"
-SettingsTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
-SettingsTitle.Font = Enum.Font.GothamBold
-SettingsTitle.TextSize = 16
-SettingsTitle.TextXAlignment = Enum.TextXAlignment.Left
+local SettingsTitleLbl = Instance.new("TextLabel", SettingsTab)
+SettingsTitleLbl.Size = UDim2.new(1, 0, 0, 30)
+SettingsTitleLbl.BackgroundTransparency = 1
+SettingsTitleLbl.Text = "Dil Seçeneği"
+SettingsTitleLbl.TextColor3 = Color3.fromRGB(255, 255, 255)
+SettingsTitleLbl.Font = Enum.Font.GothamBold
+SettingsTitleLbl.TextSize = 16
+SettingsTitleLbl.TextXAlignment = Enum.TextXAlignment.Left
 
 local LangContainer = Instance.new("Frame", SettingsTab)
 LangContainer.Size = UDim2.new(1, -10, 0, 120)
@@ -1639,16 +1666,16 @@ local function UpdateUILanguage(lang)
     OnlineFrTitle.Text = data.Online
     AllFrTitle.Text = data.All
     DS.Text = data.DiscordDesc
-    ExecTitle.Text = data.ExecTitle
+    ExecTitleLbl.Text = data.ExecTitle
     CodeBox.PlaceholderText = data.EnterScript
     ExecActBtn.Text = data.Execute
     ClearActBtn.Text = data.Clear
-    TpTitle.Text = data.TpTitle
+    TpTitleText.Text = data.TpTitle
     TpBox.PlaceholderText = data.TypeUser
     TpBtn.Text = data.Teleport
     TpLastBtn.Text = data.TpLast
     TpRandomBtn.Text = data.TpRandom
-    StarsTitle.Text = data.FeaturesTitle
+    StarsTitleLabel.Text = data.FeaturesTitle
     EPTitle.Text = data.EspColorTitle
     ApplyESPBtn.Text = data.Apply
     for _, pnl in ipairs(panelsList) do pnl.Label.Text = pnl.Key end
@@ -1657,8 +1684,8 @@ local function UpdateUILanguage(lang)
     SpamToggleBtn.Text = spamming and data.Stop or data.Start
     FriendsTabTitle.Text = data.Friends
     PopulateFriendsList()
-    NotifyTitle.Text = data.UpdatesTitle
-    SettingsTitle.Text = data.Language
+    NotifyTitleText.Text = data.UpdatesTitle
+    SettingsTitleLbl.Text = data.Language
     LangHeader.Text = data.Language
     
     if lang == "EN" then
