@@ -39,7 +39,7 @@ local Translates = {
         Friends = "Arkadaşlar", FriendsDesc = "Arkadaşlarınızın şu anda ne yaptığını öğrenin", InServer = "Sunucuda",
         Offline = "Çevrimdışı", Online = "Çevrimiçi", All = "Toplam", DiscordDesc = "Discord Sunucusuna katılmak için tıklayın",
         Copied = "Panoya kopyalandı!", ExecTitle = "Script Çalıştırıcı", EnterScript = "-- Scriptinizi buraya yazın...",
-        Execute = "Çalıştır", Clear = "Temizle", ExecSuccess = "Başarıyla çalıştırıldı!", TpTitle = "Oyuncu Işınlanma",
+        Execute = "Çalir", Clear = "Temizle", ExecSuccess = "Başarıyla çalıştırıldı!", TpTitle = "Oyuncu Işınlanma",
         TypeUser = "Kullanıcı Adı Yazın...", Teleport = "Işınlan", TpLast = "Son Hedefe Işınlan", TpRandom = "Rastgele Işınlan",
         TpError = "Oyuncu bulunamadı veya ölü!", TpSuccess = "Şuraya ışınlanıldı: ", NoOtherPlrs = "Sunucuda başka oyuncu yok!",
         FeaturesTitle = "Özellikler & Hileler", EspColorTitle = "ESP Rengini Seçin", Apply = "Uygula", EspApplied = "ESP Rengi Uygulandı!",
@@ -57,7 +57,7 @@ local Translates = {
 -- YARDIMCI FONKSİYON: WAVE GRADIENT OLUŞTURUCU
 local function ApplyWaveGradient(parent, color1, color2)
     parent.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    local grad = parent:FindFirstChildOfClass("UIGradient") or Instance.new("UIGradient", parent)
+    local grad = Instance.new("UIGradient", parent)
     grad.Color = ColorSequence.new({
         ColorSequenceKeypoint.new(0, color1),
         ColorSequenceKeypoint.new(1, color2)
@@ -733,162 +733,25 @@ SpecLastBtn.MouseButton1Click:Connect(function() if lastLookatTarget then SetSpe
 SpecRandomBtn.MouseButton1Click:Connect(function() local plrs, valid = Players:GetPlayers(), {}; for _, p in ipairs(plrs) do if p ~= LocalPlayer then table.insert(valid, p) end end; if #valid > 0 then SetSpectate(valid[math.random(1, #valid)]) else ShowNotification("Error", "No other players found!", 2) end end)
 
 -- ==========================================
--- [5] FRIENDS TAB - SAYFALANDIRILMIŞ SÜRÜM (SAYFA ATLAMALI)
+-- [5] FRIENDS TAB (GÜNCELLENMİŞ VE DÜZELTİLMİŞ)
 -- ==========================================
 local FriendsTabTitle = Instance.new("TextLabel", FriendsTabPage)
 FriendsTabTitle.Size = UDim2.new(1, 0, 0, 30); FriendsTabTitle.BackgroundTransparency = 1; FriendsTabTitle.Text = "Arkadaşlar"
 FriendsTabTitle.TextColor3 = Color3.fromRGB(255, 255, 255); FriendsTabTitle.Font = Enum.Font.GothamBold; FriendsTabTitle.TextSize = 16; FriendsTabTitle.TextXAlignment = Enum.TextXAlignment.Left
 
--- Arkadaş Listesi Kaydırma Çerçevesi (Alttan butonlar için yer açıldı: 1, -85)
 local FriendsScroll = Instance.new("ScrollingFrame", FriendsTabPage)
-FriendsScroll.Size = UDim2.new(1, -10, 1, -85); FriendsScroll.Position = UDim2.new(0, 5, 0, 40)
-FriendsScroll.BackgroundTransparency = 1; FriendsScroll.BorderSizePixel = 0; FriendsScroll.ScrollBarThickness = 0 -- Sayfalandırma olduğu için bar gizlendi
-FriendsScroll.ScrollingEnabled = false -- Manuel kaydırma devre dışı bırakıldı
+FriendsScroll.Size = UDim2.new(1, -10, 1, -40); FriendsScroll.Position = UDim2.new(0, 5, 0, 40)
+FriendsScroll.BackgroundTransparency = 1; FriendsScroll.BorderSizePixel = 0; FriendsScroll.ScrollBarThickness = 4; FriendsScroll.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 110)
 local FriendsListLayout = Instance.new("UIListLayout", FriendsScroll); FriendsListLayout.Padding = UDim.new(0, 8); FriendsListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 
--- SAYFA ATLAMA PANELİ (PAGINATION CONTROLS)
-local PagContainer = Instance.new("Frame", FriendsTabPage)
-PagContainer.Size = UDim2.new(1, -10, 0, 35); PagContainer.Position = UDim2.new(0, 5, 1, -40)
-PagContainer.BackgroundTransparency = 1
-
--- Sol (Önceki Sayfa) Butonu (Gri -> Siyah Wave Gradient)
-local PrevBtn = Instance.new("TextButton", PagContainer)
-PrevBtn.Size = UDim2.new(0, 80, 1, 0); PrevBtn.Position = UDim2.new(0, 0, 0, 0)
-PrevBtn.Text = "<"; PrevBtn.TextColor3 = Color3.fromRGB(255, 255, 255); PrevBtn.Font = Enum.Font.GothamBold; PrevBtn.TextSize = 14
-Instance.new("UICorner", PrevBtn).CornerRadius = UDim.new(0, 6)
-ApplyWaveGradient(PrevBtn, Color3.fromRGB(70, 70, 75), Color3.fromRGB(15, 15, 20))
-local prevStr = Instance.new("UIStroke", PrevBtn); prevStr.Color = Color3.fromRGB(110, 110, 115); prevStr.Transparency = 0.85
-
--- Sağ (Sonraki Sayfa) Butonu (Gri -> Siyah Wave Gradient)
-local NextBtn = Instance.new("TextButton", PagContainer)
-NextBtn.Size = UDim2.new(0, 80, 1, 0); NextBtn.Position = UDim2.new(1, -80, 0, 0)
-NextBtn.Text = ">"; NextBtn.TextColor3 = Color3.fromRGB(255, 255, 255); NextBtn.Font = Enum.Font.GothamBold; NextBtn.TextSize = 14
-Instance.new("UICorner", NextBtn).CornerRadius = UDim.new(0, 6)
-ApplyWaveGradient(NextBtn, Color3.fromRGB(70, 70, 75), Color3.fromRGB(15, 15, 20))
-local nextStr = Instance.new("UIStroke", NextBtn); nextStr.Color = Color3.fromRGB(110, 110, 115); nextStr.Transparency = 0.85
-
--- Sayfa Gösterge Metni
-local PageLabel = Instance.new("TextLabel", PagContainer)
-PageLabel.Size = UDim2.new(1, -180, 1, 0); PageLabel.Position = UDim2.new(0, 90, 0, 0)
-PageLabel.BackgroundTransparency = 1; PageLabel.Text = "Sayfa 1 / 1"
-PageLabel.TextColor3 = Color3.fromRGB(200, 201, 210); PageLabel.Font = Enum.Font.GothamMedium; PageLabel.TextSize = 12
-
--- Sayfalama Değişkenleri
-local currentFriendsPage = 1
-local friendsPerPage = 4 -- Bir sayfada görünecek arkadaş kartı sayısı
-local cachedFriendsList = {}
-
--- Sayfadaki Arkadaşlar UI Öğelerini Oluşturma Fonksiyonu
-local function RenderFriendsPage()
-    -- Mevcut listeyi sıfırla
+local function PopulateFriendsList()
+    -- Eski elemanları temizle
     for _, child in ipairs(FriendsScroll:GetChildren()) do 
         if child:IsA("Frame") then child:Destroy() end 
     end
     
-    local totalPages = math.max(1, math.ceil(#cachedFriendsList / friendsPerPage))
-    if currentFriendsPage > totalPages then currentFriendsPage = totalPages end
-    if currentFriendsPage < 1 then currentFriendsPage = 1 end
-    
-    -- Sayfa başlığını güncelle
-    local pageText = (CurrentLanguage == "TR" and "Sayfa " or "Page ") .. tostring(currentFriendsPage) .. " / " .. tostring(totalPages)
-    PageLabel.Text = pageText
-    
-    local startIndex = (currentFriendsPage - 1) * friendsPerPage + 1
-    local endIndex = math.min(currentFriendsPage * friendsPerPage, #cachedFriendsList)
-    
-    local renderIdx = 1
-    for idx = startIndex, endIndex do
-        local friend = cachedFriendsList[idx]
-        if not friend then break end
-        
-        local Row = Instance.new("Frame", FriendsScroll)
-        Row.Size = UDim2.new(1, -10, 0, 55)
-        Row.LayoutOrder = renderIdx
-        renderIdx = renderIdx + 1
-        
-        -- Duruma göre Dinamik Wave Gradient ve Kenarlık Rengi Belirleme
-        if friend.IsGame then
-            ApplyWaveGradient(Row, Color3.fromRGB(0, 110, 30), Color3.fromRGB(15, 20, 15))
-            local rStr = Instance.new("UIStroke", Row)
-            rStr.Color = Color3.fromRGB(0, 255, 100); rStr.Transparency = 0.6
-        elseif friend.IsStudio then
-            ApplyWaveGradient(Row, Color3.fromRGB(140, 60, 0), Color3.fromRGB(20, 15, 15))
-            local rStr = Instance.new("UIStroke", Row)
-            rStr.Color = Color3.fromRGB(255, 150, 0); rStr.Transparency = 0.6
-        elseif friend.IsOnline then
-            ApplyWaveGradient(Row, Color3.fromRGB(0, 70, 120), Color3.fromRGB(15, 15, 20))
-            local rStr = Instance.new("UIStroke", Row)
-            rStr.Color = Color3.fromRGB(100, 200, 255); rStr.Transparency = 0.8
-        else
-            ApplyWaveGradient(Row, Color3.fromRGB(35, 35, 40), Color3.fromRGB(15, 15, 15))
-            local rStr = Instance.new("UIStroke", Row)
-            rStr.Color = Color3.fromRGB(110, 110, 110); rStr.Transparency = 0.9
-        end
-        
-        Instance.new("UICorner", Row).CornerRadius = UDim.new(0, 8)
-        
-        -- Profil Resmi
-        local Avatar = Instance.new("ImageLabel", Row)
-        Avatar.Size = UDim2.new(0, 40, 0, 40); Avatar.Position = UDim2.new(0, 8, 0.5, -20); Avatar.BackgroundTransparency = 1
-        Instance.new("UICorner", Avatar).CornerRadius = UDim.new(0, 6)
-        task.spawn(function() 
-            local thumb, ready = Players:GetUserThumbnailAsync(friend.Id, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size100x100)
-            if ready then Avatar.Image = thumb end 
-        end)
-        
-        -- Ekran İsmi + Kullanıcı Adı
-        local NameLbl = Instance.new("TextLabel", Row)
-        NameLbl.Size = UDim2.new(0.5, 0, 0, 18); NameLbl.Position = UDim2.new(0, 56, 0, 8); NameLbl.BackgroundTransparency = 1
-        if friend.DisplayName ~= friend.Username then
-            NameLbl.Text = friend.DisplayName .. " (@" .. friend.Username .. ")"
-        else
-            NameLbl.Text = "@" .. friend.Username
-        end
-        NameLbl.TextColor3 = Color3.fromRGB(255, 255, 255); NameLbl.Font = Enum.Font.GothamBold; NameLbl.TextSize = 11; NameLbl.TextXAlignment = Enum.TextXAlignment.Left
-        NameLbl.TextTruncate = Enum.TextTruncate.AtEnd
-        
-        -- Detaylı Durum Yazısı
-        local StatusLbl = Instance.new("TextLabel", Row)
-        StatusLbl.Size = UDim2.new(1, -150, 0, 15); StatusLbl.Position = UDim2.new(0, 56, 0, 26); StatusLbl.BackgroundTransparency = 1
-        StatusLbl.Font = Enum.Font.GothamMedium; StatusLbl.TextSize = 9; StatusLbl.TextXAlignment = Enum.TextXAlignment.Left
-        StatusLbl.TextTruncate = Enum.TextTruncate.AtEnd
-        
-        if friend.IsGame then
-            local displayGame = (friend.GameName ~= "" and friend.GameName or "Unknown Game")
-            StatusLbl.Text = (CurrentLanguage == "TR" and "🎮 Oyunda: " or "🎮 In Game: ") .. displayGame
-            StatusLbl.TextColor3 = Color3.fromRGB(85, 255, 120)
-            
-            -- KATIL (JOIN) BUTONU
-            local JoinBtn = Instance.new("TextButton", Row)
-            JoinBtn.Size = UDim2.new(0, 70, 0, 28); JoinBtn.Position = UDim2.new(1, -78, 0.5, -14); JoinBtn.BackgroundColor3 = Color3.fromRGB(46, 204, 113)
-            JoinBtn.Text = Translates[CurrentLanguage].JoinFriend; JoinBtn.TextColor3 = Color3.fromRGB(255, 255, 255); JoinBtn.Font = Enum.Font.GothamBold; JoinBtn.TextSize = 11
-            Instance.new("UICorner", JoinBtn).CornerRadius = UDim.new(0, 6)
-            
-            local btnStr = Instance.new("UIStroke", JoinBtn)
-            btnStr.Color = Color3.fromRGB(255, 255, 255); btnStr.Transparency = 0.8
-            
-            JoinBtn.MouseButton1Click:Connect(function() 
-                if friend.PlaceId and friend.PlaceId ~= 0 then 
-                    TeleportService:Teleport(friend.PlaceId, LocalPlayer) 
-                end 
-            end)
-        elseif friend.IsStudio then
-            local displayStudio = (friend.GameName ~= "" and friend.GameName or "Unknown Place")
-            StatusLbl.Text = (CurrentLanguage == "TR" and "🛠️ Studio: " or "🛠️ Studio: ") .. displayStudio
-            StatusLbl.TextColor3 = Color3.fromRGB(255, 180, 50)
-        elseif friend.IsOnline then
-            StatusLbl.Text = (CurrentLanguage == "TR" and "📱 Çevrimiçi" or "📱 Online")
-            StatusLbl.TextColor3 = Color3.fromRGB(100, 200, 255)
-        else
-            StatusLbl.Text = (CurrentLanguage == "TR" and "💤 Çevrimdışı" or "💤 Offline")
-            StatusLbl.TextColor3 = Color3.fromRGB(160, 160, 160)
-        end
-    end
-end
-
--- Arkadaşları API'den Çekme ve Cache'leme Fonksiyonu
-local function PopulateFriendsList()
     task.spawn(function()
+        -- Çevrimiçi arkadaşların anlık detaylarını çek
         local onlineData = {}
         pcall(function()
             local friendsOnline = LocalPlayer:GetFriendsOnline(200) or {}
@@ -897,10 +760,11 @@ local function PopulateFriendsList()
             end
         end)
         
+        -- Tüm arkadaşları (Offline dahil) sayfalar halinde çek
         local success, friendPages = pcall(function() return Players:GetFriendsAsync(LocalPlayer.UserId) end)
         if not success then return end
         
-        cachedFriendsList = {}
+        local rawFriendsList = {}
         
         while true do
             for _, friend in ipairs(friendPages:GetCurrentPage()) do
@@ -919,6 +783,7 @@ local function PopulateFriendsList()
                     gameName = onlineData[fId].LastLocation or ""
                     placeId = onlineData[fId].PlaceId or 0
                     
+                    -- GÜVENLİ DURUM AYRIŞTIRMA (BUG DÜZELTMESİ)
                     local locVal = -1
                     if typeof(rawLocationType) == "EnumItem" then
                         locVal = rawLocationType.Value
@@ -926,7 +791,9 @@ local function PopulateFriendsList()
                         locVal = rawLocationType
                     end
                     
+                    -- Roblox Studio veya Düzenleme tespiti
                     local isStudioLocation = string.find(string.lower(gameName), "studio") or string.find(string.lower(gameName), "editing")
+                    -- Web sitesi tespiti
                     local isWebsite = (gameName == "Website" or gameName == "Mobile Website")
                     
                     if locVal == 3 or isStudioLocation then
@@ -934,11 +801,12 @@ local function PopulateFriendsList()
                     elseif (locVal == 2 or placeId > 0) and not isStudioLocation and not isWebsite then
                         isGame = true
                     else
+                        -- Eğer ne oyunda ne stüdyoda ise, sadece çevrimiçidir.
                         isOnline = true
                     end
                 end
                 
-                table.insert(cachedFriendsList, {
+                table.insert(rawFriendsList, {
                     Id = fId,
                     Username = username,
                     DisplayName = displayName,
@@ -953,8 +821,8 @@ local function PopulateFriendsList()
             pcall(function() friendPages:AdvanceToNextPageAsync() end)
         end
         
-        -- Sıralama: Oyunda > Studio > Çevrimiçi > Çevrimdışı
-        table.sort(cachedFriendsList, function(a, b)
+        -- Sıralama Mantığı: Oyunda > Studio'da > Çevrimiçi > Çevrimdışı, ardından Alfabetik isim
+        table.sort(rawFriendsList, function(a, b)
             local aScore = a.IsGame and 4 or (a.IsStudio and 3 or (a.IsOnline and 2 or 1))
             local bScore = b.IsGame and 4 or (b.IsStudio and 3 or (b.IsOnline and 2 or 1))
             if aScore ~= bScore then
@@ -964,28 +832,93 @@ local function PopulateFriendsList()
             end
         end)
         
-        -- Listeyi ilk yüklemede 1. sayfadan başlat
-        currentFriendsPage = 1
-        RenderFriendsPage()
+        -- Sıralanmış listeye göre UI nesnelerini oluştur
+        for idx, friend in ipairs(rawFriendsList) do
+            local Row = Instance.new("Frame", FriendsScroll)
+            Row.Size = UDim2.new(1, -10, 0, 55)
+            Row.LayoutOrder = idx
+            
+            -- Duruma göre Dinamik Wave Gradient ve Kenarlık Rengi Belirleme
+            if friend.IsGame then
+                ApplyWaveGradient(Row, Color3.fromRGB(0, 110, 30), Color3.fromRGB(15, 20, 15))
+                local rStr = Instance.new("UIStroke", Row)
+                rStr.Color = Color3.fromRGB(0, 255, 100); rStr.Transparency = 0.6
+            elseif friend.IsStudio then
+                ApplyWaveGradient(Row, Color3.fromRGB(140, 60, 0), Color3.fromRGB(20, 15, 15))
+                local rStr = Instance.new("UIStroke", Row)
+                rStr.Color = Color3.fromRGB(255, 150, 0); rStr.Transparency = 0.6
+            elseif friend.IsOnline then
+                ApplyWaveGradient(Row, Color3.fromRGB(0, 70, 120), Color3.fromRGB(15, 15, 20))
+                local rStr = Instance.new("UIStroke", Row)
+                rStr.Color = Color3.fromRGB(100, 200, 255); rStr.Transparency = 0.8
+            else
+                ApplyWaveGradient(Row, Color3.fromRGB(35, 35, 40), Color3.fromRGB(15, 15, 15))
+                local rStr = Instance.new("UIStroke", Row)
+                rStr.Color = Color3.fromRGB(110, 110, 110); rStr.Transparency = 0.9
+            end
+            
+            Instance.new("UICorner", Row).CornerRadius = UDim.new(0, 8)
+            
+            -- Profil Resmi
+            local Avatar = Instance.new("ImageLabel", Row)
+            Avatar.Size = UDim2.new(0, 40, 0, 40); Avatar.Position = UDim2.new(0, 8, 0.5, -20); Avatar.BackgroundTransparency = 1
+            Instance.new("UICorner", Avatar).CornerRadius = UDim.new(0, 6)
+            task.spawn(function() 
+                local thumb, ready = Players:GetUserThumbnailAsync(friend.Id, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size100x100)
+                if ready then Avatar.Image = thumb end 
+            end)
+            
+            -- Ekran İsmi + Kullanıcı Adı
+            local NameLbl = Instance.new("TextLabel", Row)
+            NameLbl.Size = UDim2.new(0.5, 0, 0, 18); NameLbl.Position = UDim2.new(0, 56, 0, 8); NameLbl.BackgroundTransparency = 1
+            if friend.DisplayName ~= friend.Username then
+                NameLbl.Text = friend.DisplayName .. " (@" .. friend.Username .. ")"
+            else
+                NameLbl.Text = "@" .. friend.Username
+            end
+            NameLbl.TextColor3 = Color3.fromRGB(255, 255, 255); NameLbl.Font = Enum.Font.GothamBold; NameLbl.TextSize = 11; NameLbl.TextXAlignment = Enum.TextXAlignment.Left
+            NameLbl.TextTruncate = Enum.TextTruncate.AtEnd
+            
+            -- Detaylı Durum Yazısı
+            local StatusLbl = Instance.new("TextLabel", Row)
+            StatusLbl.Size = UDim2.new(1, -150, 0, 15); StatusLbl.Position = UDim2.new(0, 56, 0, 26); StatusLbl.BackgroundTransparency = 1
+            StatusLbl.Font = Enum.Font.GothamMedium; StatusLbl.TextSize = 9; StatusLbl.TextXAlignment = Enum.TextXAlignment.Left
+            StatusLbl.TextTruncate = Enum.TextTruncate.AtEnd
+            
+            -- Durum kontrolü ve detayların yazdırılması
+            if friend.IsGame then
+                local displayGame = (friend.GameName ~= "" and friend.GameName or "Unknown Game")
+                StatusLbl.Text = (CurrentLanguage == "TR" and "🎮 Oyunda: " or "🎮 In Game: ") .. displayGame
+                StatusLbl.TextColor3 = Color3.fromRGB(85, 255, 120)
+                
+                -- KATIL (JOIN) BUTONU
+                local JoinBtn = Instance.new("TextButton", Row)
+                JoinBtn.Size = UDim2.new(0, 70, 0, 28); JoinBtn.Position = UDim2.new(1, -78, 0.5, -14); JoinBtn.BackgroundColor3 = Color3.fromRGB(46, 204, 113)
+                JoinBtn.Text = Translates[CurrentLanguage].JoinFriend; JoinBtn.TextColor3 = Color3.fromRGB(255, 255, 255); JoinBtn.Font = Enum.Font.GothamBold; JoinBtn.TextSize = 11
+                Instance.new("UICorner", JoinBtn).CornerRadius = UDim.new(0, 6)
+                
+                local btnStr = Instance.new("UIStroke", JoinBtn)
+                btnStr.Color = Color3.fromRGB(255, 255, 255); btnStr.Transparency = 0.8
+                
+                JoinBtn.MouseButton1Click:Connect(function() 
+                    if friend.PlaceId and friend.PlaceId ~= 0 then 
+                        TeleportService:Teleport(friend.PlaceId, LocalPlayer) 
+                    end 
+                end)
+            elseif friend.IsStudio then
+                local displayStudio = (friend.GameName ~= "" and friend.GameName or "Unknown Place")
+                StatusLbl.Text = (CurrentLanguage == "TR" and "🛠️ Studio: " or "🛠️ Studio: ") .. displayStudio
+                StatusLbl.TextColor3 = Color3.fromRGB(255, 180, 50)
+            elseif friend.IsOnline then
+                StatusLbl.Text = (CurrentLanguage == "TR" and "📱 Çevrimiçi" or "📱 Online")
+                StatusLbl.TextColor3 = Color3.fromRGB(100, 200, 255)
+            else
+                StatusLbl.Text = (CurrentLanguage == "TR" and "💤 Çevrimdışı" or "💤 Offline")
+                StatusLbl.TextColor3 = Color3.fromRGB(160, 160, 160)
+            end
+        end
     end)
 end
-
--- Buton Dinleyicileri
-PrevBtn.MouseButton1Click:Connect(function()
-    if currentFriendsPage > 1 then
-        currentFriendsPage = currentFriendsPage - 1
-        RenderFriendsPage()
-    end
-end)
-
-NextBtn.MouseButton1Click:Connect(function()
-    local totalPages = math.max(1, math.ceil(#cachedFriendsList / friendsPerPage))
-    if currentFriendsPage < totalPages then
-        currentFriendsPage = currentFriendsPage + 1
-        RenderFriendsPage()
-    end
-end)
-
 FriendBtn.MouseButton1Click:Connect(function() PopulateFriendsList() end)
 
 -- ==========================================
@@ -1056,12 +989,7 @@ local function UpdateUILanguage(lang)
     for _, pnl in ipairs(panelsList) do pnl.Label.Text = pnl.Key end
     SpamLbl.Text = data.SpamMsg; SpamBox.PlaceholderText = data.SpamPlace; SpamToggleBtn.Text = spamming and data.Stop or data.Start
     SpecLbl.Text = data.Lookat; SpecBox.PlaceholderText = data.LookatPlace; SpecToggleBtn.Text = spectating and data.UnlookBtn or data.LookatBtn; SpecLastBtn.Text = data.LookLast; SpecRandomBtn.Text = data.LookRand
-    FriendsTabTitle.Text = data.Friends
-    
-    local totalPages = math.max(1, math.ceil(#cachedFriendsList / friendsPerPage))
-    PageLabel.Text = (lang == "TR" and "Sayfa " or "Page ") .. tostring(currentFriendsPage) .. " / " .. tostring(totalPages)
-    
-    PopulateFriendsList()
+    FriendsTabTitle.Text = data.Friends; PopulateFriendsList()
     NotifyTitle.Text = data.UpdatesTitle; SettingsTitle.Text = data.Language; LangHeader.Text = data.Language
     
     if lang == "EN" then
@@ -1173,6 +1101,7 @@ task.spawn(function()
             for _, info in ipairs(friendsOnline) do
                 onlineCount = onlineCount + 1
                 
+                -- ANA SAYFA ARKADAŞ STATÜSÜ GÜNCELLEME DÜZELTMESİ
                 local locVal = -1
                 if typeof(info.LocationType) == "EnumItem" then
                     locVal = info.LocationType.Value
