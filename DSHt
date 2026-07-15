@@ -10,14 +10,14 @@ local TeleportService = game:GetService("TeleportService")
 local LocalPlayer = Players.LocalPlayer
 
 -- GLOBAL TRANSLATION TABLE (DİL DEĞİŞTİRME TABLOSU)
-local CurrentLanguage = "TR" 
+local CurrentLanguage = "TR"
 local Translates = {
     EN = {
         Title = "Darker", Welcome = "Hello, ", Server = "Server", ServerDesc = "Information on the session you're currently in",
         Players = "Players", MaxPlayers = "Maximum Players", Latency = "Latency", ServerRegion = "Server Region",
-        InServerFor = "In server for", JoinScript = "Join Script", TapCopy = "Tap to copy join script",
-        WaveDesc = "Your executor seems to support this script.", Friends = "Friends", FriendsDesc = "Find out what your friends are currently doing",
-        InServer = "In Server", Offline = "Offline", Online = "Online", All = "All", DiscordDesc = "Tap to join the Discord Server",
+        InServerFor = "In server for", JoinScript = "Join Script", TapCopy = "Tap to copy join script", WaveDesc = "Your executor seems to support this script.",
+        Friends = "Friends", FriendsDesc = "Find out what your friends are currently doing", InServer = "In Server",
+        Offline = "Offline", Online = "Online", All = "All", DiscordDesc = "Tap to join the Discord Server",
         Copied = "Copied to clipboard!", ExecTitle = "Script Executor", EnterScript = "-- Enter your script here...",
         Execute = "Execute", Clear = "Clear", ExecSuccess = "Executed successfully!", TpTitle = "Player Teleport",
         TypeUser = "Type Username...", Teleport = "Teleport", TpLast = "Teleport Last Target", TpRandom = "Teleport Random",
@@ -29,17 +29,15 @@ local Translates = {
         Start = "Start", Stop = "Stop", Lookat = "Lookat Player", LookatPlace = "Player Name...", LookatBtn = "Lookat",
         UnlookBtn = "Unlook", LookLast = "Lookat Last Player", LookRand = "Lookat Random", SpecActive = "Looking at: ",
         SpecDeactive = "Spectate Stopped.", Language = "Language", UpdatesTitle = "Updates & Changelogs",
-        FriendStatusOffline = "Offline", FriendStatusOnline = "Online", FriendStatusInGame = "Playing:", JoinFriend = "Join",
-        Calculating = "Calculating...", NextPage = "Next Page", PrevPage = "Previous Page",
-        TracerColorTitle = "Select Tracer Color", TracerApplied = "Tracer Color Applied!", FloatPlat = "Floating Platform",
-        Tracers = "Tracers", Up = "UP", Down = "DOWN"
+        FriendStatusOffline = "Offline", FriendStatusOnline = "Online", FriendStatusInGame = "In Game", JoinFriend = "Join",
+        Calculating = "Calculating..."
     },
     TR = {
         Title = "Darker", Welcome = "Merhaba, ", Server = "Sunucu", ServerDesc = "Şu anda içinde bulunduğunuz oturumun bilgileri",
         Players = "Oyuncular", MaxPlayers = "Maksimum Oyuncu", Latency = "Gecikme (Ping)", ServerRegion = "Sunucu Bölgesi",
-        InServerFor = "Sunucuda geçen süre", JoinScript = "Giriş Scripti", TapCopy = "Kopyalamak için dokunun",
-        WaveDesc = "Executor'ınız bu scripti destekliyor gibi görünüyor.", Friends = "Arkadaşlar", FriendsDesc = "Arkadaşlarınızın şu anda ne yaptığını öğrenin",
-        InServer = "Sunucuda", Offline = "Çevrimdışı", Online = "Çevrimiçi", All = "Toplam", DiscordDesc = "Discord Sunucusuna katılmak için tıklayın",
+        InServerFor = "Sunucuda geçen süre", JoinScript = "Giriş Scripti", TapCopy = "Kopyalamak için dokunun", WaveDesc = "Executor'ınız bu scripti destekliyor gibi görünüyor.",
+        Friends = "Arkadaşlar", FriendsDesc = "Arkadaşlarınızın şu anda ne yaptığını öğrenin", InServer = "Sunucuda",
+        Offline = "Çevrimdışı", Online = "Çevrimiçi", All = "Toplam", DiscordDesc = "Discord Sunucusuna katılmak için tıklayın",
         Copied = "Panoya kopyalandı!", ExecTitle = "Script Çalıştırıcı", EnterScript = "-- Scriptinizi buraya yazın...",
         Execute = "Çalıştır", Clear = "Temizle", ExecSuccess = "Başarıyla çalıştırıldı!", TpTitle = "Oyuncu Işınlanma",
         TypeUser = "Kullanıcı Adı Yazın...", Teleport = "Işınlan", TpLast = "Son Hedefe Işınlan", TpRandom = "Rastgele Işınlan",
@@ -51,12 +49,22 @@ local Translates = {
         Start = "Başlat", Stop = "Durdur", Lookat = "Oyuncuya Odaklan", LookatPlace = "Oyuncu Adı...", LookatBtn = "Odaklan",
         UnlookBtn = "Bırak", LookLast = "Son Oyuncuya Odaklan", LookRand = "Rastgele Odaklan", SpecActive = "İzlenen oyuncu: ",
         SpecDeactive = "İzleme Durduruldu.", Language = "Dil Seçeneği", UpdatesTitle = "Güncellemeler & Yenilikler",
-        FriendStatusOffline = "Çevrimdışı", FriendStatusOnline = "Çevrimiçi", FriendStatusInGame = "Oynuyor:", JoinFriend = "Katıl",
-        Calculating = "Hesaplanıyor...", NextPage = "Sonraki Sayfa", PrevPage = "Önceki Sayfa",
-        TracerColorTitle = "Tracer Rengini Seçin", TracerApplied = "Tracer Rengi Uygulandı!", FloatPlat = "Yüzen Platform",
-        Tracers = "Tracer Çizgileri", Up = "YUKARI", Down = "AŞAĞI"
+        FriendStatusOffline = "Çevrimdışı", FriendStatusOnline = "Çevrimiçi", FriendStatusInGame = "Oyunda", JoinFriend = "Katıl",
+        Calculating = "Hesaplanıyor..."
     }
 }
+
+-- YARDIMCI FONKSİYON: WAVE GRADIENT OLUŞTURUCU
+local function ApplyWaveGradient(parent, color1, color2)
+    parent.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    local grad = Instance.new("UIGradient", parent)
+    grad.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, color1),
+        ColorSequenceKeypoint.new(1, color2)
+    })
+    grad.Rotation = 45
+    return grad
+end
 
 -- ANA SCREEN GUI
 local ScreenGui = Instance.new("ScreenGui")
@@ -66,13 +74,14 @@ ScreenGui.ResetOnSpawn = false
 local success, err = pcall(function() ScreenGui.Parent = CoreGui end)
 if not success then ScreenGui.Parent = LocalPlayer:WaitForChild("PlayerGui") end
 
--- BİLDİRİM SİSTEMİ
+-- BİLDİRİM SİSTEMİ (NOTIFICATION)
 local NotificationHolder = Instance.new("Frame")
 NotificationHolder.Name = "NotificationHolder"
 NotificationHolder.Size = UDim2.new(0, 300, 1, 0)
 NotificationHolder.Position = UDim2.new(1, -310, 0, 10)
 NotificationHolder.BackgroundTransparency = 1
 NotificationHolder.Parent = ScreenGui
+
 local UIListLayoutNotify = Instance.new("UIListLayout")
 UIListLayoutNotify.VerticalAlignment = Enum.VerticalAlignment.Bottom
 UIListLayoutNotify.Padding = UDim.new(0, 10)
@@ -84,33 +93,22 @@ local function ShowNotification(title, text, duration)
     Frame.BackgroundColor3 = Color3.fromRGB(20, 21, 26)
     Frame.BackgroundTransparency = 0.15
     Frame.Parent = NotificationHolder
+
     Instance.new("UICorner", Frame).CornerRadius = UDim.new(0, 10)
-    
     local Stroke = Instance.new("UIStroke", Frame)
-    Stroke.Thickness = 1
-    Stroke.Color = Color3.fromRGB(255, 255, 255)
-    Stroke.Transparency = 0.9
+    Stroke.Thickness = 1; Stroke.Color = Color3.fromRGB(255, 255, 255); Stroke.Transparency = 0.9
 
     local TitleLbl = Instance.new("TextLabel", Frame)
-    TitleLbl.Size = UDim2.new(1, -20, 0, 20)
-    TitleLbl.Position = UDim2.new(0, 10, 0, 8)
-    TitleLbl.BackgroundTransparency = 1
-    TitleLbl.Text = title
-    TitleLbl.TextColor3 = Color3.fromRGB(156, 179, 255)
-    TitleLbl.Font = Enum.Font.GothamBold
-    TitleLbl.TextSize = 12
-    TitleLbl.TextXAlignment = Enum.TextXAlignment.Left
+    TitleLbl.Size = UDim2.new(1, -20, 0, 20); TitleLbl.Position = UDim2.new(0, 10, 0, 8)
+    TitleLbl.BackgroundTransparency = 1; TitleLbl.Text = title
+    TitleLbl.TextColor3 = Color3.fromRGB(156, 179, 255); TitleLbl.Font = Enum.Font.GothamBold
+    TitleLbl.TextSize = 12; TitleLbl.TextXAlignment = Enum.TextXAlignment.Left
 
     local TextLbl = Instance.new("TextLabel", Frame)
-    TextLbl.Size = UDim2.new(1, -20, 0, 25)
-    TextLbl.Position = UDim2.new(0, 10, 0, 26)
-    TextLbl.BackgroundTransparency = 1
-    TextLbl.Text = text
-    TextLbl.TextColor3 = Color3.fromRGB(200, 201, 210)
-    TextLbl.Font = Enum.Font.GothamMedium
-    TextLbl.TextSize = 10
-    TextLbl.TextXAlignment = Enum.TextXAlignment.Left
-    TextLbl.TextWrapped = true
+    TextLbl.Size = UDim2.new(1, -20, 0, 25); TextLbl.Position = UDim2.new(0, 10, 0, 26)
+    TextLbl.BackgroundTransparency = 1; TextLbl.Text = text
+    TextLbl.TextColor3 = Color3.fromRGB(200, 201, 210); TextLbl.Font = Enum.Font.GothamMedium
+    TextLbl.TextSize = 10; TextLbl.TextXAlignment = Enum.TextXAlignment.Left; TextLbl.TextWrapped = true
 
     TweenService:Create(Frame, TweenInfo.new(0.3), {BackgroundTransparency = 0.15}):Play()
     task.delay(duration or 3, function()
@@ -118,34 +116,29 @@ local function ShowNotification(title, text, duration)
         TweenService:Create(Stroke, TweenInfo.new(0.3), {Transparency = 1}):Play()
         TweenService:Create(TitleLbl, TweenInfo.new(0.3), {TextTransparency = 1}):Play()
         TweenService:Create(TextLbl, TweenInfo.new(0.3), {TextTransparency = 1}):Play()
-        task.wait(0.3)
-        Frame:Destroy()
+        task.wait(0.3); Frame:Destroy()
     end)
 end
 
--- ANA PENCERE
+-- ANA PENCERE (MAIN FRAME)
 local MainFrame = Instance.new("Frame")
 MainFrame.Name = "MainFrame"
 MainFrame.Size = UDim2.new(0, 680, 0, 420)
 MainFrame.Position = UDim2.new(0.5, -340, 0.5, -210)
 MainFrame.BackgroundColor3 = Color3.fromRGB(24, 25, 30)
-MainFrame.ClipsDescendants = true
-MainFrame.Active = true
+MainFrame.ClipsDescendants = true; MainFrame.Active = true
 MainFrame.Parent = ScreenGui
 
 local MainCorner = Instance.new("UICorner", MainFrame)
 MainCorner.CornerRadius = UDim.new(0, 14)
-Instance.new("UIStroke", MainFrame).Color = Color3.fromRGB(255, 255, 255)
-Instance.new("UIStroke", MainFrame).Transparency = 0.94
-Instance.new("UIStroke", MainFrame).Thickness = 1.5
+local MainStroke = Instance.new("UIStroke", MainFrame)
+MainStroke.Thickness = 1.5; MainStroke.Color = Color3.fromRGB(255, 255, 255); MainStroke.Transparency = 0.94
 
--- SÜRÜKLEME
+-- SÜRÜKLEME SİSTEMİ
 local dragging, dragInput, dragStart, startPos
 MainFrame.InputBegan:Connect(function(input)
     if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) and not MainFrame:GetAttribute("Minimized") then
-        dragging = true
-        dragStart = input.Position
-        startPos = MainFrame.Position
+        dragging = true; dragStart = input.Position; startPos = MainFrame.Position
         input.Changed:Connect(function() if input.UserInputState == Enum.UserInputState.End then dragging = false end end)
     end
 end)
@@ -159,165 +152,121 @@ UserInputService.InputChanged:Connect(function(input)
     end
 end)
 
--- ÜST BAR
-local TopBar = Instance.new("Frame", MainFrame)
+-- ÜST BAR (TITLEBAR)
+local TopBar = Instance.new("Frame")
 TopBar.Size = UDim2.new(1, 0, 0, 42)
 TopBar.BackgroundColor3 = Color3.fromRGB(30, 31, 38)
-TopBar.BorderSizePixel = 0
+TopBar.BorderSizePixel = 0; TopBar.Parent = MainFrame
 Instance.new("UICorner", TopBar).CornerRadius = UDim.new(0, 14)
 
 local TopBarCornerFix = Instance.new("Frame", TopBar)
-TopBarCornerFix.Size = UDim2.new(1, 0, 0, 10)
-TopBarCornerFix.Position = UDim2.new(0, 0, 1, -10)
-TopBarCornerFix.BackgroundColor3 = Color3.fromRGB(30, 31, 38)
-TopBarCornerFix.BorderSizePixel = 0
+TopBarCornerFix.Size = UDim2.new(1, 0, 0, 10); TopBarCornerFix.Position = UDim2.new(0, 0, 1, -10)
+TopBarCornerFix.BackgroundColor3 = Color3.fromRGB(30, 31, 38); TopBarCornerFix.BorderSizePixel = 0
 
 local TopBarLine = Instance.new("Frame", TopBar)
-TopBarLine.Size = UDim2.new(1, 0, 0, 1)
-TopBarLine.Position = UDim2.new(0, 0, 1, 0)
-TopBarLine.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-TopBarLine.BackgroundTransparency = 0.95
-TopBarLine.BorderSizePixel = 0
+TopBarLine.Size = UDim2.new(1, 0, 0, 1); TopBarLine.Position = UDim2.new(0, 0, 1, 0)
+TopBarLine.BackgroundColor3 = Color3.fromRGB(255, 255, 255); TopBarLine.BackgroundTransparency = 0.95; TopBarLine.BorderSizePixel = 0
 
+-- Büyütülmüş Profil Fotoğrafı Logosu
 local MoonIcon = Instance.new("ImageLabel", TopBar)
-MoonIcon.Size = UDim2.new(0, 24, 0, 24)
-MoonIcon.Position = UDim2.new(0, 15, 0.5, -12)
+MoonIcon.Size = UDim2.new(0, 32, 0, 32)
+MoonIcon.Position = UDim2.new(0, 10, 0.5, -16)
 MoonIcon.BackgroundTransparency = 1
-MoonIcon.Image = "rbxassetid://94035720579249" 
+MoonIcon.Image = "rbxassetid://94035720579249"
 
 local TitleLabel = Instance.new("TextLabel", TopBar)
-TitleLabel.Size = UDim2.new(0, 300, 1, 0)
-TitleLabel.Position = UDim2.new(0, 48, 0, 0)
-TitleLabel.BackgroundTransparency = 1
-TitleLabel.Text = "Darker"
-TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-TitleLabel.Font = Enum.Font.GothamBold
-TitleLabel.TextSize = 13
-TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
+TitleLabel.Size = UDim2.new(0, 300, 1, 0); TitleLabel.Position = UDim2.new(0, 50, 0, 0)
+TitleLabel.BackgroundTransparency = 1; TitleLabel.Text = "Darker"
+TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255); TitleLabel.Font = Enum.Font.GothamBold
+TitleLabel.TextSize = 14; TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
 
 local SubTitleLabel = Instance.new("TextLabel", TopBar)
-SubTitleLabel.Size = UDim2.new(0, 200, 1, 0)
-SubTitleLabel.Position = UDim2.new(0, 110, 0, 0)
-SubTitleLabel.BackgroundTransparency = 1
-SubTitleLabel.Text = ".gg/nodiscordyet"
-SubTitleLabel.TextColor3 = Color3.fromRGB(140, 141, 150)
-SubTitleLabel.Font = Enum.Font.GothamMedium
-SubTitleLabel.TextSize = 11
-SubTitleLabel.TextXAlignment = Enum.TextXAlignment.Left
+SubTitleLabel.Size = UDim2.new(0, 200, 1, 0); SubTitleLabel.Position = UDim2.new(0, 115, 0, 0)
+SubTitleLabel.BackgroundTransparency = 1; SubTitleLabel.Text = ".gg/nodiscordyet"
+SubTitleLabel.TextColor3 = Color3.fromRGB(140, 141, 150); SubTitleLabel.Font = Enum.Font.GothamMedium
+SubTitleLabel.TextSize = 11; SubTitleLabel.TextXAlignment = Enum.TextXAlignment.Left
 
 local CloseBtn = Instance.new("ImageButton", TopBar)
-CloseBtn.Size = UDim2.new(0, 16, 0, 16)
-CloseBtn.Position = UDim2.new(1, -28, 0.5, -8)
-CloseBtn.BackgroundTransparency = 1
-CloseBtn.Image = "rbxassetid://10747384394"
+CloseBtn.Size = UDim2.new(0, 16, 0, 16); CloseBtn.Position = UDim2.new(1, -28, 0.5, -8)
+CloseBtn.BackgroundTransparency = 1; CloseBtn.Image = "rbxassetid://10747384394"
 CloseBtn.ImageColor3 = Color3.fromRGB(150, 151, 160)
 CloseBtn.MouseButton1Click:Connect(function() ScreenGui:Destroy() end)
 
 local MinimizeBtn = Instance.new("ImageButton", TopBar)
-MinimizeBtn.Size = UDim2.new(0, 16, 0, 16)
-MinimizeBtn.Position = UDim2.new(1, -52, 0.5, -8)
-MinimizeBtn.BackgroundTransparency = 1
-MinimizeBtn.Image = "rbxassetid://10751034456"
+MinimizeBtn.Size = UDim2.new(0, 16, 0, 16); MinimizeBtn.Position = UDim2.new(1, -52, 0.5, -8)
+MinimizeBtn.BackgroundTransparency = 1; MinimizeBtn.Image = "rbxassetid://10751034456"
 MinimizeBtn.ImageColor3 = Color3.fromRGB(150, 151, 160)
 
--- SOL KENAR ÇUBUĞU (Büyütüldü)
+-- SOL KENAR ÇUBUĞU (SIDEBAR) - BUTONLAR BÜYÜTÜLDÜ (40x40)
 local SideBar = Instance.new("Frame", MainFrame)
-SideBar.Size = UDim2.new(0, 58, 1, -42) -- Genişletildi
-SideBar.Position = UDim2.new(0, 0, 0, 42)
-SideBar.BackgroundColor3 = Color3.fromRGB(28, 29, 36)
-SideBar.BorderSizePixel = 0
+SideBar.Size = UDim2.new(0, 58, 1, -42); SideBar.Position = UDim2.new(0, 0, 0, 42)
+SideBar.BackgroundColor3 = Color3.fromRGB(28, 29, 36); SideBar.BorderSizePixel = 0
 
 local SideBarLine = Instance.new("Frame", SideBar)
-SideBarLine.Size = UDim2.new(0, 1, 1, 0)
-SideBarLine.Position = UDim2.new(1, -1, 0, 0)
-SideBarLine.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-SideBarLine.BackgroundTransparency = 0.96
-SideBarLine.BorderSizePixel = 0
+SideBarLine.Size = UDim2.new(0, 1, 1, 0); SideBarLine.Position = UDim2.new(1, -1, 0, 0)
+SideBarLine.BackgroundColor3 = Color3.fromRGB(255, 255, 255); SideBarLine.BackgroundTransparency = 0.96; SideBarLine.BorderSizePixel = 0
 
 local ButtonList = Instance.new("Frame", SideBar)
-ButtonList.Size = UDim2.new(1, 0, 1, -60)
-ButtonList.Position = UDim2.new(0, 0, 0, 12)
-ButtonList.BackgroundTransparency = 1
-
+ButtonList.Size = UDim2.new(1, 0, 1, -60); ButtonList.Position = UDim2.new(0, 0, 0, 12); ButtonList.BackgroundTransparency = 1
 local ButtonLayout = Instance.new("UIListLayout", ButtonList)
-ButtonLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-ButtonLayout.Padding = UDim.new(0, 12)
+ButtonLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center; ButtonLayout.Padding = UDim.new(0, 8)
 
 local TabButtons = {Selected = nil}
 
 local function CreateNavButton(name, iconId)
     local BtnContainer = Instance.new("Frame", ButtonList)
-    BtnContainer.Size = UDim2.new(0, 42, 0, 42) -- Büyütüldü
-    BtnContainer.BackgroundTransparency = 1
+    BtnContainer.Size = UDim2.new(0, 44, 0, 44); BtnContainer.BackgroundTransparency = 1
     Instance.new("UICorner", BtnContainer).CornerRadius = UDim.new(0, 10)
-    
     local Stroke = Instance.new("UIStroke", BtnContainer)
-    Stroke.Thickness = 1
-    Stroke.Color = Color3.fromRGB(255, 255, 255)
-    Stroke.Transparency = 1
+    Stroke.Thickness = 1; Stroke.Color = Color3.fromRGB(255, 255, 255); Stroke.Transparency = 1
 
     local Icon = Instance.new("ImageButton", BtnContainer)
-    Icon.Size = UDim2.new(0, 22, 0, 22) -- Büyütüldü
-    Icon.Position = UDim2.new(0.5, -11, 0.5, -11)
-    Icon.BackgroundTransparency = 1
-    Icon.Image = iconId
-    Icon.ImageColor3 = Color3.fromRGB(150, 151, 160)
+    Icon.Size = UDim2.new(0, 22, 0, 22); Icon.Position = UDim2.new(0.5, -11, 0.5, -11)
+    Icon.BackgroundTransparency = 1; Icon.Image = iconId; Icon.ImageColor3 = Color3.fromRGB(150, 151, 160)
     
     TabButtons[name] = Icon
 
     Icon.MouseEnter:Connect(function()
-        if TabButtons.Selected ~= Icon then
-            TweenService:Create(Icon, TweenInfo.new(0.2), {ImageColor3 = Color3.fromRGB(220, 221, 230)}):Play()
-        end
+        if TabButtons.Selected ~= Icon then TweenService:Create(Icon, TweenInfo.new(0.2), {ImageColor3 = Color3.fromRGB(220, 221, 230)}):Play() end
     end)
     Icon.MouseLeave:Connect(function()
-        if TabButtons.Selected ~= Icon then
-            TweenService:Create(Icon, TweenInfo.new(0.2), {ImageColor3 = Color3.fromRGB(150, 151, 160)}):Play()
-        end
+        if TabButtons.Selected ~= Icon then TweenService:Create(Icon, TweenInfo.new(0.2), {ImageColor3 = Color3.fromRGB(150, 151, 160)}):Play() end
     end)
     return Icon
 end
 
-local HomeBtn = CreateNavButton("Home", "rbxassetid://94035720579249")         
-local ExecBtn = CreateNavButton("Executor", "rbxassetid://10747373176")     
-local MapBtn = CreateNavButton("Teleport", "rbxassetid://10734919379")      
-local FriendBtn = CreateNavButton("Friends", "rbxassetid://10747383845")    
-local StarBtn = CreateNavButton("Stars", "rbxassetid://10734949856")        
-local BellBtn = CreateNavButton("Notify", "rbxassetid://11545465997")       
-local SettingBtn = CreateNavButton("Settings", "rbxassetid://10734950020")   
+-- NAVİGASYON SİMGELERİ
+local HomeBtn = CreateNavButton("Home", "rbxassetid://110705725860423")
+local ExecBtn = CreateNavButton("Executor", "rbxassetid://125081190503235")
+local MapBtn = CreateNavButton("Teleport", "rbxassetid://86143271250497")
+local FriendBtn = CreateNavButton("Friends", "rbxassetid://82208832868901")
+local StarBtn = CreateNavButton("Stars", "rbxassetid://86950770485410")
+local BellBtn = CreateNavButton("Notify", "rbxassetid://111094391421625")
+local SettingBtn = CreateNavButton("Settings", "rbxassetid://10734950020")
 
--- Profil Kartı
 local SideAvatarFrame = Instance.new("Frame", SideBar)
-SideAvatarFrame.Size = UDim2.new(0, 42, 0, 42)
-SideAvatarFrame.Position = UDim2.new(0.5, -21, 1, -50)
+SideAvatarFrame.Size = UDim2.new(0, 40, 0, 40); SideAvatarFrame.Position = UDim2.new(0.5, -20, 1, -50)
 SideAvatarFrame.BackgroundColor3 = Color3.fromRGB(20, 21, 26)
 Instance.new("UICorner", SideAvatarFrame).CornerRadius = UDim.new(0, 10)
-
 local SideAvatar = Instance.new("ImageLabel", SideAvatarFrame)
-SideAvatar.Size = UDim2.new(1, 0, 1, 0)
-SideAvatar.BackgroundTransparency = 1
+SideAvatar.Size = UDim2.new(1, 0, 1, 0); SideAvatar.BackgroundTransparency = 1
 Instance.new("UICorner", SideAvatar).CornerRadius = UDim.new(0, 10)
-
 task.spawn(function()
-    local content, isReady = Players:GetUserThumbnailAsync(LocalPlayer.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420)
-    if isReady then SideAvatar.Image = content end
+    local content, ready = Players:GetUserThumbnailAsync(LocalPlayer.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420)
+    if ready then SideAvatar.Image = content end
 end)
 
 -- SAYFALAR (PAGES CONTAINER)
 local PagesContainer = Instance.new("Frame", MainFrame)
-PagesContainer.Size = UDim2.new(1, -74, 1, -58)
-PagesContainer.Position = UDim2.new(0, 66, 0, 50)
+PagesContainer.Size = UDim2.new(1, -74, 1, -58); PagesContainer.Position = UDim2.new(0, 66, 0, 50)
 PagesContainer.BackgroundTransparency = 1
 
 local Pages = {}
 local function CreatePage(name)
     local Page = Instance.new("Frame", PagesContainer)
-    Page.Name = name .. "Tab"
-    Page.Size = UDim2.new(1, 0, 1, 0)
-    Page.BackgroundTransparency = 1
-    Page.Visible = false
-    Pages[name] = Page
-    return Page
+    Page.Name = name .. "Tab"; Page.Size = UDim2.new(1, 0, 1, 0)
+    Page.BackgroundTransparency = 1; Page.Visible = false
+    Pages[name] = Page; return Page
 end
 
 local HomeTab = CreatePage("Home")
@@ -325,37 +274,41 @@ local ExecutorTab = CreatePage("Executor")
 local TeleportTab = CreatePage("Teleport")
 local FriendsTabPage = CreatePage("Friends")
 local StarsTab = CreatePage("Stars")
+local StarsTab2 = CreatePage("Stars2") -- YENİ NEXT PAGE SEKMESİ
 local NotifyTab = CreatePage("Notify")
 local SettingsTab = CreatePage("Settings")
 
--- MİNİMİZE
+-- =======================================================
+-- SMOOTH MİNİMİZE SİSTEMİ
+-- =======================================================
 local isMinimized = false
 local originalSize = UDim2.new(0, 680, 0, 420)
 local minimizedSize = UDim2.new(0, 50, 0, 50)
-local originalCornerRadius = UDim.new(0, 14)
-local minimizedCornerRadius = UDim.new(0, 12)
 
 MinimizeBtn.MouseButton1Click:Connect(function()
     isMinimized = not isMinimized
     MainFrame:SetAttribute("Minimized", isMinimized)
+    
     if isMinimized then
         TopBar.BackgroundTransparency = 1; TopBarLine.BackgroundTransparency = 1; TopBarCornerFix.BackgroundTransparency = 1
         TitleLabel.TextTransparency = 1; SubTitleLabel.TextTransparency = 1; MoonIcon.ImageTransparency = 1; CloseBtn.ImageTransparency = 1
         SideBar.Visible = false; PagesContainer.Visible = false
-        MinimizeBtn.Position = UDim2.new(0.5, -17, 0.5, -17)
-        MinimizeBtn.Size = UDim2.new(0, 34, 0, 34)
+        
+        MinimizeBtn.Size = UDim2.new(1, 0, 1, 0)
+        MinimizeBtn.Position = UDim2.new(0, 0, 0, 0)
         MinimizeBtn.Image = "rbxassetid://94035720579249"
-        local tw = TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
-        TweenService:Create(MainFrame, tw, {Size = minimizedSize}):Play()
-        TweenService:Create(MainCorner, tw, {CornerRadius = minimizedCornerRadius}):Play()
+        
+        TweenService:Create(MainFrame, TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Size = minimizedSize}):Play()
+        TweenService:Create(MainCorner, TweenInfo.new(0.4), {CornerRadius = UDim.new(0, 12)}):Play()
     else
         MinimizeBtn.Position = UDim2.new(1, -52, 0.5, -8)
         MinimizeBtn.Size = UDim2.new(0, 16, 0, 16)
         MinimizeBtn.Image = "rbxassetid://10751034456"
-        local tw = TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
-        local sizeTween = TweenService:Create(MainFrame, tw, {Size = originalSize})
+        
+        local sizeTween = TweenService:Create(MainFrame, TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Size = originalSize})
         sizeTween:Play()
-        TweenService:Create(MainCorner, tw, {CornerRadius = originalCornerRadius}):Play()
+        TweenService:Create(MainCorner, TweenInfo.new(0.4), {CornerRadius = UDim.new(0, 14)}):Play()
+        
         sizeTween.Completed:Connect(function()
             if not isMinimized then
                 TopBar.BackgroundTransparency = 0; TopBarLine.BackgroundTransparency = 0.95; TopBarCornerFix.BackgroundTransparency = 0
@@ -366,591 +319,10 @@ MinimizeBtn.MouseButton1Click:Connect(function()
     end
 end)
 
--- ==========================================
--- [1] HOME TAB
--- ==========================================
--- (Home Tab kodları mevcut yapıdakiyle aynı tutuldu)
-local UserCard = Instance.new("Frame", HomeTab)
-UserCard.Size = UDim2.new(1, -10, 0, 75); UserCard.Position = UDim2.new(0, 5, 0, 5); UserCard.BackgroundColor3 = Color3.fromRGB(20, 21, 26)
-Instance.new("UICorner", UserCard).CornerRadius = UDim.new(0, 12)
-Instance.new("UIStroke", UserCard).Color = Color3.fromRGB(255, 255, 255)
-Instance.new("UIStroke", UserCard).Transparency = 0.95
-
-local UserAvatar = Instance.new("ImageLabel", UserCard)
-UserAvatar.Size = UDim2.new(0, 55, 0, 55); UserAvatar.Position = UDim2.new(0, 10, 0, 10); UserAvatar.BackgroundColor3 = Color3.fromRGB(30, 31, 38)
-Instance.new("UICorner", UserAvatar).CornerRadius = UDim.new(0, 10)
-task.spawn(function()
-    local content, isReady = Players:GetUserThumbnailAsync(LocalPlayer.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420)
-    if isReady then UserAvatar.Image = content end
-end)
-
-local WelcomeText = Instance.new("TextLabel", UserCard)
-WelcomeText.Size = UDim2.new(1, -85, 0, 22); WelcomeText.Position = UDim2.new(0, 78, 0, 16); WelcomeText.BackgroundTransparency = 1
-WelcomeText.TextColor3 = Color3.fromRGB(255, 255, 255); WelcomeText.Font = Enum.Font.GothamBold; WelcomeText.TextSize = 16; WelcomeText.TextXAlignment = Enum.TextXAlignment.Left
-
-local SubText = Instance.new("TextLabel", UserCard)
-SubText.Size = UDim2.new(1, -85, 0, 18); SubText.Position = UDim2.new(0, 78, 0, 38); SubText.BackgroundTransparency = 1
-SubText.Text = LocalPlayer.Name .. " - Darker"; SubText.TextColor3 = Color3.fromRGB(130, 131, 140); SubText.Font = Enum.Font.GothamMedium; SubText.TextSize = 11; SubText.TextXAlignment = Enum.TextXAlignment.Left
-
--- (Server, Friends Home, Discord UI Kısaltılmış Formda - İstenilenleri doğrudan entegre ediyorum)
--- Sunucu Bilgileri vb... (Bu kısımlar tam çalışması için aşağıya orijinal formda ekleniyor)
-local ServerSection = Instance.new("Frame", HomeTab)
-ServerSection.Size = UDim2.new(0.55, -8, 0, 180); ServerSection.Position = UDim2.new(0, 5, 0, 90); ServerSection.BackgroundColor3 = Color3.fromRGB(20, 25, 45)
-Instance.new("UICorner", ServerSection).CornerRadius = UDim.new(0, 12)
-Instance.new("UIStroke", ServerSection).Transparency = 0.92; Instance.new("UIStroke", ServerSection).Color = Color3.fromRGB(100, 150, 255)
-local SrvTitle = Instance.new("TextLabel", ServerSection)
-SrvTitle.Size = UDim2.new(1, -20, 0, 25); SrvTitle.Position = UDim2.new(0, 12, 0, 8); SrvTitle.BackgroundTransparency = 1
-SrvTitle.TextColor3 = Color3.fromRGB(255, 255, 255); SrvTitle.Font = Enum.Font.GothamBold; SrvTitle.TextSize = 13; SrvTitle.TextXAlignment = Enum.TextXAlignment.Left
-local SrvDesc = Instance.new("TextLabel", ServerSection)
-SrvDesc.Size = UDim2.new(1, -20, 0, 15); SrvDesc.Position = UDim2.new(0, 12, 0, 28); SrvDesc.BackgroundTransparency = 1
-SrvDesc.TextColor3 = Color3.fromRGB(160, 175, 220); SrvDesc.Font = Enum.Font.GothamMedium; SrvDesc.TextSize = 8; SrvDesc.TextXAlignment = Enum.TextXAlignment.Left
-
-local ServerContainer = Instance.new("Frame", ServerSection)
-ServerContainer.Size = UDim2.new(1, -20, 1, -55); ServerContainer.Position = UDim2.new(0, 10, 0, 48); ServerContainer.BackgroundTransparency = 1
-local SrvGrid = Instance.new("UIGridLayout", ServerContainer)
-SrvGrid.CellSize = UDim2.new(0.5, -4, 0.33, -4); SrvGrid.CellPadding = UDim2.new(0, 8, 0, 6)
-
-local function CreateInfoBox(parent, title, val)
-    local Box = Instance.new("Frame", parent); Box.BackgroundColor3 = Color3.fromRGB(30, 31, 38)
-    Instance.new("UICorner", Box).CornerRadius = UDim.new(0, 8)
-    Instance.new("UIStroke", Box).Transparency = 0.96; Instance.new("UIStroke", Box).Color = Color3.fromRGB(255, 255, 255)
-    local TL = Instance.new("TextLabel", Box); TL.Size = UDim2.new(1, -12, 0, 12); TL.Position = UDim2.new(0, 8, 0, 6); TL.BackgroundTransparency = 1
-    TL.Text = title; TL.TextColor3 = Color3.fromRGB(255, 255, 255); TL.Font = Enum.Font.GothamBold; TL.TextSize = 9; TL.TextXAlignment = Enum.TextXAlignment.Left
-    local VL = Instance.new("TextLabel", Box); VL.Size = UDim2.new(1, -12, 0, 12); VL.Position = UDim2.new(0, 8, 0, 18); VL.BackgroundTransparency = 1
-    VL.Text = val; VL.TextColor3 = Color3.fromRGB(140, 141, 150); VL.Font = Enum.Font.GothamMedium; VL.TextSize = 8; VL.TextXAlignment = Enum.TextXAlignment.Left
-    return TL, VL
-end
-
-local PlayersTitleLbl, PlayersLabel = CreateInfoBox(ServerContainer, "Oyuncular", "0 / 0")
-local MaxPlrsTitleLbl, MaxPlrsLabel = CreateInfoBox(ServerContainer, "Maksimum Oyuncu", "0")
-local PingTitleLbl, PingLabel = CreateInfoBox(ServerContainer, "Gecikme (Ping)", "0 ms")
-local RegionTitleLbl, RegionLabel = CreateInfoBox(ServerContainer, "Sunucu Bölgesi", "Hesaplanıyor...")
-local TimeTitleLbl, TimeLabel = CreateInfoBox(ServerContainer, "Sunucuda geçen süre", "00:00:00")
-local JoinScriptTitleLbl, JoinScriptLabel = CreateInfoBox(ServerContainer, "Giriş Scripti", "Kopyalamak için dokunun")
-
-local ExecCard = Instance.new("Frame", HomeTab); ExecCard.Size = UDim2.new(0.45, -8, 0, 85); ExecCard.Position = UDim2.new(0.55, 3, 0, 90)
-ExecCard.BackgroundColor3 = Color3.fromRGB(45, 20, 20); Instance.new("UICorner", ExecCard).CornerRadius = UDim.new(0, 12)
-Instance.new("UIStroke", ExecCard).Color = Color3.fromRGB(255, 100, 100); Instance.new("UIStroke", ExecCard).Transparency = 0.92
-local ET = Instance.new("TextLabel", ExecCard); ET.Size = UDim2.new(1, -20, 0, 22); ET.Position = UDim2.new(0, 12, 0, 8); ET.BackgroundTransparency = 1
-ET.Text = "Wave"; ET.TextColor3 = Color3.fromRGB(255, 255, 255); ET.Font = Enum.Font.GothamBold; ET.TextSize = 13; ET.TextXAlignment = Enum.TextXAlignment.Left
-local ES = Instance.new("TextLabel", ExecCard); ES.Size = UDim2.new(1, -20, 0, 40); ES.Position = UDim2.new(0, 12, 0, 30); ES.BackgroundTransparency = 1
-ES.TextColor3 = Color3.fromRGB(230, 200, 200); ES.Font = Enum.Font.GothamMedium; ES.TextSize = 9; ES.TextXAlignment = Enum.TextXAlignment.Left; ES.TextWrapped = true
-
-local FriendsCard = Instance.new("Frame", HomeTab); FriendsCard.Size = UDim2.new(0.45, -8, 0, 160); FriendsCard.Position = UDim2.new(0.55, 3, 0, 185)
-FriendsCard.BackgroundColor3 = Color3.fromRGB(35, 20, 45); Instance.new("UICorner", FriendsCard).CornerRadius = UDim.new(0, 12)
-Instance.new("UIStroke", FriendsCard).Color = Color3.fromRGB(180, 100, 255); Instance.new("UIStroke", FriendsCard).Transparency = 0.92
-local FT = Instance.new("TextLabel", FriendsCard); FT.Size = UDim2.new(1, -20, 0, 22); FT.Position = UDim2.new(0, 12, 0, 8); FT.BackgroundTransparency = 1
-FT.TextColor3 = Color3.fromRGB(255, 255, 255); FT.Font = Enum.Font.GothamBold; FT.TextSize = 13; FT.TextXAlignment = Enum.TextXAlignment.Left
-local FDesc = Instance.new("TextLabel", FriendsCard); FDesc.Size = UDim2.new(1, -20, 0, 15); FDesc.Position = UDim2.new(0, 12, 0, 26); FDesc.BackgroundTransparency = 1
-FDesc.TextColor3 = Color3.fromRGB(200, 170, 220); FDesc.Font = Enum.Font.GothamMedium; FDesc.TextSize = 8; FDesc.TextXAlignment = Enum.TextXAlignment.Left
-
-local FriendsGridContainer = Instance.new("Frame", FriendsCard); FriendsGridContainer.Size = UDim2.new(1, -20, 1, -55)
-FriendsGridContainer.Position = UDim2.new(0, 10, 0, 48); FriendsGridContainer.BackgroundTransparency = 1
-local FrGrid = Instance.new("UIGridLayout", FriendsGridContainer); FrGrid.CellSize = UDim2.new(0.5, -4, 0.45, -4); FrGrid.CellPadding = UDim2.new(0, 8, 0, 8)
-local InServerFrTitle, InServerFr = CreateInfoBox(FriendsGridContainer, "Sunucuda", "0")
-local OfflineFrTitle, OfflineFr = CreateInfoBox(FriendsGridContainer, "Çevrimdışı", "0")
-local OnlineFrTitle, OnlineFr = CreateInfoBox(FriendsGridContainer, "Çevrimiçi", "0")
-local AllFrTitle, AllFr = CreateInfoBox(FriendsGridContainer, "Toplam", "0")
-
-local DiscordCard = Instance.new("Frame", HomeTab); DiscordCard.Size = UDim2.new(0.55, -8, 0, 70); DiscordCard.Position = UDim2.new(0, 5, 0, 275)
-DiscordCard.BackgroundColor3 = Color3.fromRGB(20, 21, 26); Instance.new("UICorner", DiscordCard).CornerRadius = UDim.new(0, 12)
-Instance.new("UIStroke", DiscordCard).Color = Color3.fromRGB(114, 137, 218); Instance.new("UIStroke", DiscordCard).Transparency = 0.9
-local DT = Instance.new("TextLabel", DiscordCard); DT.Size = UDim2.new(1, -20, 0, 25); DT.Position = UDim2.new(0, 15, 0, 12); DT.BackgroundTransparency = 1
-DT.Text = "Discord"; DT.TextColor3 = Color3.fromRGB(255, 255, 255); DT.Font = Enum.Font.GothamBold; DT.TextSize = 16; DT.TextXAlignment = Enum.TextXAlignment.Left
-local DS = Instance.new("TextLabel", DiscordCard); DS.Size = UDim2.new(1, -20, 0, 20); DS.Position = UDim2.new(0, 15, 0, 36); DS.BackgroundTransparency = 1
-DS.TextColor3 = Color3.fromRGB(210, 220, 255); DS.Font = Enum.Font.GothamMedium; DS.TextSize = 10; DS.TextXAlignment = Enum.TextXAlignment.Left
-local DiscordBtn = Instance.new("TextButton", DiscordCard); DiscordBtn.Size = UDim2.new(1, 0, 1, 0); DiscordBtn.BackgroundTransparency = 1; DiscordBtn.Text = ""
-DiscordBtn.MouseButton1Click:Connect(function()
-    if setclipboard then 
-        setclipboard("https://discord.gg/nodiscordyet") 
-        ShowNotification("Discord", Translates[CurrentLanguage].Copied, 3) 
-    end
-end)
-
--- ==========================================
--- [2] EXECUTOR TAB
--- ==========================================
-local ExecTitle = Instance.new("TextLabel", ExecutorTab)
-ExecTitle.Size = UDim2.new(1, 0, 0, 30); ExecTitle.BackgroundTransparency = 1; ExecTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
-ExecTitle.Font = Enum.Font.GothamBold; ExecTitle.TextSize = 16; ExecTitle.TextXAlignment = Enum.TextXAlignment.Left
-
-local TextBoxBg = Instance.new("Frame", ExecutorTab); TextBoxBg.Size = UDim2.new(1, -10, 0, 230); TextBoxBg.Position = UDim2.new(0, 5, 0, 40)
-TextBoxBg.BackgroundColor3 = Color3.fromRGB(20, 21, 26); Instance.new("UICorner", TextBoxBg).CornerRadius = UDim.new(0, 10)
-Instance.new("UIStroke", TextBoxBg).Transparency = 0.95
-local CodeBox = Instance.new("TextBox", TextBoxBg); CodeBox.Size = UDim2.new(1, -20, 1, -20); CodeBox.Position = UDim2.new(0, 10, 0, 10)
-CodeBox.BackgroundTransparency = 1; CodeBox.TextColor3 = Color3.fromRGB(140, 200, 140); CodeBox.Font = Enum.Font.Code
-CodeBox.TextSize = 11; CodeBox.ClearTextOnFocus = false; CodeBox.MultiLine = true; CodeBox.TextXAlignment = Enum.TextXAlignment.Left; CodeBox.TextYAlignment = Enum.TextYAlignment.Top
-
-local ExecActBtn = Instance.new("TextButton", ExecutorTab); ExecActBtn.Size = UDim2.new(0, 110, 0, 35); ExecActBtn.Position = UDim2.new(0, 5, 0, 280)
-ExecActBtn.BackgroundColor3 = Color3.fromRGB(30, 110, 60); ExecActBtn.TextColor3 = Color3.fromRGB(255, 255, 255); ExecActBtn.Font = Enum.Font.GothamBold; ExecActBtn.TextSize = 12
-Instance.new("UICorner", ExecActBtn).CornerRadius = UDim.new(0, 8)
-ExecActBtn.MouseButton1Click:Connect(function()
-    local s, e = pcall(function() loadstring(CodeBox.Text)() end)
-    if s then ShowNotification("Executor", Translates[CurrentLanguage].ExecSuccess, 3) else ShowNotification("Error", e, 3) end
-end)
-
-local ClearActBtn = Instance.new("TextButton", ExecutorTab); ClearActBtn.Size = UDim2.new(0, 110, 0, 35); ClearActBtn.Position = UDim2.new(0, 125, 0, 280)
-ClearActBtn.BackgroundColor3 = Color3.fromRGB(40, 42, 50); ClearActBtn.TextColor3 = Color3.fromRGB(200, 200, 200); ClearActBtn.Font = Enum.Font.GothamBold; ClearActBtn.TextSize = 12
-Instance.new("UICorner", ClearActBtn).CornerRadius = UDim.new(0, 8)
-ClearActBtn.MouseButton1Click:Connect(function() CodeBox.Text = "" end)
-
--- ==========================================
--- [3] TELEPORT TAB
--- ==========================================
-local TpTitle = Instance.new("TextLabel", TeleportTab)
-TpTitle.Size = UDim2.new(1, 0, 0, 30); TpTitle.BackgroundTransparency = 1; TpTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
-TpTitle.Font = Enum.Font.GothamBold; TpTitle.TextSize = 16; TpTitle.TextXAlignment = Enum.TextXAlignment.Left
-
-local TpSearchBg = Instance.new("Frame", TeleportTab); TpSearchBg.Size = UDim2.new(0, 250, 0, 40); TpSearchBg.Position = UDim2.new(0, 5, 0, 40)
-TpSearchBg.BackgroundColor3 = Color3.fromRGB(20, 21, 26); Instance.new("UICorner", TpSearchBg).CornerRadius = UDim.new(0, 8); Instance.new("UIStroke", TpSearchBg).Transparency = 0.95
-local TpBox = Instance.new("TextBox", TpSearchBg); TpBox.Size = UDim2.new(1, -20, 1, 0); TpBox.Position = UDim2.new(0, 10, 0, 0); TpBox.BackgroundTransparency = 1
-TpBox.TextColor3 = Color3.fromRGB(255, 255, 255); TpBox.Font = Enum.Font.GothamMedium; TpBox.TextSize = 12; TpBox.TextXAlignment = Enum.TextXAlignment.Left
-
-local TpBtn = Instance.new("TextButton", TeleportTab); TpBtn.Size = UDim2.new(0, 100, 0, 40); TpBtn.Position = UDim2.new(0, 265, 0, 40)
-TpBtn.BackgroundColor3 = Color3.fromRGB(30, 90, 150); TpBtn.TextColor3 = Color3.fromRGB(255, 255, 255); TpBtn.Font = Enum.Font.GothamBold; TpBtn.TextSize = 12; Instance.new("UICorner", TpBtn).CornerRadius = UDim.new(0, 8)
-
-local TpLastBtn = Instance.new("TextButton", TeleportTab); TpLastBtn.Size = UDim2.new(0, 170, 0, 40); TpLastBtn.Position = UDim2.new(0, 5, 0, 90)
-TpLastBtn.BackgroundColor3 = Color3.fromRGB(40, 42, 50); TpLastBtn.TextColor3 = Color3.fromRGB(200, 200, 200); TpLastBtn.Font = Enum.Font.GothamBold; TpLastBtn.TextSize = 12; Instance.new("UICorner", TpLastBtn).CornerRadius = UDim.new(0, 6)
-
-local TpRandomBtn = Instance.new("TextButton", TeleportTab); TpRandomBtn.Size = UDim2.new(0, 170, 0, 40); TpRandomBtn.Position = UDim2.new(0, 185, 0, 90)
-TpRandomBtn.BackgroundColor3 = Color3.fromRGB(40, 42, 50); TpRandomBtn.TextColor3 = Color3.fromRGB(200, 200, 200); TpRandomBtn.Font = Enum.Font.GothamBold; TpRandomBtn.TextSize = 12; Instance.new("UICorner", TpRandomBtn).CornerRadius = UDim.new(0, 6)
-
-local lastTPTarget = nil
-local function GetPlayerFromPart(str)
-    str = string.lower(str)
-    for _, p in ipairs(Players:GetPlayers()) do
-        if p ~= LocalPlayer and (string.find(string.lower(p.Name), str) or string.find(string.lower(p.DisplayName), str)) then return p end
-    end
-    return nil
-end
-local function ExecuteTP(targetPlayer)
-    if not targetPlayer or not targetPlayer.Character or not targetPlayer.Character:FindFirstChild("HumanoidRootPart") then ShowNotification("Teleport Error", Translates[CurrentLanguage].TpError, 3); return end
-    local myChar = LocalPlayer.Character
-    if myChar and myChar:FindFirstChild("HumanoidRootPart") then
-        myChar.HumanoidRootPart.CFrame = targetPlayer.Character.HumanoidRootPart.CFrame
-        lastTPTarget = targetPlayer
-        ShowNotification("Teleport", Translates[CurrentLanguage].TpSuccess .. targetPlayer.Name, 3)
-    end
-end
-TpBtn.MouseButton1Click:Connect(function() ExecuteTP(GetPlayerFromPart(TpBox.Text)) end)
-TpLastBtn.MouseButton1Click:Connect(function() ExecuteTP(lastTPTarget) end)
-TpRandomBtn.MouseButton1Click:Connect(function()
-    local valid = {}
-    for _, p in ipairs(Players:GetPlayers()) do if p ~= LocalPlayer then table.insert(valid, p) end end
-    if #valid > 0 then ExecuteTP(valid[math.random(1, #valid)]) else ShowNotification("Teleport Error", Translates[CurrentLanguage].NoOtherPlrs, 3) end
-end)
-
--- ==========================================
--- [4] STARS TAB (ÖZELLİKLER & HİLELER + SAYFALAMA)
--- ==========================================
-local StarsTitle = Instance.new("TextLabel", StarsTab)
-StarsTitle.Size = UDim2.new(1, 0, 0, 30); StarsTitle.BackgroundTransparency = 1; StarsTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
-StarsTitle.Font = Enum.Font.GothamBold; StarsTitle.TextSize = 16; StarsTitle.TextXAlignment = Enum.TextXAlignment.Left
-
--- Container for Pages
-local StarPagesContainer = Instance.new("Frame", StarsTab)
-StarPagesContainer.Size = UDim2.new(1, 0, 1, -40); StarPagesContainer.Position = UDim2.new(0, 0, 0, 40); StarPagesContainer.BackgroundTransparency = 1
-
-local StarScroll = Instance.new("ScrollingFrame", StarPagesContainer) -- Page 1
-StarScroll.Size = UDim2.new(1, -10, 1, 0); StarScroll.Position = UDim2.new(0, 5, 0, 0); StarScroll.BackgroundTransparency = 1
-StarScroll.BorderSizePixel = 0; StarScroll.ScrollBarThickness = 3
-local StarLayout = Instance.new("UIListLayout", StarScroll); StarLayout.Padding = UDim.new(0, 8); StarLayout.SortOrder = Enum.SortOrder.LayoutOrder
-
-local StarScroll2 = Instance.new("ScrollingFrame", StarPagesContainer) -- Page 2
-StarScroll2.Size = UDim2.new(1, -10, 1, 0); StarScroll2.Position = UDim2.new(0, 5, 0, 0); StarScroll2.BackgroundTransparency = 1
-StarScroll2.BorderSizePixel = 0; StarScroll2.ScrollBarThickness = 3; StarScroll2.Visible = false
-local StarLayout2 = Instance.new("UIListLayout", StarScroll2); StarLayout2.Padding = UDim.new(0, 8); StarLayout2.SortOrder = Enum.SortOrder.LayoutOrder
-
--- ESP/Tracer Renk Seçici GUI (Ortak Color Picker)
-local ColorPickerFrame = Instance.new("Frame", MainFrame)
-ColorPickerFrame.Size = UDim2.new(0, 220, 0, 140); ColorPickerFrame.Position = UDim2.new(0.5, -110, 0.5, -70)
-ColorPickerFrame.BackgroundColor3 = Color3.fromRGB(20, 21, 26); ColorPickerFrame.Visible = false; ColorPickerFrame.ZIndex = 10
-Instance.new("UICorner", ColorPickerFrame).CornerRadius = UDim.new(0, 8)
-Instance.new("UIStroke", ColorPickerFrame).Color = Color3.fromRGB(255,255,255); Instance.new("UIStroke", ColorPickerFrame).Transparency = 0.8
-local CPTitle = Instance.new("TextLabel", ColorPickerFrame)
-CPTitle.Size = UDim2.new(1, 0, 0, 30); CPTitle.BackgroundTransparency = 1; CPTitle.TextColor3 = Color3.fromRGB(255,255,255)
-CPTitle.Font = Enum.Font.GothamBold; CPTitle.TextSize = 12; CPTitle.ZIndex = 10
-
-local HueFrame = Instance.new("Frame", ColorPickerFrame); HueFrame.Size = UDim2.new(1, -20, 0, 30); HueFrame.Position = UDim2.new(0, 10, 0, 40); HueFrame.ZIndex = 10
-local HueGrad = Instance.new("UIGradient", HueFrame)
-HueGrad.Color = ColorSequence.new({ColorSequenceKeypoint.new(0, Color3.new(1,0,0)), ColorSequenceKeypoint.new(0.16, Color3.new(1,1,0)), ColorSequenceKeypoint.new(0.33, Color3.new(0,1,0)), ColorSequenceKeypoint.new(0.5, Color3.new(0,1,1)), ColorSequenceKeypoint.new(0.66, Color3.new(0,0,1)), ColorSequenceKeypoint.new(0.83, Color3.new(1,0,1)), ColorSequenceKeypoint.new(1, Color3.new(1,0,0))})
-local HueBtn = Instance.new("TextButton", HueFrame); HueBtn.Size = UDim2.new(1, 0, 1, 0); HueBtn.BackgroundTransparency = 1; HueBtn.Text = ""; HueBtn.ZIndex = 11
-
-local PreviewColor = Instance.new("Frame", ColorPickerFrame); PreviewColor.Size = UDim2.new(0, 40, 0, 40); PreviewColor.Position = UDim2.new(0, 10, 0, 85); PreviewColor.BackgroundColor3 = Color3.new(1,0,0); PreviewColor.ZIndex = 10
-Instance.new("UICorner", PreviewColor).CornerRadius = UDim.new(0, 6)
-local ApplyColorBtn = Instance.new("TextButton", ColorPickerFrame); ApplyColorBtn.Size = UDim2.new(0, 130, 0, 40); ApplyColorBtn.Position = UDim2.new(0, 60, 0, 85)
-ApplyColorBtn.BackgroundColor3 = Color3.fromRGB(30, 110, 60); ApplyColorBtn.TextColor3 = Color3.fromRGB(255,255,255); ApplyColorBtn.Font = Enum.Font.GothamBold; ApplyColorBtn.TextSize = 14; ApplyColorBtn.ZIndex = 10; Instance.new("UICorner", ApplyColorBtn).CornerRadius = UDim.new(0, 6)
-
-local TempColor = Color3.new(1,0,0)
-local CurrentESPColor = Color3.new(1,0,0)
-local CurrentTracerColor = Color3.new(1,1,1)
-local colorDragging = false
-local editingMode = "ESP"
-
-HueBtn.MouseButton1Down:Connect(function() colorDragging = true end)
-UserInputService.InputEnded:Connect(function(inp) if inp.UserInputType == Enum.UserInputType.MouseButton1 or inp.UserInputType == Enum.UserInputType.Touch then colorDragging = false end end)
-RunService.RenderStepped:Connect(function()
-    if colorDragging and ColorPickerFrame.Visible then
-        local pct = math.clamp((UserInputService:GetMouseLocation().X - HueFrame.AbsolutePosition.X)/HueFrame.AbsoluteSize.X, 0, 1)
-        TempColor = Color3.fromHSV(pct, 1, 1)
-        PreviewColor.BackgroundColor3 = TempColor
-    end
-end)
-
-local panelsList = {}
-local layoutCounter = 0
-local function CreateModPanel(parentScroll, name, hasSlider, maxSliderVal, defaultSliderVal, onToggle, onSliderChange)
-    layoutCounter = layoutCounter + 1
-    local Container = Instance.new("Frame", parentScroll)
-    Container.Size = UDim2.new(1, -6, 0, 45); Container.BackgroundColor3 = Color3.fromRGB(20, 21, 26); Container.LayoutOrder = layoutCounter
-    Instance.new("UICorner", Container).CornerRadius = UDim.new(0, 8)
-    local cStr = Instance.new("UIStroke", Container); cStr.Color = Color3.fromRGB(255, 255, 255); cStr.Transparency = 0.95
-    
-    local Lbl = Instance.new("TextLabel", Container)
-    Lbl.Size = UDim2.new(0.6, 0, 0, 45); Lbl.Position = UDim2.new(0, 15, 0, 0); Lbl.BackgroundTransparency = 1
-    Lbl.Text = name; Lbl.TextColor3 = Color3.fromRGB(235, 235, 240); Lbl.Font = Enum.Font.GothamBold; Lbl.TextSize = 11; Lbl.TextXAlignment = Enum.TextXAlignment.Left
-    
-    local Switch = Instance.new("TextButton", Container)
-    Switch.Size = UDim2.new(0, 36, 0, 18); Switch.Position = UDim2.new(1, -50, 0, 13); Switch.BackgroundColor3 = Color3.fromRGB(40, 41, 48); Switch.Text = ""
-    Instance.new("UICorner", Switch).CornerRadius = UDim.new(1, 0)
-    
-    local Dot = Instance.new("Frame", Switch); Dot.Size = UDim2.new(0, 14, 0, 14); Dot.Position = UDim2.new(0, 2, 0.5, -7); Dot.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    Instance.new("UICorner", Dot).CornerRadius = UDim.new(1, 0)
-    
-    local isActive = false
-    local SliderFrame = nil
-    
-    if hasSlider then
-        -- Slider setup... (kept original compact)
-        SliderFrame = Instance.new("Frame", Container); SliderFrame.Size = UDim2.new(1, 0, 0, 30); SliderFrame.Position = UDim2.new(0, 0, 0, 45); SliderFrame.BackgroundTransparency = 1; SliderFrame.Visible = false
-        local SliderBg = Instance.new("Frame", SliderFrame); SliderBg.Size = UDim2.new(1, -60, 0, 6); SliderBg.Position = UDim2.new(0, 15, 0.5, -3); SliderBg.BackgroundColor3 = Color3.fromRGB(30, 31, 38); Instance.new("UICorner", SliderBg).CornerRadius = UDim.new(1, 0)
-        local SliderFill = Instance.new("Frame", SliderBg); SliderFill.Size = UDim2.new(defaultSliderVal/maxSliderVal, 0, 1, 0); SliderFill.BackgroundColor3 = Color3.fromRGB(50, 120, 220); Instance.new("UICorner", SliderFill).CornerRadius = UDim.new(1, 0)
-        local SVal = Instance.new("TextLabel", SliderFrame); SVal.Size = UDim2.new(0, 30, 1, 0); SVal.Position = UDim2.new(1, -40, 0, 0); SVal.BackgroundTransparency = 1; SVal.Text = tostring(defaultSliderVal); SVal.TextColor3 = Color3.fromRGB(255,255,255); SVal.Font = Enum.Font.GothamBold; SVal.TextSize = 10
-        local SBtn = Instance.new("TextButton", SliderBg); SBtn.Size = UDim2.new(1, 0, 1, 10); SBtn.Position = UDim2.new(0, 0, 0, -5); SBtn.BackgroundTransparency = 1; SBtn.Text = ""
-        local draggingSlider = false
-        SBtn.MouseButton1Down:Connect(function() draggingSlider = true end)
-        UserInputService.InputEnded:Connect(function(inp) if inp.UserInputType == Enum.UserInputType.MouseButton1 or inp.UserInputType == Enum.UserInputType.Touch then draggingSlider = false end end)
-        RunService.RenderStepped:Connect(function()
-            if draggingSlider and SliderFrame.Visible then
-                local p = math.clamp((UserInputService:GetMouseLocation().X - SliderBg.AbsolutePosition.X)/SliderBg.AbsoluteSize.X, 0, 1)
-                SliderFill.Size = UDim2.new(p, 0, 1, 0); local v = math.floor(p * maxSliderVal); SVal.Text = tostring(v); onSliderChange(v)
-            end
-        end)
-    end
-    
-    Switch.MouseButton1Click:Connect(function()
-        isActive = not isActive
-        TweenService:Create(Dot, TweenInfo.new(0.2), {Position = isActive and UDim2.new(1, -16, 0.5, -7) or UDim2.new(0, 2, 0.5, -7)}):Play()
-        TweenService:Create(Switch, TweenInfo.new(0.2), {BackgroundColor3 = isActive and Color3.fromRGB(40, 150, 80) or Color3.fromRGB(40, 41, 48)}):Play()
-        if SliderFrame then
-            SliderFrame.Visible = isActive
-            TweenService:Create(Container, TweenInfo.new(0.2), {Size = isActive and UDim2.new(1, -6, 0, 75) or UDim2.new(1, -6, 0, 45)}):Play()
-        end
-        onToggle(isActive)
-    end)
-    table.insert(panelsList, {Label = Lbl, Key = name})
-end
-
--- Fly Sistemi
-local isFlying = false; local flySpeed = 50; local flyBV, flyBG, flyLoop
-local function StartFly()
-    local char = LocalPlayer.Character
-    if not char or not char:FindFirstChild("HumanoidRootPart") then return end
-    isFlying = true; char.Humanoid.PlatformStand = true
-    local hrp = char.HumanoidRootPart
-    flyBV = Instance.new("BodyVelocity", hrp); flyBV.MaxForce = Vector3.new(math.huge, math.huge, math.huge); flyBV.Velocity = Vector3.new(0,0,0)
-    flyBG = Instance.new("BodyGyro", hrp); flyBG.MaxTorque = Vector3.new(math.huge, math.huge, math.huge); flyBG.P = 10000; flyBG.CFrame = workspace.CurrentCamera.CFrame
-    flyLoop = RunService.RenderStepped:Connect(function()
-        if not isFlying or not char.Parent then return end
-        local cam = workspace.CurrentCamera; flyBG.CFrame = cam.CFrame
-        local moveVec = Vector3.new(0,0,0)
-        pcall(function() moveVec = require(LocalPlayer.PlayerScripts:WaitForChild("PlayerModule")):GetControls():GetMoveVector() end)
-        local moveDir = (cam.CFrame.RightVector * moveVec.X) + (cam.CFrame.LookVector * -moveVec.Z)
-        if moveDir.Magnitude > 0 then moveDir = moveDir.Unit end
-        flyBV.Velocity = moveDir * flySpeed
-    end)
-    ShowNotification("Fly", Translates[CurrentLanguage].FlyActive, 3)
-end
-local function StopFly()
-    isFlying = false
-    if flyBV then flyBV:Destroy() end; if flyBG then flyBG:Destroy() end; if flyLoop then flyLoop:Disconnect() end
-    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then LocalPlayer.Character.Humanoid.PlatformStand = false end
-    ShowNotification("Fly", Translates[CurrentLanguage].FlyDeactive, 2)
-end
-CreateModPanel(StarScroll, "Fly Hack", true, 500, 50, function(a) if a then StartFly() else StopFly() end end, function(v) flySpeed = v end)
-
--- ESP Sistemi
-local espEnabled = false
-local ESPFolder = Instance.new("Folder", CoreGui); ESPFolder.Name = "HiddenDarkerESP"
-local function ApplyESPToAll()
-    ESPFolder:ClearAllChildren()
-    if not espEnabled then return end
-    for _, p in ipairs(Players:GetPlayers()) do
-        if p ~= LocalPlayer and p.Character then
-            local hl = Instance.new("Highlight")
-            hl.Adornee = p.Character; hl.FillColor = CurrentESPColor; hl.OutlineColor = Color3.new(1,1,1); hl.FillTransparency = 0.5; hl.Parent = ESPFolder
-        end
-    end
-end
-CreateModPanel(StarScroll, "Player ESP", false, 0, 0, function(active)
-    espEnabled = active
-    if active then editingMode = "ESP"; CPTitle.Text = Translates[CurrentLanguage].EspColorTitle; ColorPickerFrame.Visible = true else ColorPickerFrame.Visible = false; ESPFolder:ClearAllChildren() end
-end, nil)
-
--- WalkSpeed, JumpPower, InfJump, Noclip
-CreateModPanel(StarScroll, "Speed Changer", true, 500, 16, function(a) local h = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid"); if h then h.WalkSpeed = a and 100 or 16 end end, function(v) local h = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid"); if h then h.WalkSpeed = v end end)
-CreateModPanel(StarScroll, "JumpPower", true, 500, 50, function(a) local h = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid"); if h then h.UseJumpPower = true; h.JumpPower = a and 150 or 50 end end, function(v) local h = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid"); if h then h.UseJumpPower = true; h.JumpPower = v end end)
-local infJumpEnabled = false; UserInputService.JumpRequest:Connect(function() if infJumpEnabled then local h = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid"); if h then h:ChangeState(Enum.HumanoidStateType.Jumping) end end end)
-CreateModPanel(StarScroll, "Infinite Jump", false, 0, 0, function(a) infJumpEnabled = a end, nil)
-local noclipConnection; CreateModPanel(StarScroll, "Noclip", false, 0, 0, function(a)
-    if a then noclipConnection = RunService.Stepped:Connect(function() if LocalPlayer.Character then for _, part in ipairs(LocalPlayer.Character:GetDescendants()) do if part:IsA("BasePart") then part.CanCollide = false end end end end)
-    else if noclipConnection then noclipConnection:Disconnect() end end
-end, nil)
-
--- NEXT PAGE BUTTON (StarScroll sonuna)
-layoutCounter = layoutCounter + 1
-local NextPageBtn = Instance.new("TextButton", StarScroll)
-NextPageBtn.Size = UDim2.new(1, -6, 0, 40)
-NextPageBtn.BackgroundColor3 = Color3.fromRGB(30, 90, 150)
-NextPageBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-NextPageBtn.Font = Enum.Font.GothamBold; NextPageBtn.TextSize = 12
-NextPageBtn.LayoutOrder = layoutCounter; Instance.new("UICorner", NextPageBtn).CornerRadius = UDim.new(0, 8)
-NextPageBtn.MouseButton1Click:Connect(function()
-    StarScroll.Visible = false
-    StarScroll2.Position = UDim2.new(0.05, 0, 0, 0)
-    StarScroll2.Visible = true
-    TweenService:Create(StarScroll2, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Position = UDim2.new(0, 5, 0, 0)}):Play()
-end)
-
-
--- ==========================================
--- PAGE 2 (YENİ HİLELER)
--- ==========================================
--- PREV PAGE BUTTON (StarScroll2 Başına)
-local PrevPageBtn = Instance.new("TextButton", StarScroll2)
-PrevPageBtn.Size = UDim2.new(1, -6, 0, 40)
-PrevPageBtn.BackgroundColor3 = Color3.fromRGB(40, 42, 50)
-PrevPageBtn.TextColor3 = Color3.fromRGB(200, 200, 200)
-PrevPageBtn.Font = Enum.Font.GothamBold; PrevPageBtn.TextSize = 12
-PrevPageBtn.LayoutOrder = 1; Instance.new("UICorner", PrevPageBtn).CornerRadius = UDim.new(0, 8)
-PrevPageBtn.MouseButton1Click:Connect(function()
-    StarScroll2.Visible = false
-    StarScroll.Position = UDim2.new(-0.05, 0, 0, 0)
-    StarScroll.Visible = true
-    TweenService:Create(StarScroll, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Position = UDim2.new(0, 5, 0, 0)}):Play()
-end)
-layoutCounter = 1
-
--- Floating Platform
-local platPart
-local FloatingPlatUI = Instance.new("Frame", ScreenGui)
-FloatingPlatUI.Size = UDim2.new(0, 60, 0, 130); FloatingPlatUI.Position = UDim2.new(1, -80, 0.5, -65)
-FloatingPlatUI.BackgroundTransparency = 1; FloatingPlatUI.Visible = false
-
-local UpBtn = Instance.new("TextButton", FloatingPlatUI); UpBtn.Size = UDim2.new(1, 0, 0, 60); UpBtn.BackgroundColor3 = Color3.fromRGB(30, 90, 150)
-Instance.new("UICorner", UpBtn).CornerRadius = UDim.new(1, 0); UpBtn.TextColor3 = Color3.fromRGB(255,255,255); UpBtn.Font = Enum.Font.GothamBold
-local DownBtn = Instance.new("TextButton", FloatingPlatUI); DownBtn.Size = UDim2.new(1, 0, 0, 60); DownBtn.Position = UDim2.new(0, 0, 0, 70); DownBtn.BackgroundColor3 = Color3.fromRGB(150, 40, 40)
-Instance.new("UICorner", DownBtn).CornerRadius = UDim.new(1, 0); DownBtn.TextColor3 = Color3.fromRGB(255,255,255); DownBtn.Font = Enum.Font.GothamBold
-
-UpBtn.MouseButton1Click:Connect(function()
-    if platPart then
-        platPart.CFrame = platPart.CFrame + Vector3.new(0, 3, 0)
-        local c = LocalPlayer.Character
-        if c and c:FindFirstChild("HumanoidRootPart") then c.HumanoidRootPart.CFrame = c.HumanoidRootPart.CFrame + Vector3.new(0, 3, 0) end
-    end
-end)
-DownBtn.MouseButton1Click:Connect(function() if platPart then platPart.CFrame = platPart.CFrame - Vector3.new(0, 3, 0) end end)
-
-CreateModPanel(StarScroll2, "Floating Platform", false, 0, 0, function(active)
-    if active then
-        platPart = Instance.new("Part")
-        platPart.Size = Vector3.new(20, 1, 20); platPart.Anchored = true; platPart.BrickColor = BrickColor.new("Cyan")
-        platPart.Material = Enum.Material.Neon; platPart.Transparency = 0.5; platPart.Parent = workspace
-        local hrp = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-        if hrp then platPart.CFrame = hrp.CFrame - Vector3.new(0, 3.5, 0) end
-        FloatingPlatUI.Visible = true
-    else
-        if platPart then platPart:Destroy() end
-        FloatingPlatUI.Visible = false
-    end
-end, nil)
-
--- Tracers
-local tracersActive = false
-local TracerLines = {}
-
-local function ClearTracers()
-    for _, line in pairs(TracerLines) do line:Remove() end
-    TracerLines = {}
-end
-
-RunService.RenderStepped:Connect(function()
-    if tracersActive then
-        local cam = workspace.CurrentCamera
-        for _, p in ipairs(Players:GetPlayers()) do
-            if p ~= LocalPlayer and p.Character and p.Character:FindFirstChild("HumanoidRootPart") then
-                local vector, onScreen = cam:WorldToViewportPoint(p.Character.HumanoidRootPart.Position)
-                if onScreen then
-                    if not TracerLines[p] then
-                        local line = Drawing.new("Line")
-                        line.Thickness = 2
-                        line.Transparency = 1
-                        TracerLines[p] = line
-                    end
-                    TracerLines[p].Color = CurrentTracerColor
-                    TracerLines[p].From = Vector2.new(cam.ViewportSize.X / 2, cam.ViewportSize.Y)
-                    TracerLines[p].To = Vector2.new(vector.X, vector.Y)
-                    TracerLines[p].Visible = true
-                else
-                    if TracerLines[p] then TracerLines[p].Visible = false end
-                end
-            else
-                if TracerLines[p] then TracerLines[p]:Remove(); TracerLines[p] = nil end
-            end
-        end
-    else
-        ClearTracers()
-    end
-end)
-Players.PlayerRemoving:Connect(function(p) if TracerLines[p] then TracerLines[p]:Remove(); TracerLines[p] = nil end end)
-
-CreateModPanel(StarScroll2, "Tracers", false, 0, 0, function(active)
-    tracersActive = active
-    if active then editingMode = "Tracer"; CPTitle.Text = Translates[CurrentLanguage].TracerColorTitle; ColorPickerFrame.Visible = true else ColorPickerFrame.Visible = false; ClearTracers() end
-end, nil)
-
--- Apply Button Logic (Ortak)
-ApplyColorBtn.MouseButton1Click:Connect(function()
-    ColorPickerFrame.Visible = false
-    if editingMode == "ESP" then
-        CurrentESPColor = TempColor; ApplyESPToAll()
-        ShowNotification("ESP", Translates[CurrentLanguage].EspApplied, 3)
-    elseif editingMode == "Tracer" then
-        CurrentTracerColor = TempColor
-        ShowNotification("Tracer", Translates[CurrentLanguage].TracerApplied, 3)
-    end
-end)
-
-
--- ==========================================
--- [GELİŞMİŞ] (4) FRIENDS TAB - OYUN DETAYLARI
--- ==========================================
-local FriendsTabTitle = Instance.new("TextLabel", FriendsTabPage)
-FriendsTabTitle.Size = UDim2.new(1, 0, 0, 30); FriendsTabTitle.BackgroundTransparency = 1; FriendsTabTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
-FriendsTabTitle.Font = Enum.Font.GothamBold; FriendsTabTitle.TextSize = 16; FriendsTabTitle.TextXAlignment = Enum.TextXAlignment.Left
-
-local FriendsScroll = Instance.new("ScrollingFrame", FriendsTabPage)
-FriendsScroll.Size = UDim2.new(1, -10, 1, -40); FriendsScroll.Position = UDim2.new(0, 5, 0, 40); FriendsScroll.BackgroundTransparency = 1
-FriendsScroll.BorderSizePixel = 0; FriendsScroll.ScrollBarThickness = 4; FriendsScroll.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 110)
-local FriendsListLayout = Instance.new("UIListLayout", FriendsScroll); FriendsListLayout.Padding = UDim.new(0, 8); FriendsListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-
-local function PopulateFriendsList()
-    for _, child in ipairs(FriendsScroll:GetChildren()) do if child:IsA("Frame") then child:Destroy() end end
-    
-    task.spawn(function()
-        local success, result = pcall(function() return LocalPlayer:GetFriendsOnline(100) or {} end)
-        if not success then return end
-        
-        for idx, item in ipairs(result) do
-            local Row = Instance.new("Frame", FriendsScroll)
-            Row.Size = UDim2.new(1, -10, 0, 65) -- Detaylar sığsın diye büyütüldü
-            Row.BackgroundColor3 = Color3.fromRGB(20, 21, 26); Row.LayoutOrder = idx
-            Instance.new("UICorner", Row).CornerRadius = UDim.new(0, 8)
-            Instance.new("UIStroke", Row).Color = Color3.fromRGB(255, 255, 255); Instance.new("UIStroke", Row).Transparency = 0.95
-            
-            local Avatar = Instance.new("ImageLabel", Row); Avatar.Size = UDim2.new(0, 46, 0, 46); Avatar.Position = UDim2.new(0, 8, 0.5, -23); Avatar.BackgroundColor3 = Color3.fromRGB(30, 31, 38)
-            Instance.new("UICorner", Avatar).CornerRadius = UDim.new(0, 6)
-            task.spawn(function()
-                local thumb, ready = Players:GetUserThumbnailAsync(item.VisitorId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size100x100)
-                if ready then Avatar.Image = thumb end
-            end)
-            
-            local NameLbl = Instance.new("TextLabel", Row)
-            NameLbl.Size = UDim2.new(0.5, 0, 0, 20); NameLbl.Position = UDim2.new(0, 64, 0, 8); NameLbl.BackgroundTransparency = 1
-            NameLbl.Text = item.UserName; NameLbl.TextColor3 = Color3.fromRGB(255, 255, 255); NameLbl.Font = Enum.Font.GothamBold; NameLbl.TextSize = 13; NameLbl.TextXAlignment = Enum.TextXAlignment.Left
-            
-            local StatusLbl = Instance.new("TextLabel", Row)
-            StatusLbl.Size = UDim2.new(0.5, 0, 0, 15); StatusLbl.Position = UDim2.new(0, 64, 0, 28); StatusLbl.BackgroundTransparency = 1
-            StatusLbl.Font = Enum.Font.GothamBold; StatusLbl.TextSize = 10; StatusLbl.TextXAlignment = Enum.TextXAlignment.Left
-            
-            local GameLbl = Instance.new("TextLabel", Row)
-            GameLbl.Size = UDim2.new(0.5, 0, 0, 15); GameLbl.Position = UDim2.new(0, 64, 0, 42); GameLbl.BackgroundTransparency = 1
-            GameLbl.Font = Enum.Font.GothamMedium; GameLbl.TextSize = 10; GameLbl.TextXAlignment = Enum.TextXAlignment.Left
-            GameLbl.TextColor3 = Color3.fromRGB(200, 200, 200)
-
-            if item.LocationType == 2 then 
-                StatusLbl.Text = Translates[CurrentLanguage].FriendStatusInGame
-                StatusLbl.TextColor3 = Color3.fromRGB(46, 204, 113) 
-                GameLbl.Text = (item.LastLocation ~= "" and item.LastLocation or "Unknown/Gizli Oyun")
-                
-                local JoinBtn = Instance.new("TextButton", Row); JoinBtn.Size = UDim2.new(0, 70, 0, 32); JoinBtn.Position = UDim2.new(1, -80, 0.5, -16)
-                JoinBtn.BackgroundColor3 = Color3.fromRGB(46, 204, 113); JoinBtn.Text = Translates[CurrentLanguage].JoinFriend; JoinBtn.TextColor3 = Color3.fromRGB(255, 255, 255); JoinBtn.Font = Enum.Font.GothamBold; JoinBtn.TextSize = 12
-                Instance.new("UICorner", JoinBtn).CornerRadius = UDim.new(0, 6)
-                JoinBtn.MouseButton1Click:Connect(function() if item.PlaceId and item.PlaceId ~= 0 then TeleportService:Teleport(item.PlaceId, LocalPlayer) end end)
-            elseif item.IsOnline then 
-                StatusLbl.Text = Translates[CurrentLanguage].FriendStatusOnline; StatusLbl.TextColor3 = Color3.fromRGB(52, 152, 219); GameLbl.Text = "Roblox Menüsünde"
-            else 
-                StatusLbl.Text = Translates[CurrentLanguage].FriendStatusOffline; StatusLbl.TextColor3 = Color3.fromRGB(149, 165, 166); GameLbl.Text = "-"
-            end
-        end
-    end)
-end
-FriendBtn.MouseButton1Click:Connect(function() PopulateFriendsList() end)
-
--- ==========================================
--- [6] NOTIFY TAB & [7] SETTINGS TAB
--- ==========================================
-local NotifyTitle = Instance.new("TextLabel", NotifyTab); NotifyTitle.Size = UDim2.new(1, 0, 0, 30); NotifyTitle.BackgroundTransparency = 1; NotifyTitle.TextColor3 = Color3.fromRGB(255, 255, 255); NotifyTitle.Font = Enum.Font.GothamBold; NotifyTitle.TextSize = 16; NotifyTitle.TextXAlignment = Enum.TextXAlignment.Left
-local NotifyScroll = Instance.new("ScrollingFrame", NotifyTab); NotifyScroll.Size = UDim2.new(1, -10, 1, -40); NotifyScroll.Position = UDim2.new(0, 5, 0, 40); NotifyScroll.BackgroundTransparency = 1; NotifyScroll.BorderSizePixel = 0; NotifyScroll.ScrollBarThickness = 3
-local NotifyListLayout = Instance.new("UIListLayout", NotifyScroll); NotifyListLayout.Padding = UDim.new(0, 10)
-local ChangelogFrame = Instance.new("Frame", NotifyScroll); ChangelogFrame.Size = UDim2.new(1, -10, 0, 220); ChangelogFrame.BackgroundColor3 = Color3.fromRGB(20, 21, 26); Instance.new("UICorner", ChangelogFrame).CornerRadius = UDim.new(0, 10); Instance.new("UIStroke", ChangelogFrame).Color = Color3.fromRGB(255, 255, 255); Instance.new("UIStroke", ChangelogFrame).Transparency = 0.95
-local ChangelogText = Instance.new("TextLabel", ChangelogFrame); ChangelogText.Size = UDim2.new(1, -20, 1, -20); ChangelogText.Position = UDim2.new(0, 10, 0, 10); ChangelogText.BackgroundTransparency = 1; ChangelogText.TextColor3 = Color3.fromRGB(200, 201, 210); ChangelogText.Font = Enum.Font.GothamMedium; ChangelogText.TextSize = 11; ChangelogText.TextXAlignment = Enum.TextXAlignment.Left; ChangelogText.TextYAlignment = Enum.TextYAlignment.Top; ChangelogText.TextWrapped = true
-ChangelogText.Text = "• Added Slide Animations\n• Enhanced Sidebar Buttons\n• Detailed Friends Page\n• Added Floating Platform (Star > Page 2)\n• Added Tracers (Star > Page 2)"
-
-local SettingsTitle = Instance.new("TextLabel", SettingsTab); SettingsTitle.Size = UDim2.new(1, 0, 0, 30); SettingsTitle.BackgroundTransparency = 1; SettingsTitle.TextColor3 = Color3.fromRGB(255, 255, 255); SettingsTitle.Font = Enum.Font.GothamBold; SettingsTitle.TextSize = 16; SettingsTitle.TextXAlignment = Enum.TextXAlignment.Left
-local LangContainer = Instance.new("Frame", SettingsTab); LangContainer.Size = UDim2.new(1, -10, 0, 120); LangContainer.Position = UDim2.new(0, 5, 0, 45); LangContainer.BackgroundColor3 = Color3.fromRGB(20, 21, 26); Instance.new("UICorner", LangContainer).CornerRadius = UDim.new(0, 10); Instance.new("UIStroke", LangContainer).Color = Color3.fromRGB(255, 255, 255); Instance.new("UIStroke", LangContainer).Transparency = 0.95
-local LangHeader = Instance.new("TextLabel", LangContainer); LangHeader.Size = UDim2.new(0, 200, 0, 30); LangHeader.Position = UDim2.new(0, 15, 0, 10); LangHeader.BackgroundTransparency = 1; LangHeader.TextColor3 = Color3.fromRGB(255, 255, 255); LangHeader.Font = Enum.Font.GothamBold; LangHeader.TextSize = 14; LangHeader.TextXAlignment = Enum.TextXAlignment.Left
-local EngBtn = Instance.new("TextButton", LangContainer); EngBtn.Size = UDim2.new(0, 120, 0, 40); EngBtn.Position = UDim2.new(0, 15, 0, 55); EngBtn.BackgroundColor3 = Color3.fromRGB(40, 42, 50); EngBtn.TextColor3 = Color3.fromRGB(255, 255, 255); EngBtn.Font = Enum.Font.GothamBold; EngBtn.TextSize = 12; Instance.new("UICorner", EngBtn).CornerRadius = UDim.new(0, 8); EngBtn.Text = "English"
-local TurBtn = Instance.new("TextButton", LangContainer); TurBtn.Size = UDim2.new(0, 120, 0, 40); TurBtn.Position = UDim2.new(0, 150, 0, 55); TurBtn.BackgroundColor3 = Color3.fromRGB(40, 42, 50); TurBtn.TextColor3 = Color3.fromRGB(255, 255, 255); TurBtn.Font = Enum.Font.GothamBold; TurBtn.TextSize = 12; Instance.new("UICorner", TurBtn).CornerRadius = UDim.new(0, 8); TurBtn.Text = "Turkish"
-
-local function UpdateUILanguage(lang)
-    CurrentLanguage = lang
-    local data = Translates[lang]
-    WelcomeText.Text = data.Welcome .. LocalPlayer.DisplayName
-    SrvTitle.Text = data.Server; SrvDesc.Text = data.ServerDesc
-    PlayersTitleLbl.Text = data.Players; MaxPlrsTitleLbl.Text = data.MaxPlayers; PingTitleLbl.Text = data.Latency
-    RegionTitleLbl.Text = data.ServerRegion; TimeTitleLbl.Text = data.InServerFor; JoinScriptTitleLbl.Text = data.JoinScript; JoinScriptLabel.Text = data.TapCopy
-    ES.Text = data.WaveDesc; FT.Text = data.Friends; FDesc.Text = data.FriendsDesc
-    InServerFrTitle.Text = data.InServer; OfflineFrTitle.Text = data.Offline; OnlineFrTitle.Text = data.Online; AllFrTitle.Text = data.All
-    DS.Text = data.DiscordDesc
-    ExecTitle.Text = data.ExecTitle; CodeBox.PlaceholderText = data.EnterScript; ExecActBtn.Text = data.Execute; ClearActBtn.Text = data.Clear
-    TpTitle.Text = data.TpTitle; TpBox.PlaceholderText = data.TypeUser; TpBtn.Text = data.Teleport; TpLastBtn.Text = data.TpLast; TpRandomBtn.Text = data.TpRandom
-    StarsTitle.Text = data.FeaturesTitle; ApplyColorBtn.Text = data.Apply
-    NextPageBtn.Text = data.NextPage; PrevPageBtn.Text = data.PrevPage
-    UpBtn.Text = data.Up; DownBtn.Text = data.Down
-    
-    for _, pnl in ipairs(panelsList) do 
-        if pnl.Key == "Floating Platform" then pnl.Label.Text = data.FloatPlat 
-        elseif pnl.Key == "Tracers" then pnl.Label.Text = data.Tracers
-        else pnl.Label.Text = pnl.Key end
-    end
-    
-    FriendsTabTitle.Text = data.Friends
-    PopulateFriendsList()
-    NotifyTitle.Text = data.UpdatesTitle; SettingsTitle.Text = data.Language; LangHeader.Text = data.Language
-    
-    if lang == "EN" then EngBtn.BackgroundColor3 = Color3.fromRGB(30, 90, 150); TurBtn.BackgroundColor3 = Color3.fromRGB(40, 42, 50) else TurBtn.BackgroundColor3 = Color3.fromRGB(30, 90, 150); EngBtn.BackgroundColor3 = Color3.fromRGB(40, 42, 50) end
-end
-EngBtn.MouseButton1Click:Connect(function() UpdateUILanguage("EN") end)
-TurBtn.MouseButton1Click:Connect(function() UpdateUILanguage("TR") end)
-UpdateUILanguage("TR")
-
--- ==========================================
--- SEKMELER ARASI GEÇİŞ MANTİĞİ (ANİMASYONLU)
--- ==========================================
+-- ANIMATED PAGE SWITCH (SOLDAN SAĞA GEÇİŞ ANİMASYONU)
 local function SwitchToPage(pageName)
-    local targetBtn = TabButtons[pageName]
-    if TabButtons.Selected == targetBtn then return end
+    local targetBtn = TabButtons[pageName == "Stars2" and "Stars" or pageName]
+    if TabButtons.Selected == targetBtn and Pages[pageName].Visible then return end
     
     if TabButtons.Selected then
         TweenService:Create(TabButtons.Selected, TweenInfo.new(0.2), {ImageColor3 = Color3.fromRGB(150, 151, 160)}):Play()
@@ -967,22 +339,786 @@ local function SwitchToPage(pageName)
     if currStroke then TweenService:Create(currStroke, TweenInfo.new(0.2), {Transparency = 0.9, Color = Color3.fromRGB(255, 255, 255)}):Play() end
     TweenService:Create(currContainer, TweenInfo.new(0.2), {BackgroundTransparency = 0.9, BackgroundColor3 = Color3.fromRGB(255, 255, 255)}):Play()
     
-    -- ANİMASYONLU KAYMA MANTIĞI
     for name, page in pairs(Pages) do
         if name == pageName then
-            if not page.Visible then
-                page.Position = UDim2.new(-0.05, 0, 0, 0) -- Hafif soldan gelsin
-                page.Visible = true
-                TweenService:Create(page, TweenInfo.new(0.35, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Position = UDim2.new(0, 0, 0, 0)}):Play()
-            end
+            page.Position = UDim2.new(-0.1, 0, 0, 0)
+            page.Size = UDim2.new(1, 0, 1, 0)
+            page.Visible = true
+            TweenService:Create(page, TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Position = UDim2.new(0, 0, 0, 0)}):Play()
         else
-            if page.Visible then
-                page.Visible = false
-            end
+            page.Visible = false
         end
     end
 end
 
+-- ==========================================
+-- [1] HOME TAB
+-- ==========================================
+local UserCard = Instance.new("Frame", HomeTab)
+UserCard.Size = UDim2.new(1, -10, 0, 75); UserCard.Position = UDim2.new(0, 5, 0, 5)
+UserCard.BackgroundColor3 = Color3.fromRGB(20, 21, 26)
+Instance.new("UICorner", UserCard).CornerRadius = UDim.new(0, 12)
+local UCStroke = Instance.new("UIStroke", UserCard); UCStroke.Color = Color3.fromRGB(255, 255, 255); UCStroke.Transparency = 0.95
+
+local UserAvatar = Instance.new("ImageLabel", UserCard)
+UserAvatar.Size = UDim2.new(0, 55, 0, 55); UserAvatar.Position = UDim2.new(0, 10, 0, 10)
+UserAvatar.BackgroundColor3 = Color3.fromRGB(30, 31, 38)
+Instance.new("UICorner", UserAvatar).CornerRadius = UDim.new(0, 10)
+task.spawn(function()
+    local c, r = Players:GetUserThumbnailAsync(LocalPlayer.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420)
+    if r then UserAvatar.Image = c end
+end)
+local WelcomeText = Instance.new("TextLabel", UserCard)
+WelcomeText.Size = UDim2.new(1, -85, 0, 22); WelcomeText.Position = UDim2.new(0, 78, 0, 16)
+WelcomeText.BackgroundTransparency = 1; WelcomeText.Text = "Merhaba, " .. LocalPlayer.DisplayName
+WelcomeText.TextColor3 = Color3.fromRGB(255, 255, 255); WelcomeText.Font = Enum.Font.GothamBold; WelcomeText.TextSize = 16; WelcomeText.TextXAlignment = Enum.TextXAlignment.Left
+local SubText = Instance.new("TextLabel", UserCard)
+SubText.Size = UDim2.new(1, -85, 0, 18); SubText.Position = UDim2.new(0, 78, 0, 38)
+SubText.BackgroundTransparency = 1; SubText.Text = LocalPlayer.Name .. " - Darker"
+SubText.TextColor3 = Color3.fromRGB(130, 131, 140); SubText.Font = Enum.Font.GothamMedium; SubText.TextSize = 11; SubText.TextXAlignment = Enum.TextXAlignment.Left
+
+-- SERVER KARTI
+local ServerSection = Instance.new("Frame", HomeTab)
+ServerSection.Size = UDim2.new(0.55, -8, 0, 180); ServerSection.Position = UDim2.new(0, 5, 0, 90)
+ApplyWaveGradient(ServerSection, Color3.fromRGB(0, 70, 0), Color3.fromRGB(15, 15, 20))
+Instance.new("UICorner", ServerSection).CornerRadius = UDim.new(0, 12)
+local ServStroke = Instance.new("UIStroke", ServerSection); ServStroke.Transparency = 0.8; ServStroke.Color = Color3.fromRGB(100, 255, 100)
+
+local SrvTitle = Instance.new("TextLabel", ServerSection)
+SrvTitle.Size = UDim2.new(1, -20, 0, 25); SrvTitle.Position = UDim2.new(0, 12, 0, 8); SrvTitle.BackgroundTransparency = 1
+SrvTitle.Text = "Sunucu"; SrvTitle.TextColor3 = Color3.fromRGB(255, 255, 255); SrvTitle.Font = Enum.Font.GothamBold; SrvTitle.TextSize = 13; SrvTitle.TextXAlignment = Enum.TextXAlignment.Left
+local SrvDesc = Instance.new("TextLabel", ServerSection)
+SrvDesc.Size = UDim2.new(1, -20, 0, 15); SrvDesc.Position = UDim2.new(0, 12, 0, 28); SrvDesc.BackgroundTransparency = 1
+SrvDesc.Text = "Şu anda içinde bulunduğunuz oturumun bilgileri"; SrvDesc.TextColor3 = Color3.fromRGB(180, 220, 180); SrvDesc.Font = Enum.Font.GothamMedium; SrvDesc.TextSize = 8; SrvDesc.TextXAlignment = Enum.TextXAlignment.Left
+
+local ServerContainer = Instance.new("Frame", ServerSection)
+ServerContainer.Size = UDim2.new(1, -20, 1, -55); ServerContainer.Position = UDim2.new(0, 10, 0, 48); ServerContainer.BackgroundTransparency = 1
+local SrvGrid = Instance.new("UIGridLayout", ServerContainer)
+SrvGrid.CellSize = UDim2.new(0.5, -4, 0.33, -4); SrvGrid.CellPadding = UDim2.new(0, 8, 0, 6)
+
+local function CreateInfoBox(parent, title, val)
+    local Box = Instance.new("Frame", parent); Box.BackgroundColor3 = Color3.fromRGB(30, 31, 38)
+    Instance.new("UICorner", Box).CornerRadius = UDim.new(0, 8)
+    local bStr = Instance.new("UIStroke", Box); bStr.Transparency = 0.96; bStr.Color = Color3.fromRGB(255, 255, 255)
+    local TL = Instance.new("TextLabel", Box); TL.Size = UDim2.new(1, -12, 0, 12); TL.Position = UDim2.new(0, 8, 0, 6); TL.BackgroundTransparency = 1
+    TL.Text = title; TL.TextColor3 = Color3.fromRGB(255, 255, 255); TL.Font = Enum.Font.GothamBold; TL.TextSize = 9; TL.TextXAlignment = Enum.TextXAlignment.Left
+    local VL = Instance.new("TextLabel", Box); VL.Size = UDim2.new(1, -12, 0, 12); VL.Position = UDim2.new(0, 8, 0, 18); VL.BackgroundTransparency = 1
+    VL.Text = val; VL.TextColor3 = Color3.fromRGB(140, 141, 150); VL.Font = Enum.Font.GothamMedium; VL.TextSize = 8; VL.TextXAlignment = Enum.TextXAlignment.Left
+    return TL, VL
+end
+
+local PlayersTitleLbl, PlayersLabel = CreateInfoBox(ServerContainer, "Oyuncular", "0 / 0")
+local MaxPlrsTitleLbl, MaxPlrsLabel = CreateInfoBox(ServerContainer, "Maksimum Oyuncu", "0")
+local PingTitleLbl, PingLabel = CreateInfoBox(ServerContainer, "Gecikme (Ping)", "0 ms")
+local RegionTitleLbl, RegionLabel = CreateInfoBox(ServerContainer, "Sunucu Bölgesi", "Hesaplanıyor...")
+local TimeTitleLbl, TimeLabel = CreateInfoBox(ServerContainer, "Sunucuda geçen süre", "00:00:00")
+local JoinScriptTitleLbl, JoinScriptLabel = CreateInfoBox(ServerContainer, "Giriş Scripti", "Kopyalamak için dokunun")
+
+-- WAVE KARTI
+local ExecCard = Instance.new("Frame", HomeTab)
+ExecCard.Size = UDim2.new(0.45, -8, 0, 85); ExecCard.Position = UDim2.new(0.55, 3, 0, 90)
+ApplyWaveGradient(ExecCard, Color3.fromRGB(100, 0, 0), Color3.fromRGB(15, 15, 20))
+Instance.new("UICorner", ExecCard).CornerRadius = UDim.new(0, 12)
+local ExStroke = Instance.new("UIStroke", ExecCard); ExStroke.Color = Color3.fromRGB(255, 100, 100); ExStroke.Transparency = 0.8
+
+local ET = Instance.new("TextLabel", ExecCard)
+ET.Size = UDim2.new(1, -20, 0, 22); ET.Position = UDim2.new(0, 12, 0, 8); ET.BackgroundTransparency = 1
+ET.Text = "Wave"; ET.TextColor3 = Color3.fromRGB(255, 255, 255); ET.Font = Enum.Font.GothamBold; ET.TextSize = 13; ET.TextXAlignment = Enum.TextXAlignment.Left
+local ES = Instance.new("TextLabel", ExecCard)
+ES.Size = UDim2.new(1, -20, 0, 40); ES.Position = UDim2.new(0, 12, 0, 30); ES.BackgroundTransparency = 1
+ES.Text = "Executor'ınız bu scripti destekliyor gibi görünüyor."; ES.TextColor3 = Color3.fromRGB(230, 200, 200); ES.Font = Enum.Font.GothamMedium; ES.TextSize = 9; ES.TextXAlignment = Enum.TextXAlignment.Left; ES.TextWrapped = true
+
+-- ARKADAŞLAR KARTI
+local FriendsCard = Instance.new("Frame", HomeTab)
+FriendsCard.Size = UDim2.new(0.45, -8, 0, 160); FriendsCard.Position = UDim2.new(0.55, 3, 0, 185)
+ApplyWaveGradient(FriendsCard, Color3.fromRGB(70, 0, 100), Color3.fromRGB(15, 15, 20))
+Instance.new("UICorner", FriendsCard).CornerRadius = UDim.new(0, 12)
+local FrStroke = Instance.new("UIStroke", FriendsCard); FrStroke.Color = Color3.fromRGB(180, 100, 255); FrStroke.Transparency = 0.8
+
+local FT = Instance.new("TextLabel", FriendsCard)
+FT.Size = UDim2.new(1, -20, 0, 22); FT.Position = UDim2.new(0, 12, 0, 8); FT.BackgroundTransparency = 1
+FT.Text = "Arkadaşlar"; FT.TextColor3 = Color3.fromRGB(255, 255, 255); FT.Font = Enum.Font.GothamBold; FT.TextSize = 13; FT.TextXAlignment = Enum.TextXAlignment.Left
+local FDesc = Instance.new("TextLabel", FriendsCard)
+FDesc.Size = UDim2.new(1, -20, 0, 15); FDesc.Position = UDim2.new(0, 12, 0, 26); FDesc.BackgroundTransparency = 1
+FDesc.Text = "Arkadaşlarınızın şu anda ne yaptığını öğrenin"; FDesc.TextColor3 = Color3.fromRGB(200, 170, 220); FDesc.Font = Enum.Font.GothamMedium; FDesc.TextSize = 8; FDesc.TextXAlignment = Enum.TextXAlignment.Left
+
+local FriendsGridContainer = Instance.new("Frame", FriendsCard)
+FriendsGridContainer.Size = UDim2.new(1, -20, 1, -55); FriendsGridContainer.Position = UDim2.new(0, 10, 0, 48); FriendsGridContainer.BackgroundTransparency = 1
+local FrGrid = Instance.new("UIGridLayout", FriendsGridContainer); FrGrid.CellSize = UDim2.new(0.5, -4, 0.45, -4); FrGrid.CellPadding = UDim2.new(0, 8, 0, 8)
+
+local InServerFrTitle, InServerFr = CreateInfoBox(FriendsGridContainer, "Sunucuda", "0 arkadaş")
+local OfflineFrTitle, OfflineFr = CreateInfoBox(FriendsGridContainer, "Çevrimdışı", "Hesaplanıyor...")
+local OnlineFrTitle, OnlineFr = CreateInfoBox(FriendsGridContainer, "Çevrimiçi", "Hesaplanıyor...")
+local AllFrTitle, AllFr = CreateInfoBox(FriendsGridContainer, "Toplam", "Hesaplanıyor...")
+
+-- DISCORD KARTI
+local DiscordCard = Instance.new("Frame", HomeTab)
+DiscordCard.Size = UDim2.new(0.55, -8, 0, 70); DiscordCard.Position = UDim2.new(0, 5, 0, 275)
+ApplyWaveGradient(DiscordCard, Color3.fromRGB(0, 0, 90), Color3.fromRGB(15, 15, 20))
+Instance.new("UICorner", DiscordCard).CornerRadius = UDim.new(0, 12)
+local DiStroke = Instance.new("UIStroke", DiscordCard); DiStroke.Color = Color3.fromRGB(100, 120, 255); DiStroke.Transparency = 0.8
+
+local DT = Instance.new("TextLabel", DiscordCard)
+DT.Size = UDim2.new(1, -20, 0, 25); DT.Position = UDim2.new(0, 15, 0, 12); DT.BackgroundTransparency = 1
+DT.Text = "Discord"; DT.TextColor3 = Color3.fromRGB(255, 255, 255); DT.Font = Enum.Font.GothamBold; DT.TextSize = 16; DT.TextXAlignment = Enum.TextXAlignment.Left
+local DS = Instance.new("TextLabel", DiscordCard)
+DS.Size = UDim2.new(1, -20, 0, 20); DS.Position = UDim2.new(0, 15, 0, 36); DS.BackgroundTransparency = 1
+DS.Text = "Discord Sunucusuna katılmak için tıklayın"; DS.TextColor3 = Color3.fromRGB(180, 200, 255); DS.Font = Enum.Font.GothamMedium; DS.TextSize = 10; DS.TextXAlignment = Enum.TextXAlignment.Left
+
+local DiscordBtn = Instance.new("TextButton", DiscordCard)
+DiscordBtn.Size = UDim2.new(1, 0, 1, 0); DiscordBtn.BackgroundTransparency = 1; DiscordBtn.Text = ""
+DiscordBtn.MouseButton1Click:Connect(function()
+    if setclipboard then 
+        setclipboard("https://discord.gg/nodiscordyet") 
+        ShowNotification("Discord", Translates[CurrentLanguage].Copied, 3) 
+    end
+end)
+
+-- ==========================================
+-- [2] EXECUTOR TAB
+-- ==========================================
+local ExecTitle = Instance.new("TextLabel", ExecutorTab)
+ExecTitle.Size = UDim2.new(1, 0, 0, 30); ExecTitle.BackgroundTransparency = 1; ExecTitle.Text = "Script Çalıştırıcı"
+ExecTitle.TextColor3 = Color3.fromRGB(255, 255, 255); ExecTitle.Font = Enum.Font.GothamBold; ExecTitle.TextSize = 16; ExecTitle.TextXAlignment = Enum.TextXAlignment.Left
+
+local TextBoxBg = Instance.new("Frame", ExecutorTab)
+TextBoxBg.Size = UDim2.new(1, -10, 0, 230); TextBoxBg.Position = UDim2.new(0, 5, 0, 40)
+ApplyWaveGradient(TextBoxBg, Color3.fromRGB(50, 150, 50), Color3.fromRGB(15, 15, 15))
+Instance.new("UICorner", TextBoxBg).CornerRadius = UDim.new(0, 10)
+Instance.new("UIStroke", TextBoxBg).Transparency = 0.7; Instance.new("UIStroke", TextBoxBg).Color = Color3.fromRGB(100, 255, 100)
+
+local CodeBox = Instance.new("TextBox", TextBoxBg)
+CodeBox.Size = UDim2.new(1, -20, 1, -20); CodeBox.Position = UDim2.new(0, 10, 0, 10)
+CodeBox.BackgroundTransparency = 1; CodeBox.Text = "-- Scriptinizi buraya yazın..."
+CodeBox.TextColor3 = Color3.fromRGB(255, 255, 255); CodeBox.Font = Enum.Font.Code; CodeBox.TextSize = 12
+CodeBox.ClearTextOnFocus = false; CodeBox.MultiLine = true; CodeBox.TextXAlignment = Enum.TextXAlignment.Left; CodeBox.TextYAlignment = Enum.TextYAlignment.Top
+
+local ExecActBtn = Instance.new("TextButton", ExecutorTab)
+ExecActBtn.Size = UDim2.new(0, 110, 0, 35); ExecActBtn.Position = UDim2.new(0, 5, 0, 280)
+ExecActBtn.BackgroundColor3 = Color3.fromRGB(30, 110, 60); ExecActBtn.Text = "Çalıştır"; ExecActBtn.TextColor3 = Color3.fromRGB(255, 255, 255); ExecActBtn.Font = Enum.Font.GothamBold; ExecActBtn.TextSize = 12
+Instance.new("UICorner", ExecActBtn).CornerRadius = UDim.new(0, 8)
+ExecActBtn.MouseButton1Click:Connect(function()
+    local s, e = pcall(function() loadstring(CodeBox.Text)() end)
+    if s then ShowNotification("Executor", Translates[CurrentLanguage].ExecSuccess, 3) else ShowNotification("Error", e, 3) end
+end)
+
+local ClearActBtn = Instance.new("TextButton", ExecutorTab)
+ClearActBtn.Size = UDim2.new(0, 110, 0, 35); ClearActBtn.Position = UDim2.new(0, 125, 0, 280)
+ClearActBtn.BackgroundColor3 = Color3.fromRGB(40, 42, 50); ClearActBtn.Text = "Temizle"; ClearActBtn.TextColor3 = Color3.fromRGB(200, 200, 200); ClearActBtn.Font = Enum.Font.GothamBold; ClearActBtn.TextSize = 12
+Instance.new("UICorner", ClearActBtn).CornerRadius = UDim.new(0, 8)
+ClearActBtn.MouseButton1Click:Connect(function() CodeBox.Text = "" end)
+
+-- ==========================================
+-- [3] TELEPORT TAB
+-- ==========================================
+local TpTitle = Instance.new("TextLabel", TeleportTab)
+TpTitle.Size = UDim2.new(1, 0, 0, 30); TpTitle.BackgroundTransparency = 1; TpTitle.Text = "Oyuncu Işınlanma"
+TpTitle.TextColor3 = Color3.fromRGB(255, 255, 255); TpTitle.Font = Enum.Font.GothamBold; TpTitle.TextSize = 16; TpTitle.TextXAlignment = Enum.TextXAlignment.Left
+
+local TpCard = Instance.new("Frame", TeleportTab)
+TpCard.Size = UDim2.new(1, -10, 0, 150); TpCard.Position = UDim2.new(0, 5, 0, 40)
+ApplyWaveGradient(TpCard, Color3.fromRGB(80, 120, 160), Color3.fromRGB(15, 15, 20))
+Instance.new("UICorner", TpCard).CornerRadius = UDim.new(0, 12)
+local tpStr = Instance.new("UIStroke", TpCard); tpStr.Color = Color3.fromRGB(150, 180, 255); tpStr.Transparency = 0.7
+
+local TpSearchBg = Instance.new("Frame", TpCard)
+TpSearchBg.Size = UDim2.new(0, 250, 0, 40); TpSearchBg.Position = UDim2.new(0, 10, 0, 20)
+TpSearchBg.BackgroundColor3 = Color3.fromRGB(20, 21, 26); Instance.new("UICorner", TpSearchBg).CornerRadius = UDim.new(0, 8)
+Instance.new("UIStroke", TpSearchBg).Transparency = 0.95
+
+local TpBox = Instance.new("TextBox", TpSearchBg)
+TpBox.Size = UDim2.new(1, -20, 1, 0); TpBox.Position = UDim2.new(0, 10, 0, 0)
+TpBox.BackgroundTransparency = 1; TpBox.PlaceholderText = "Kullanıcı Adı Yazın..."; TpBox.Text = ""
+TpBox.TextColor3 = Color3.fromRGB(255, 255, 255); TpBox.Font = Enum.Font.GothamMedium; TpBox.TextSize = 12; TpBox.TextXAlignment = Enum.TextXAlignment.Left
+
+local TpBtn = Instance.new("TextButton", TpCard)
+TpBtn.Size = UDim2.new(0, 100, 0, 40); TpBtn.Position = UDim2.new(0, 270, 0, 20)
+TpBtn.BackgroundColor3 = Color3.fromRGB(30, 90, 150); TpBtn.Text = "Işınlan"; TpBtn.TextColor3 = Color3.fromRGB(255, 255, 255); TpBtn.Font = Enum.Font.GothamBold; TpBtn.TextSize = 12
+Instance.new("UICorner", TpBtn).CornerRadius = UDim.new(0, 8)
+
+local TpLastBtn = Instance.new("TextButton", TpCard)
+TpLastBtn.Size = UDim2.new(0, 170, 0, 40); TpLastBtn.Position = UDim2.new(0, 10, 0, 80)
+TpLastBtn.BackgroundColor3 = Color3.fromRGB(40, 42, 50); TpLastBtn.Text = "Son Hedefe Işınlan"; TpLastBtn.TextColor3 = Color3.fromRGB(200, 200, 200); TpLastBtn.Font = Enum.Font.GothamBold; TpLastBtn.TextSize = 12
+Instance.new("UICorner", TpLastBtn).CornerRadius = UDim.new(0, 6)
+
+local TpRandomBtn = Instance.new("TextButton", TpCard)
+TpRandomBtn.Size = UDim2.new(0, 170, 0, 40); TpRandomBtn.Position = UDim2.new(0, 190, 0, 80)
+TpRandomBtn.BackgroundColor3 = Color3.fromRGB(40, 42, 50); TpRandomBtn.Text = "Rastgele Işınlan"; TpRandomBtn.TextColor3 = Color3.fromRGB(200, 200, 200); TpRandomBtn.Font = Enum.Font.GothamBold; TpRandomBtn.TextSize = 12
+Instance.new("UICorner", TpRandomBtn).CornerRadius = UDim.new(0, 6)
+
+local lastTPTarget = nil
+local function GetPlayerFromPart(str)
+    str = string.lower(str)
+    for _, p in ipairs(Players:GetPlayers()) do
+        if p ~= LocalPlayer and (string.find(string.lower(p.Name), str) or string.find(string.lower(p.DisplayName), str)) then return p end
+    end
+    return nil
+end
+local function ExecuteTP(targetPlayer)
+    if not targetPlayer or not targetPlayer.Character or not targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        ShowNotification("Teleport Error", Translates[CurrentLanguage].TpError, 3); return
+    end
+    local myChar = LocalPlayer.Character
+    if myChar and myChar:FindFirstChild("HumanoidRootPart") then
+        myChar.HumanoidRootPart.CFrame = targetPlayer.Character.HumanoidRootPart.CFrame
+        lastTPTarget = targetPlayer
+        ShowNotification("Teleport", Translates[CurrentLanguage].TpSuccess .. targetPlayer.Name, 3)
+    end
+end
+
+TpBtn.MouseButton1Click:Connect(function() ExecuteTP(GetPlayerFromPart(TpBox.Text)) end)
+TpLastBtn.MouseButton1Click:Connect(function() ExecuteTP(lastTPTarget) end)
+TpRandomBtn.MouseButton1Click:Connect(function()
+    local plrs, valid = Players:GetPlayers(), {}
+    for _, p in ipairs(plrs) do if p ~= LocalPlayer then table.insert(valid, p) end end
+    if #valid > 0 then ExecuteTP(valid[math.random(1, #valid)]) else ShowNotification("Teleport Error", Translates[CurrentLanguage].NoOtherPlrs, 3) end
+end)
+
+-- ==========================================
+-- [4] STARS TAB (ÖZELLİKLER & HİLELER)
+-- ==========================================
+local StarsTitle = Instance.new("TextLabel", StarsTab)
+StarsTitle.Size = UDim2.new(1, 0, 0, 30); StarsTitle.BackgroundTransparency = 1; StarsTitle.Text = "Özellikler & Hileler"
+StarsTitle.TextColor3 = Color3.fromRGB(255, 255, 255); StarsTitle.Font = Enum.Font.GothamBold; StarsTitle.TextSize = 16; StarsTitle.TextXAlignment = Enum.TextXAlignment.Left
+
+local StarScroll = Instance.new("ScrollingFrame", StarsTab)
+StarScroll.Size = UDim2.new(1, -10, 1, -40); StarScroll.Position = UDim2.new(0, 5, 0, 40)
+StarScroll.BackgroundTransparency = 1; StarScroll.BorderSizePixel = 0; StarScroll.ScrollBarThickness = 3
+local StarLayout = Instance.new("UIListLayout", StarScroll); StarLayout.Padding = UDim.new(0, 8); StarLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+-- ESP & TRACER SEÇİCİ (ORTAK RENK SEÇİCİ)
+local ESPPickerFrame = Instance.new("Frame", MainFrame)
+ESPPickerFrame.Size = UDim2.new(0, 220, 0, 140); ESPPickerFrame.Position = UDim2.new(0.5, -110, 0.5, -70); ESPPickerFrame.BackgroundColor3 = Color3.fromRGB(20, 21, 26); ESPPickerFrame.Visible = false; ESPPickerFrame.ZIndex = 10
+Instance.new("UICorner", ESPPickerFrame).CornerRadius = UDim.new(0, 8); Instance.new("UIStroke", ESPPickerFrame).Color = Color3.fromRGB(255,255,255); Instance.new("UIStroke", ESPPickerFrame).Transparency = 0.8
+local EPTitle = Instance.new("TextLabel", ESPPickerFrame); EPTitle.Size = UDim2.new(1, 0, 0, 30); EPTitle.BackgroundTransparency = 1; EPTitle.Text = "Renk Seçimi"; EPTitle.TextColor3 = Color3.fromRGB(255,255,255); EPTitle.Font = Enum.Font.GothamBold; EPTitle.TextSize = 12; EPTitle.ZIndex = 10
+local HueFrame = Instance.new("Frame", ESPPickerFrame); HueFrame.Size = UDim2.new(1, -20, 0, 30); HueFrame.Position = UDim2.new(0, 10, 0, 40); HueFrame.ZIndex = 10
+local HueGrad = Instance.new("UIGradient", HueFrame); HueGrad.Color = ColorSequence.new({ColorSequenceKeypoint.new(0, Color3.new(1,0,0)), ColorSequenceKeypoint.new(0.16, Color3.new(1,1,0)), ColorSequenceKeypoint.new(0.33, Color3.new(0,1,0)), ColorSequenceKeypoint.new(0.5, Color3.new(0,1,1)), ColorSequenceKeypoint.new(0.66, Color3.new(0,0,1)), ColorSequenceKeypoint.new(0.83, Color3.new(1,0,1)), ColorSequenceKeypoint.new(1, Color3.new(1,0,0))})
+local HueBtn = Instance.new("TextButton", HueFrame); HueBtn.Size = UDim2.new(1, 0, 1, 0); HueBtn.BackgroundTransparency = 1; HueBtn.Text = ""; HueBtn.ZIndex = 11
+local PreviewColor = Instance.new("Frame", ESPPickerFrame); PreviewColor.Size = UDim2.new(0, 40, 0, 40); PreviewColor.Position = UDim2.new(0, 10, 0, 85); PreviewColor.BackgroundColor3 = Color3.new(1,0,0); PreviewColor.ZIndex = 10; Instance.new("UICorner", PreviewColor).CornerRadius = UDim.new(0, 6)
+local ApplyESPBtn = Instance.new("TextButton", ESPPickerFrame); ApplyESPBtn.Size = UDim2.new(0, 130, 0, 40); ApplyESPBtn.Position = UDim2.new(0, 60, 0, 85); ApplyESPBtn.BackgroundColor3 = Color3.fromRGB(30, 110, 60); ApplyESPBtn.Text = "Uygula"; ApplyESPBtn.TextColor3 = Color3.fromRGB(255,255,255); ApplyESPBtn.Font = Enum.Font.GothamBold; ApplyESPBtn.TextSize = 14; ApplyESPBtn.ZIndex = 10; Instance.new("UICorner", ApplyESPBtn).CornerRadius = UDim.new(0, 6)
+local SelectedColor = Color3.new(1,0,0); local espDragging = false
+local currentActiveSelector = "ESP" -- "ESP" veya "TRACER"
+
+HueBtn.MouseButton1Down:Connect(function() espDragging = true end)
+UserInputService.InputEnded:Connect(function(inp) if inp.UserInputType == Enum.UserInputType.MouseButton1 or inp.UserInputType == Enum.UserInputType.Touch then espDragging = false end end)
+RunService.RenderStepped:Connect(function()
+    if espDragging and ESPPickerFrame.Visible then
+        local mouseX, minX = UserInputService:GetMouseLocation().X, HueFrame.AbsolutePosition.X
+        local pct = math.clamp((mouseX - minX)/(HueFrame.AbsoluteSize.X), 0, 1)
+        SelectedColor = Color3.fromHSV(pct, 1, 1); PreviewColor.BackgroundColor3 = SelectedColor
+    end
+end)
+
+-- MOD PANEL OLUŞTURUCU (Kişiselleştirilebilir scroll parent ile)
+local panelsList = {}; local layoutCounter = 0
+local function CreateModPanel(name, hasSlider, maxSliderVal, defaultSliderVal, onToggle, onSliderChange, customScroll)
+    local targetScroll = customScroll or StarScroll
+    layoutCounter = layoutCounter + 1
+    local Container = Instance.new("Frame", targetScroll)
+    Container.Size = UDim2.new(1, -6, 0, 45); Container.LayoutOrder = layoutCounter
+    ApplyWaveGradient(Container, Color3.fromRGB(80, 0, 0), Color3.fromRGB(15, 15, 20))
+    Instance.new("UICorner", Container).CornerRadius = UDim.new(0, 8)
+    local cStr = Instance.new("UIStroke", Container); cStr.Color = Color3.fromRGB(255, 100, 100); cStr.Transparency = 0.7
+    
+    local Lbl = Instance.new("TextLabel", Container)
+    Lbl.Size = UDim2.new(0.6, 0, 0, 45); Lbl.Position = UDim2.new(0, 15, 0, 0); Lbl.BackgroundTransparency = 1
+    Lbl.Text = name; Lbl.TextColor3 = Color3.fromRGB(235, 235, 240); Lbl.Font = Enum.Font.GothamBold; Lbl.TextSize = 11; Lbl.TextXAlignment = Enum.TextXAlignment.Left
+    
+    local Switch = Instance.new("TextButton", Container)
+    Switch.Size = UDim2.new(0, 36, 0, 18); Switch.Position = UDim2.new(1, -50, 0, 13); Switch.BackgroundColor3 = Color3.fromRGB(40, 41, 48); Switch.Text = ""
+    Instance.new("UICorner", Switch).CornerRadius = UDim.new(1, 0)
+    local Dot = Instance.new("Frame", Switch)
+    Dot.Size = UDim2.new(0, 14, 0, 14); Dot.Position = UDim2.new(0, 2, 0.5, -7); Dot.BackgroundColor3 = Color3.fromRGB(255, 255, 255); Instance.new("UICorner", Dot).CornerRadius = UDim.new(1, 0)
+    
+    local isActive, SliderFrame = false, nil
+    if hasSlider then
+        SliderFrame = Instance.new("Frame", Container); SliderFrame.Size = UDim2.new(1, 0, 0, 30); SliderFrame.Position = UDim2.new(0, 0, 0, 45); SliderFrame.BackgroundTransparency = 1; SliderFrame.Visible = false
+        local SliderBg = Instance.new("Frame", SliderFrame); SliderBg.Size = UDim2.new(1, -60, 0, 6); SliderBg.Position = UDim2.new(0, 15, 0.5, -3); SliderBg.BackgroundColor3 = Color3.fromRGB(30, 31, 38); Instance.new("UICorner", SliderBg).CornerRadius = UDim.new(1, 0)
+        local SliderFill = Instance.new("Frame", SliderBg); SliderFill.Size = UDim2.new(defaultSliderVal / maxSliderVal, 0, 1, 0); SliderFill.BackgroundColor3 = Color3.fromRGB(200, 50, 50); Instance.new("UICorner", SliderFill).CornerRadius = UDim.new(1, 0)
+        local SVal = Instance.new("TextLabel", SliderFrame); SVal.Size = UDim2.new(0, 30, 1, 0); SVal.Position = UDim2.new(1, -40, 0, 0); SVal.BackgroundTransparency = 1; SVal.Text = tostring(defaultSliderVal); SVal.TextColor3 = Color3.fromRGB(255,255,255); SVal.Font = Enum.Font.GothamBold; SVal.TextSize = 10
+        local SBtn = Instance.new("TextButton", SliderBg); SBtn.Size = UDim2.new(1, 0, 1, 10); SBtn.Position = UDim2.new(0, 0, 0, -5); SBtn.BackgroundTransparency = 1; SBtn.Text = ""
+        local draggingSlider = false
+        SBtn.MouseButton1Down:Connect(function() draggingSlider = true end)
+        UserInputService.InputEnded:Connect(function(inp) if inp.UserInputType == Enum.UserInputType.MouseButton1 or inp.UserInputType == Enum.UserInputType.Touch then draggingSlider = false end end)
+        RunService.RenderStepped:Connect(function()
+            if draggingSlider and SliderFrame.Visible then
+                local p = math.clamp((UserInputService:GetMouseLocation().X - SliderBg.AbsolutePosition.X)/(SliderBg.AbsoluteSize.X), 0, 1)
+                SliderFill.Size = UDim2.new(p, 0, 1, 0); local v = math.floor(p * maxSliderVal); SVal.Text = tostring(v); onSliderChange(v)
+            end
+        end)
+    end
+    
+    Switch.MouseButton1Click:Connect(function()
+        isActive = not isActive
+        TweenService:Create(Dot, TweenInfo.new(0.2), {Position = isActive and UDim2.new(1, -16, 0.5, -7) or UDim2.new(0, 2, 0.5, -7)}):Play()
+        TweenService:Create(Switch, TweenInfo.new(0.2), {BackgroundColor3 = isActive and Color3.fromRGB(200, 50, 50) or Color3.fromRGB(40, 41, 48)}):Play()
+        if SliderFrame then
+            SliderFrame.Visible = isActive
+            TweenService:Create(Container, TweenInfo.new(0.2), {Size = isActive and UDim2.new(1, -6, 0, 75) or UDim2.new(1, -6, 0, 45)}):Play()
+        end
+        onToggle(isActive)
+    end)
+    table.insert(panelsList, {Label = Lbl, Key = name})
+end
+
+-- Fly, ESP, WalkSpeed, JumpPower, InfJump, Noclip Mantıkları
+local isFlying, flySpeed, flyBV, flyBG, flyLoop = false, 50, nil, nil, nil
+local function StartFly()
+    local char = LocalPlayer.Character
+    if not char or not char:FindFirstChild("HumanoidRootPart") then return end
+    isFlying = true; char.Humanoid.PlatformStand = true
+    flyBV = Instance.new("BodyVelocity", char.HumanoidRootPart); flyBV.MaxForce = Vector3.new(math.huge, math.huge, math.huge); flyBV.Velocity = Vector3.new(0,0,0)
+    flyBG = Instance.new("BodyGyro", char.HumanoidRootPart); flyBG.MaxTorque = Vector3.new(math.huge, math.huge, math.huge); flyBG.P = 10000; flyBG.CFrame = workspace.CurrentCamera.CFrame
+    flyLoop = RunService.RenderStepped:Connect(function()
+        if not isFlying or not char.Parent then return end
+        local cam = workspace.CurrentCamera; flyBG.CFrame = cam.CFrame; local moveVec = Vector3.new(0,0,0)
+        pcall(function() moveVec = require(LocalPlayer.PlayerScripts:WaitForChild("PlayerModule")):GetControls():GetMoveVector() end)
+        local moveDir = (cam.CFrame.RightVector * moveVec.X) + (cam.CFrame.LookVector * -moveVec.Z)
+        if moveDir.Magnitude > 0 then moveDir = moveDir.Unit end; flyBV.Velocity = moveDir * flySpeed
+    end)
+    ShowNotification("Fly", Translates[CurrentLanguage].FlyActive, 3)
+end
+local function StopFly()
+    isFlying = false
+    if flyBV then flyBV:Destroy() end; if flyBG then flyBG:Destroy() end; if flyLoop then flyLoop:Disconnect() end
+    if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then LocalPlayer.Character.Humanoid.PlatformStand = false end
+    ShowNotification("Fly", Translates[CurrentLanguage].FlyDeactive, 2)
+end
+CreateModPanel("Fly Hack", true, 500, 50, function(active) if active then StartFly() else StopFly() end end, function(val) flySpeed = val end)
+
+local espEnabled = false; local ESPFolder = Instance.new("Folder", CoreGui); ESPFolder.Name = "HiddenDarkerESP"
+local espColor = Color3.new(1,0,0)
+local function ApplyESPToAll()
+    ESPFolder:ClearAllChildren(); if not espEnabled then return end
+    for _, p in ipairs(Players:GetPlayers()) do
+        if p ~= LocalPlayer and p.Character then
+            local hl = Instance.new("Highlight", ESPFolder); hl.Adornee = p.Character; hl.FillColor = espColor; hl.OutlineColor = Color3.new(1,1,1); hl.FillTransparency = 0.5
+        end
+    end
+end
+
+CreateModPanel("Player ESP", false, 0, 0, function(active) espEnabled = active; if active then currentActiveSelector = "ESP"; ESPPickerFrame.Visible = true else ESPPickerFrame.Visible = false; ESPFolder:ClearAllChildren() end end, nil)
+CreateModPanel("Speed Changer", true, 500, 16, function(active) local h = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid"); if h then h.WalkSpeed = active and 100 or 16 end; ShowNotification("Speed", active and Translates[CurrentLanguage].SpeedActive or Translates[CurrentLanguage].SpeedReset, 2) end, function(val) local h = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid"); if h then h.WalkSpeed = val end end)
+CreateModPanel("JumpPower", true, 500, 50, function(active) local h = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid"); if h then h.UseJumpPower = true; h.JumpPower = active and 150 or 50 end; ShowNotification("Jump", active and Translates[CurrentLanguage].JumpActive or Translates[CurrentLanguage].JumpReset, 2) end, function(val) local h = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid"); if h then h.UseJumpPower = true; h.JumpPower = val end end)
+local infJumpEnabled = false; UserInputService.JumpRequest:Connect(function() if infJumpEnabled then local h = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid"); if h then h:ChangeState(Enum.HumanoidStateType.Jumping) end end end)
+CreateModPanel("Infinite Jump", false, 0, 0, function(active) infJumpEnabled = active; ShowNotification("Inf Jump", active and Translates[CurrentLanguage].InfActive or Translates[CurrentLanguage].InfDeactive, 2) end, nil)
+local noclipConnection, noclipActive = nil, false
+CreateModPanel("Noclip", false, 0, 0, function(active)
+    noclipActive = active
+    if active then
+        noclipConnection = RunService.Stepped:Connect(function() if LocalPlayer.Character then for _, part in ipairs(LocalPlayer.Character:GetDescendants()) do if part:IsA("BasePart") then part.CanCollide = false end end end end)
+        ShowNotification("Noclip", Translates[CurrentLanguage].NoclipActive, 2)
+    else if noclipConnection then noclipConnection:Disconnect() end; ShowNotification("Noclip", Translates[CurrentLanguage].NoclipDeactive, 2) end
+end, nil)
+
+-- SPAM & SPECTATE PANELS
+layoutCounter = layoutCounter + 1
+local SpamPanel = Instance.new("Frame", StarScroll); SpamPanel.Size = UDim2.new(1, -6, 0, 55); SpamPanel.LayoutOrder = layoutCounter
+ApplyWaveGradient(SpamPanel, Color3.fromRGB(80, 0, 0), Color3.fromRGB(15, 15, 20))
+Instance.new("UICorner", SpamPanel).CornerRadius = UDim.new(0, 8); local spStr = Instance.new("UIStroke", SpamPanel); spStr.Color = Color3.fromRGB(255, 100, 100); spStr.Transparency = 0.7
+local SpamLbl = Instance.new("TextLabel", SpamPanel); SpamLbl.Size = UDim2.new(0.3, 0, 1, 0); SpamLbl.Position = UDim2.new(0, 12, 0, 0); SpamLbl.BackgroundTransparency = 1; SpamLbl.Text = "Mesaj Spamlayıcı"; SpamLbl.TextColor3 = Color3.fromRGB(235, 235, 240); SpamLbl.Font = Enum.Font.GothamBold; SpamLbl.TextSize = 11; SpamLbl.TextXAlignment = Enum.TextXAlignment.Left
+local SpamBoxBg = Instance.new("Frame", SpamPanel); SpamBoxBg.Size = UDim2.new(0.45, 0, 0, 32); SpamBoxBg.Position = UDim2.new(0.32, 0, 0.5, -16); SpamBoxBg.BackgroundColor3 = Color3.fromRGB(30, 31, 38); Instance.new("UICorner", SpamBoxBg).CornerRadius = UDim.new(0, 6); Instance.new("UIStroke", SpamBoxBg).Color = Color3.fromRGB(255, 255, 255); Instance.new("UIStroke", SpamBoxBg).Transparency = 0.96
+local SpamBox = Instance.new("TextBox", SpamBoxBg); SpamBox.Size = UDim2.new(1, -16, 1, 0); SpamBox.Position = UDim2.new(0, 8, 0, 0); SpamBox.BackgroundTransparency = 1; SpamBox.PlaceholderText = "Mesaj yazın..."; SpamBox.Text = ""; SpamBox.TextColor3 = Color3.fromRGB(255, 255, 255); SpamBox.Font = Enum.Font.GothamMedium; SpamBox.TextSize = 10; SpamBox.TextXAlignment = Enum.TextXAlignment.Left
+local SpamToggleBtn = Instance.new("TextButton", SpamPanel); SpamToggleBtn.Size = UDim2.new(0.2, 0, 0, 32); SpamToggleBtn.Position = UDim2.new(0.78, 0, 0.5, -16); SpamToggleBtn.BackgroundColor3 = Color3.fromRGB(40, 42, 50); SpamToggleBtn.Text = "Başlat"; SpamToggleBtn.TextColor3 = Color3.fromRGB(255, 255, 255); SpamToggleBtn.Font = Enum.Font.GothamBold; SpamToggleBtn.TextSize = 11; Instance.new("UICorner", SpamToggleBtn).CornerRadius = UDim.new(0, 6)
+local spamming, spamThread = false, nil
+SpamToggleBtn.MouseButton1Click:Connect(function()
+    spamming = not spamming
+    if spamming then
+        SpamToggleBtn.Text = Translates[CurrentLanguage].Stop; SpamToggleBtn.BackgroundColor3 = Color3.fromRGB(150, 40, 40)
+        spamThread = task.spawn(function()
+            while spamming do
+                local msg = SpamBox.Text
+                if msg ~= "" then
+                    local tcs = game:GetService("TextChatService")
+                    if tcs.ChatVersion == Enum.ChatVersion.TextChatService then
+                        local gc = tcs:FindFirstChild("TextChannels") and tcs.TextChannels:FindFirstChild("RBXGeneral"); if gc then gc:SendAsync(msg) end
+                    else
+                        local ce = game:GetService("ReplicatedStorage"):FindFirstChild("DefaultChatSystemChatEvents")
+                        local sm = ce and ce:FindFirstChild("SayMessageRequest"); if sm then sm:FireServer(msg, "All") end
+                    end
+                end
+                task.wait(0.5)
+            end
+        end)
+    else SpamToggleBtn.Text = Translates[CurrentLanguage].Start; SpamToggleBtn.BackgroundColor3 = Color3.fromRGB(40, 42, 50); if spamThread then task.cancel(spamThread); spamThread = nil end end
+end)
+
+layoutCounter = layoutCounter + 1
+local SpecPanel = Instance.new("Frame", StarScroll); SpecPanel.Size = UDim2.new(1, -6, 0, 110); SpecPanel.LayoutOrder = layoutCounter
+ApplyWaveGradient(SpecPanel, Color3.fromRGB(80, 0, 0), Color3.fromRGB(15, 15, 20))
+Instance.new("UICorner", SpecPanel).CornerRadius = UDim.new(0, 8); local scStr = Instance.new("UIStroke", SpecPanel); scStr.Color = Color3.fromRGB(255, 100, 100); scStr.Transparency = 0.7
+local SpecLbl = Instance.new("TextLabel", SpecPanel); SpecLbl.Size = UDim2.new(0.3, 0, 0, 50); SpecLbl.Position = UDim2.new(0, 12, 0, 0); SpecLbl.BackgroundTransparency = 1; SpecLbl.Text = "Oyuncuya Odaklan"; SpecLbl.TextColor3 = Color3.fromRGB(235, 235, 240); SpecLbl.Font = Enum.Font.GothamBold; SpecLbl.TextSize = 11; SpecLbl.TextXAlignment = Enum.TextXAlignment.Left
+local SpecBoxBg = Instance.new("Frame", SpecPanel); SpecBoxBg.Size = UDim2.new(0.45, 0, 0, 32); SpecBoxBg.Position = UDim2.new(0.32, 0, 0, 10); SpecBoxBg.BackgroundColor3 = Color3.fromRGB(30, 31, 38); Instance.new("UICorner", SpecBoxBg).CornerRadius = UDim.new(0, 6); Instance.new("UIStroke", SpecBoxBg).Color = Color3.fromRGB(255, 255, 255); Instance.new("UIStroke", SpecBoxBg).Transparency = 0.96
+local SpecBox = Instance.new("TextBox", SpecBoxBg); SpecBox.Size = UDim2.new(1, -16, 1, 0); SpecBox.Position = UDim2.new(0, 8, 0, 0); SpecBox.BackgroundTransparency = 1; SpecBox.PlaceholderText = "Oyuncu Adı..."; SpecBox.Text = ""; SpecBox.TextColor3 = Color3.fromRGB(255, 255, 255); SpecBox.Font = Enum.Font.GothamMedium; SpecBox.TextSize = 10; SpecBox.TextXAlignment = Enum.TextXAlignment.Left
+local SpecToggleBtn = Instance.new("TextButton", SpecPanel); SpecToggleBtn.Size = UDim2.new(0.2, 0, 0, 32); SpecToggleBtn.Position = UDim2.new(0.78, 0, 0, 10); SpecToggleBtn.BackgroundColor3 = Color3.fromRGB(30, 90, 150); SpecToggleBtn.Text = "Odaklan"; SpecToggleBtn.TextColor3 = Color3.fromRGB(255, 255, 255); SpecToggleBtn.Font = Enum.Font.GothamBold; SpecToggleBtn.TextSize = 11; Instance.new("UICorner", SpecToggleBtn).CornerRadius = UDim.new(0, 6)
+local SpecLastBtn = Instance.new("TextButton", SpecPanel); SpecLastBtn.Size = UDim2.new(0.45, -5, 0, 32); SpecLastBtn.Position = UDim2.new(0.05, 0, 0, 65); SpecLastBtn.BackgroundColor3 = Color3.fromRGB(40, 42, 50); SpecLastBtn.Text = "Son Oyuncuya Odaklan"; SpecLastBtn.TextColor3 = Color3.fromRGB(200, 200, 200); SpecLastBtn.Font = Enum.Font.GothamBold; SpecLastBtn.TextSize = 10; Instance.new("UICorner", SpecLastBtn).CornerRadius = UDim.new(0, 6)
+local SpecRandomBtn = Instance.new("TextButton", SpecPanel); SpecRandomBtn.Size = UDim2.new(0.45, -5, 0, 32); SpecRandomBtn.Position = UDim2.new(0.5, 5, 0, 65); SpecRandomBtn.BackgroundColor3 = Color3.fromRGB(40, 42, 50); SpecRandomBtn.Text = "Rastgele Odaklan"; SpecRandomBtn.TextColor3 = Color3.fromRGB(200, 200, 200); SpecRandomBtn.Font = Enum.Font.GothamBold; SpecRandomBtn.TextSize = 10; Instance.new("UICorner", SpecRandomBtn).CornerRadius = UDim.new(0, 6)
+local lastLookatTarget, spectating = nil, false
+local function SetSpectate(target)
+    local cam = workspace.CurrentCamera
+    if target and target.Character and target.Character:FindFirstChild("Humanoid") then
+        cam.CameraSubject = target.Character.Humanoid; lastLookatTarget = target; spectating = true
+        SpecToggleBtn.Text = Translates[CurrentLanguage].UnlookBtn; SpecToggleBtn.BackgroundColor3 = Color3.fromRGB(150, 40, 40); ShowNotification("Spectate", Translates[CurrentLanguage].SpecActive .. target.DisplayName, 3)
+    else
+        cam.CameraSubject = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid"); spectating = false
+        SpecToggleBtn.Text = Translates[CurrentLanguage].LookatBtn; SpecToggleBtn.BackgroundColor3 = Color3.fromRGB(30, 90, 150); ShowNotification("Spectate", Translates[CurrentLanguage].SpecDeactive, 2)
+    end
+end
+SpecToggleBtn.MouseButton1Click:Connect(function() if spectating then SetSpectate(nil) else local target = GetPlayerFromPart(SpecBox.Text); if target then SetSpectate(target) else ShowNotification("Error", "Player not found!", 2) end end end)
+SpecLastBtn.MouseButton1Click:Connect(function() if lastLookatTarget then SetSpectate(lastLookatTarget) else ShowNotification("Error", "No last target found!", 2) end end)
+SpecRandomBtn.MouseButton1Click:Connect(function() local plrs, valid = Players:GetPlayers(), {}; for _, p in ipairs(plrs) do if p ~= LocalPlayer then table.insert(valid, p) end end; if #valid > 0 then SetSpectate(valid[math.random(1, #valid)]) else ShowNotification("Error", "No other players found!", 2) end end)
+
+-- NEXT PAGE BUTONU (STARS SEKMESİ İÇİN)
+layoutCounter = layoutCounter + 1
+local NextPageBtn = Instance.new("TextButton", StarScroll)
+NextPageBtn.Size = UDim2.new(1, -6, 0, 40); NextPageBtn.LayoutOrder = layoutCounter
+ApplyWaveGradient(NextPageBtn, Color3.fromRGB(100, 40, 0), Color3.fromRGB(30, 15, 15))
+Instance.new("UICorner", NextPageBtn).CornerRadius = UDim.new(0, 8)
+local npStr = Instance.new("UIStroke", NextPageBtn); npStr.Color = Color3.fromRGB(255, 150, 50); npStr.Transparency = 0.7
+NextPageBtn.Text = "Next Page"
+NextPageBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+NextPageBtn.Font = Enum.Font.GothamBold
+NextPageBtn.TextSize = 13
+NextPageBtn.MouseButton1Click:Connect(function()
+    SwitchToPage("Stars2")
+end)
+
+-- ==========================================
+-- [4.2] STARS TAB 2 (YENİ SAYFA - NEXT PAGE)
+-- ==========================================
+local StarsTitle2 = Instance.new("TextLabel", StarsTab2)
+StarsTitle2.Size = UDim2.new(1, 0, 0, 30); StarsTitle2.BackgroundTransparency = 1; StarsTitle2.Text = "Özellikler & Hileler - Sayfa 2"
+StarsTitle2.TextColor3 = Color3.fromRGB(255, 255, 255); StarsTitle2.Font = Enum.Font.GothamBold; StarsTitle2.TextSize = 16; StarsTitle2.TextXAlignment = Enum.TextXAlignment.Left
+
+local StarScroll2 = Instance.new("ScrollingFrame", StarsTab2)
+StarScroll2.Size = UDim2.new(1, -10, 1, -80); StarScroll2.Position = UDim2.new(0, 5, 0, 40)
+StarScroll2.BackgroundTransparency = 1; StarScroll2.BorderSizePixel = 0; StarScroll2.ScrollBarThickness = 3
+local StarLayout2 = Instance.new("UIListLayout", StarScroll2); StarLayout2.Padding = UDim.new(0, 8); StarLayout2.SortOrder = Enum.SortOrder.LayoutOrder
+
+-- FLOATING PLATFORM MANTIĞI VE BUTONLARI
+local platActive = false
+local currentPlatform = nil
+local floatHeightOffset = -3.5
+
+-- Ekran Butonları (Up & Down)
+local FlightControls = Instance.new("Frame", ScreenGui)
+FlightControls.Size = UDim2.new(0, 50, 0, 110)
+FlightControls.Position = UDim2.new(1, -70, 0.5, -55)
+FlightControls.BackgroundTransparency = 1
+FlightControls.Visible = false
+
+local UpBtn = Instance.new("TextButton", FlightControls)
+UpBtn.Size = UDim2.new(0, 48, 0, 48); UpBtn.Position = UDim2.new(0, 0, 0, 0)
+UpBtn.BackgroundColor3 = Color3.fromRGB(30, 31, 38)
+UpBtn.Text = "▲"; UpBtn.TextColor3 = Color3.fromRGB(255,255,255); UpBtn.Font = Enum.Font.GothamBold; UpBtn.TextSize = 18
+Instance.new("UICorner", UpBtn).CornerRadius = UDim.new(1, 0)
+Instance.new("UIStroke", UpBtn).Color = Color3.fromRGB(255,255,255)
+
+local DownBtn = Instance.new("TextButton", FlightControls)
+DownBtn.Size = UDim2.new(0, 48, 0, 48); DownBtn.Position = UDim2.new(0, 0, 1, -48)
+DownBtn.BackgroundColor3 = Color3.fromRGB(30, 31, 38)
+DownBtn.Text = "▼"; DownBtn.TextColor3 = Color3.fromRGB(255,255,255); DownBtn.Font = Enum.Font.GothamBold; DownBtn.TextSize = 18
+Instance.new("UICorner", DownBtn).CornerRadius = UDim.new(1, 0)
+Instance.new("UIStroke", DownBtn).Color = Color3.fromRGB(255,255,255)
+
+local platConnection = nil
+local function SpawnPlatform()
+    if currentPlatform then currentPlatform:Destroy() end
+    local char = LocalPlayer.Character
+    if not char or not char:FindFirstChild("HumanoidRootPart") then return end
+    
+    currentPlatform = Instance.new("Part")
+    currentPlatform.Size = Vector3.new(20, 1, 20)
+    currentPlatform.Anchored = true
+    currentPlatform.Material = Enum.Material.Glass
+    currentPlatform.Transparency = 0.4
+    currentPlatform.Color = Color3.fromRGB(15, 15, 20)
+    currentPlatform.Parent = workspace
+    
+    platConnection = RunService.RenderStepped:Connect(function()
+        if not platActive or not char or not char:FindFirstChild("HumanoidRootPart") then return end
+        local root = char.HumanoidRootPart
+        currentPlatform.CFrame = CFrame.new(root.Position.X, root.Position.Y + floatHeightOffset, root.Position.Z)
+    end)
+    FlightControls.Visible = true
+end
+
+local function DestroyPlatform()
+    if platConnection then platConnection:Disconnect(); platConnection = nil end
+    if currentPlatform then currentPlatform:Destroy(); currentPlatform = nil end
+    FlightControls.Visible = false
+end
+
+UpBtn.MouseButton1Click:Connect(function() floatHeightOffset = floatHeightOffset + 1.5 end)
+DownBtn.MouseButton1Click:Connect(function() floatHeightOffset = floatHeightOffset - 1.5 end)
+
+CreateModPanel("Floating Platform", false, 0, 0, function(active)
+    platActive = active
+    if active then SpawnPlatform() else DestroyPlatform() end
+end, nil, StarScroll2)
+
+-- TRACER (LINE ESP) MANTIĞI
+local tracerEnabled = false
+local tracerColor = Color3.new(1, 0, 0)
+local tracers = {}
+
+local function ClearTracers()
+    for _, line in pairs(tracers) do line:Remove() end
+    table.clear(tracers)
+end
+
+local function UpdateTracers()
+    if not tracerEnabled then ClearTracers(); return end
+    local cam = workspace.CurrentCamera
+    local viewportSize = cam.ViewportSize
+    local startPoint = Vector2.new(viewportSize.X / 2, viewportSize.Y)
+    
+    for _, p in ipairs(Players:GetPlayers()) do
+        if p ~= LocalPlayer then
+            local char = p.Character
+            if char and char:FindFirstChild("HumanoidRootPart") then
+                local root = char.HumanoidRootPart
+                local screenPos, onScreen = cam:WorldToViewportPoint(root.Position)
+                
+                if onScreen then
+                    local line = tracers[p]
+                    if not line then
+                        line = Drawing.new("Line")
+                        line.Thickness = 1.5
+                        line.Transparency = 0.8
+                        tracers[p] = line
+                    end
+                    line.Color = tracerColor
+                    line.From = startPoint
+                    line.To = Vector2.new(screenPos.X, screenPos.Y)
+                    line.Visible = true
+                else
+                    if tracers[p] then tracers[p].Visible = false end
+                end
+            else
+                if tracers[p] then tracers[p].Visible = false end
+            end
+        end
+    end
+    -- Ayrılan oyuncuların tracerlarını temizle
+    for p, line in pairs(tracers) do
+        if not Players:FindFirstChild(p.Name) then
+            line:Remove()
+            tracers[p] = nil
+        end
+    end
+end
+
+RunService.RenderStepped:Connect(UpdateTracers)
+
+CreateModPanel("Tracer ESP", false, 0, 0, function(active)
+    tracerEnabled = active
+    if active then
+        currentActiveSelector = "TRACER"
+        ESPPickerFrame.Visible = true
+    else
+        ESPPickerFrame.Visible = false
+        ClearTracers()
+    end
+end, nil, StarScroll2)
+
+-- Renk Seçimi Uygula Düğmesi Mantığı
+ApplyESPBtn.MouseButton1Click:Connect(function()
+    ESPPickerFrame.Visible = false
+    if currentActiveSelector == "ESP" then
+        espColor = SelectedColor
+        ApplyESPToAll()
+        ShowNotification("ESP", Translates[CurrentLanguage].EspApplied, 3)
+    elseif currentActiveSelector == "TRACER" then
+        tracerColor = SelectedColor
+        ShowNotification("Tracer", "Tracer ESP Rengi Uygulandı!", 3)
+    end
+end)
+
+-- STARS TAB 2 BACK BUTTON
+local BackPageBtn = Instance.new("TextButton", StarsTab2)
+BackPageBtn.Size = UDim2.new(1, -10, 0, 35)
+BackPageBtn.Position = UDim2.new(0, 5, 1, -38)
+ApplyWaveGradient(BackPageBtn, Color3.fromRGB(100, 40, 0), Color3.fromRGB(30, 15, 15))
+Instance.new("UICorner", BackPageBtn).CornerRadius = UDim.new(0, 8)
+local bpStr = Instance.new("UIStroke", BackPageBtn); bpStr.Color = Color3.fromRGB(255, 150, 50); bpStr.Transparency = 0.7
+BackPageBtn.Text = "Back Page"
+BackPageBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+BackPageBtn.Font = Enum.Font.GothamBold
+BackPageBtn.TextSize = 12
+BackPageBtn.MouseButton1Click:Connect(function()
+    SwitchToPage("Stars")
+end)
+
+-- ==========================================
+-- [5] FRIENDS TAB - DETAYLANDIRILMIŞ LİSTELEME
+-- ==========================================
+local FriendsTabTitle = Instance.new("TextLabel", FriendsTabPage)
+FriendsTabTitle.Size = UDim2.new(1, 0, 0, 30); FriendsTabTitle.BackgroundTransparency = 1; FriendsTabTitle.Text = "Arkadaşlar"
+FriendsTabTitle.TextColor3 = Color3.fromRGB(255, 255, 255); FriendsTabTitle.Font = Enum.Font.GothamBold; FriendsTabTitle.TextSize = 16; FriendsTabTitle.TextXAlignment = Enum.TextXAlignment.Left
+
+local FriendsScroll = Instance.new("ScrollingFrame", FriendsTabPage)
+FriendsScroll.Size = UDim2.new(1, -10, 1, -40); FriendsScroll.Position = UDim2.new(0, 5, 0, 40)
+FriendsScroll.BackgroundTransparency = 1; FriendsScroll.BorderSizePixel = 0; FriendsScroll.ScrollBarThickness = 4; FriendsScroll.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 110)
+local FriendsListLayout = Instance.new("UIListLayout", FriendsScroll); FriendsListLayout.Padding = UDim.new(0, 8); FriendsListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+local function PopulateFriendsList()
+    for _, child in ipairs(FriendsScroll:GetChildren()) do if child:IsA("Frame") then child:Destroy() end end
+    
+    task.spawn(function()
+        local onlineData = {}
+        pcall(function()
+            local friendsOnline = LocalPlayer:GetFriendsOnline(200) or {}
+            for _, f in ipairs(friendsOnline) do onlineData[f.VisitorId] = f end
+        end)
+        
+        local success, friendPages = pcall(function() return Players:GetFriendsAsync(LocalPlayer.UserId) end)
+        if not success then return end
+        
+        local idx = 0
+        while true do
+            for _, friend in ipairs(friendPages:GetCurrentPage()) do
+                idx = idx + 1
+                local fId = friend.Id
+                local username = friend.Username
+                
+                local isOnline = false
+                local locationType = 0
+                local gameName = ""
+                local placeId = 0
+                
+                if onlineData[fId] then
+                    isOnline = true
+                    locationType = onlineData[fId].LocationType
+                    gameName = onlineData[fId].LastLocation
+                    placeId = onlineData[fId].PlaceId
+                end
+                
+                local Row = Instance.new("Frame", FriendsScroll)
+                Row.Size = UDim2.new(1, -10, 0, 55); Row.LayoutOrder = idx
+                ApplyWaveGradient(Row, Color3.fromRGB(0, 70, 0), Color3.fromRGB(15, 15, 20))
+                Instance.new("UICorner", Row).CornerRadius = UDim.new(0, 8)
+                local rStr = Instance.new("UIStroke", Row); rStr.Color = Color3.fromRGB(100, 255, 100); rStr.Transparency = 0.8
+                
+                local Avatar = Instance.new("ImageLabel", Row)
+                Avatar.Size = UDim2.new(0, 40, 0, 40); Avatar.Position = UDim2.new(0, 8, 0.5, -20); Avatar.BackgroundColor3 = Color3.fromRGB(30, 31, 38)
+                Instance.new("UICorner", Avatar).CornerRadius = UDim.new(0, 6)
+                task.spawn(function() local thumb, ready = Players:GetUserThumbnailAsync(fId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size100x100); if ready then Avatar.Image = thumb end end)
+                
+                local NameLbl = Instance.new("TextLabel", Row)
+                NameLbl.Size = UDim2.new(0.4, 0, 0, 20); NameLbl.Position = UDim2.new(0, 56, 0, 8)
+                NameLbl.BackgroundTransparency = 1; NameLbl.Text = username
+                NameLbl.TextColor3 = Color3.fromRGB(255, 255, 255); NameLbl.Font = Enum.Font.GothamBold; NameLbl.TextSize = 12; NameLbl.TextXAlignment = Enum.TextXAlignment.Left
+                
+                local StatusLbl = Instance.new("TextLabel", Row)
+                StatusLbl.Size = UDim2.new(0.5, 0, 0, 15); StatusLbl.Position = UDim2.new(0, 56, 0, 28)
+                StatusLbl.BackgroundTransparency = 1; StatusLbl.Font = Enum.Font.GothamMedium; StatusLbl.TextSize = 9; StatusLbl.TextXAlignment = Enum.TextXAlignment.Left
+                
+                if locationType == 2 then 
+                    StatusLbl.Text = (CurrentLanguage == "TR" and "Oyunda: " or "In Game: ") .. (gameName ~= "" and gameName or "Gizli veya Bilinmiyor")
+                    StatusLbl.TextColor3 = Color3.fromRGB(46, 204, 113)
+                    local JoinBtn = Instance.new("TextButton", Row)
+                    JoinBtn.Size = UDim2.new(0, 70, 0, 28); JoinBtn.Position = UDim2.new(1, -78, 0.5, -14); JoinBtn.BackgroundColor3 = Color3.fromRGB(46, 204, 113)
+                    JoinBtn.Text = Translates[CurrentLanguage].JoinFriend; JoinBtn.TextColor3 = Color3.fromRGB(255, 255, 255); JoinBtn.Font = Enum.Font.GothamBold; JoinBtn.TextSize = 11
+                    Instance.new("UICorner", JoinBtn).CornerRadius = UDim.new(0, 6)
+                    JoinBtn.MouseButton1Click:Connect(function() if placeId and placeId ~= 0 then TeleportService:Teleport(placeId, LocalPlayer) end end)
+                elseif isOnline then 
+                    StatusLbl.Text = Translates[CurrentLanguage].FriendStatusOnline; StatusLbl.TextColor3 = Color3.fromRGB(52, 152, 219)
+                else 
+                    StatusLbl.Text = Translates[CurrentLanguage].FriendStatusOffline; StatusLbl.TextColor3 = Color3.fromRGB(149, 165, 166)
+                end
+            end
+            if friendPages.IsFinished then break end
+            friendPages:AdvanceToNextPageAsync()
+        end
+    end)
+end
+FriendBtn.MouseButton1Click:Connect(function() PopulateFriendsList() end)
+
+-- ==========================================
+-- [6] NOTIFY TAB
+-- ==========================================
+local NotifyTitle = Instance.new("TextLabel", NotifyTab)
+NotifyTitle.Size = UDim2.new(1, 0, 0, 30); NotifyTitle.BackgroundTransparency = 1; NotifyTitle.Text = "Güncellemeler & Yenilikler"
+NotifyTitle.TextColor3 = Color3.fromRGB(255, 255, 255); NotifyTitle.Font = Enum.Font.GothamBold; NotifyTitle.TextSize = 16; NotifyTitle.TextXAlignment = Enum.TextXAlignment.Left
+local NotifyScroll = Instance.new("ScrollingFrame", NotifyTab)
+NotifyScroll.Size = UDim2.new(1, -10, 1, -40); NotifyScroll.Position = UDim2.new(0, 5, 0, 40)
+NotifyScroll.BackgroundTransparency = 1; NotifyScroll.BorderSizePixel = 0; NotifyScroll.ScrollBarThickness = 3
+local NotifyListLayout = Instance.new("UIListLayout", NotifyScroll); NotifyListLayout.Padding = UDim.new(0, 10)
+
+local ChangelogFrame = Instance.new("Frame", NotifyScroll)
+ChangelogFrame.Size = UDim2.new(1, -10, 0, 220); ChangelogFrame.BackgroundColor3 = Color3.fromRGB(20, 21, 26)
+Instance.new("UICorner", ChangelogFrame).CornerRadius = UDim.new(0, 10)
+local chStr = Instance.new("UIStroke", ChangelogFrame); chStr.Color = Color3.fromRGB(255, 255, 255); chStr.Transparency = 0.95
+local ChangelogText = Instance.new("TextLabel", ChangelogFrame)
+ChangelogText.Size = UDim2.new(1, -20, 1, -20); ChangelogText.Position = UDim2.new(0, 10, 0, 10)
+ChangelogText.BackgroundTransparency = 1; ChangelogText.TextColor3 = Color3.fromRGB(200, 201, 210); ChangelogText.Font = Enum.Font.GothamMedium; ChangelogText.TextSize = 11; ChangelogText.TextXAlignment = Enum.TextXAlignment.Left; ChangelogText.TextYAlignment = Enum.TextYAlignment.Top; ChangelogText.TextWrapped = true
+ChangelogText.Text = [[
+[Darker Hub V2.2 - Yenilikler]
+
+• Sayfa Geçiş Animasyonları:
+  - Sayfa açılışları artık soldan sağa kayma efektiyle çok daha pürüzsüz.
+
+• Floating Platform (Yeni):
+  - Yıldızlar sekmesi Sayfa 2'de aktif edilebilir. Up/Down butonlarıyla yükseklik ayarlanabilir.
+
+• Tracer ESP (Yeni):
+  - Yıldızlar sekmesi Sayfa 2'de yer alır. Renk seçicisi ile entegre çizgi ESP özelliğidir.
+
+• Sol Menü Butonları:
+  - Navigasyon simgelerinin boyutları en verimli büyük hale (40px) uyarlandı.
+]]
+
+-- ==========================================
+-- [7] AYARLAR
+-- ==========================================
+local SettingsTitle = Instance.new("TextLabel", SettingsTab)
+SettingsTitle.Size = UDim2.new(1, 0, 0, 30); SettingsTitle.BackgroundTransparency = 1; SettingsTitle.Text = "Dil Seçeneği"
+SettingsTitle.TextColor3 = Color3.fromRGB(255, 255, 255); SettingsTitle.Font = Enum.Font.GothamBold; SettingsTitle.TextSize = 16; SettingsTitle.TextXAlignment = Enum.TextXAlignment.Left
+
+local LangContainer = Instance.new("Frame", SettingsTab)
+LangContainer.Size = UDim2.new(1, -10, 0, 120); LangContainer.Position = UDim2.new(0, 5, 0, 45)
+ApplyWaveGradient(LangContainer, Color3.fromRGB(150, 70, 0), Color3.fromRGB(15, 15, 20))
+Instance.new("UICorner", LangContainer).CornerRadius = UDim.new(0, 10)
+local lStr = Instance.new("UIStroke", LangContainer); lStr.Color = Color3.fromRGB(255, 200, 100); lStr.Transparency = 0.7
+
+local LangHeader = Instance.new("TextLabel", LangContainer)
+LangHeader.Size = UDim2.new(0, 200, 0, 30); LangHeader.Position = UDim2.new(0, 15, 0, 10); LangHeader.BackgroundTransparency = 1
+LangHeader.Text = "Language"; LangHeader.TextColor3 = Color3.fromRGB(255, 255, 255); LangHeader.Font = Enum.Font.GothamBold; LangHeader.TextSize = 14; LangHeader.TextXAlignment = Enum.TextXAlignment.Left
+local EngBtn = Instance.new("TextButton", LangContainer)
+EngBtn.Size = UDim2.new(0, 120, 0, 40); EngBtn.Position = UDim2.new(0, 15, 0, 55); EngBtn.BackgroundColor3 = Color3.fromRGB(40, 42, 50)
+EngBtn.Text = "English"; EngBtn.TextColor3 = Color3.fromRGB(255, 255, 255); EngBtn.Font = Enum.Font.GothamBold; EngBtn.TextSize = 12; Instance.new("UICorner", EngBtn).CornerRadius = UDim.new(0, 8)
+local TurBtn = Instance.new("TextButton", LangContainer)
+TurBtn.Size = UDim2.new(0, 120, 0, 40); TurBtn.Position = UDim2.new(0, 150, 0, 55); TurBtn.BackgroundColor3 = Color3.fromRGB(40, 42, 50)
+TurBtn.Text = "Turkish"; TurBtn.TextColor3 = Color3.fromRGB(255, 255, 255); TurBtn.Font = Enum.Font.GothamBold; TurBtn.TextSize = 12; Instance.new("UICorner", TurBtn).CornerRadius = UDim.new(0, 8)
+
+local function UpdateUILanguage(lang)
+    CurrentLanguage = lang; local data = Translates[lang]
+    WelcomeText.Text = data.Welcome .. LocalPlayer.DisplayName
+    SrvTitle.Text = data.Server; SrvDesc.Text = data.ServerDesc
+    PlayersTitleLbl.Text = data.Players; MaxPlrsTitleLbl.Text = data.MaxPlayers; PingTitleLbl.Text = data.Latency
+    RegionTitleLbl.Text = data.ServerRegion; TimeTitleLbl.Text = data.InServerFor; JoinScriptTitleLbl.Text = data.JoinScript; JoinScriptLabel.Text = data.TapCopy
+    ES.Text = data.WaveDesc; FT.Text = data.Friends; FDesc.Text = data.FriendsDesc
+    InServerFrTitle.Text = data.InServer; OfflineFrTitle.Text = data.Offline; OnlineFrTitle.Text = data.Online; AllFrTitle.Text = data.All
+    DS.Text = data.DiscordDesc; ExecTitle.Text = data.ExecTitle; CodeBox.PlaceholderText = data.EnterScript; ExecActBtn.Text = data.Execute; ClearActBtn.Text = data.Clear
+    TpTitle.Text = data.TpTitle; TpBox.PlaceholderText = data.TypeUser; TpBtn.Text = data.Teleport; TpLastBtn.Text = data.TpLast; TpRandomBtn.Text = data.TpRandom
+    StarsTitle.Text = data.FeaturesTitle; EPTitle.Text = data.EspColorTitle; ApplyESPBtn.Text = data.Apply
+    for _, pnl in ipairs(panelsList) do pnl.Label.Text = pnl.Key end
+    SpamLbl.Text = data.SpamMsg; SpamBox.PlaceholderText = data.SpamPlace; SpamToggleBtn.Text = spamming and data.Stop or data.Start
+    SpecLbl.Text = data.Lookat; SpecBox.PlaceholderText = data.LookatPlace; SpecToggleBtn.Text = spectating and data.UnlookBtn or data.LookatBtn; SpecLastBtn.Text = data.LookLast; SpecRandomBtn.Text = data.LookRand
+    FriendsTabTitle.Text = data.Friends; PopulateFriendsList()
+    NotifyTitle.Text = data.UpdatesTitle; SettingsTitle.Text = data.Language; LangHeader.Text = data.Language
+    
+    if lang == "EN" then
+        EngBtn.BackgroundColor3 = Color3.fromRGB(30, 90, 150); TurBtn.BackgroundColor3 = Color3.fromRGB(40, 42, 50)
+    else
+        TurBtn.BackgroundColor3 = Color3.fromRGB(30, 90, 150); EngBtn.BackgroundColor3 = Color3.fromRGB(40, 42, 50)
+    end
+end
+EngBtn.MouseButton1Click:Connect(function() UpdateUILanguage("EN") end); TurBtn.MouseButton1Click:Connect(function() UpdateUILanguage("TR") end)
+UpdateUILanguage("TR")
+
+-- SEKMELER ARASI GEÇİŞ TETİKLEYİCİLERİ
 HomeBtn.MouseButton1Click:Connect(function() SwitchToPage("Home") end)
 ExecBtn.MouseButton1Click:Connect(function() SwitchToPage("Executor") end)
 MapBtn.MouseButton1Click:Connect(function() SwitchToPage("Teleport") end)
@@ -990,34 +1126,39 @@ FriendBtn.MouseButton1Click:Connect(function() SwitchToPage("Friends") end)
 StarBtn.MouseButton1Click:Connect(function() SwitchToPage("Stars") end)
 BellBtn.MouseButton1Click:Connect(function() SwitchToPage("Notify") end)
 SettingBtn.MouseButton1Click:Connect(function() SwitchToPage("Settings") end)
-
 SwitchToPage("Home")
 
--- ==========================================
--- SAYAÇLAR VE SUNUCU BİLGİSİ YARDIMCILARI
--- ==========================================
+-- SAYAÇLAR VE SUNUCU BİLGİSİ
+local fpsTable = {}
+RunService.RenderStepped:Connect(function(dt) table.insert(fpsTable, dt); if #fpsTable > 100 then table.remove(fpsTable, 1) end end)
 local joinTime = os.time()
-local function UpdatePlayerCount()
-    PlayersLabel.Text = tostring(#Players:GetPlayers()) .. " / " .. tostring(Players.MaxPlayers)
-    MaxPlrsLabel.Text = tostring(Players.MaxPlayers)
-end
+local function UpdatePlayerCount() PlayersLabel.Text = tostring(#Players:GetPlayers()) .. " / " .. tostring(Players.MaxPlayers); MaxPlrsLabel.Text = tostring(Players.MaxPlayers) end
 Players.PlayerAdded:Connect(UpdatePlayerCount); Players.PlayerRemoving:Connect(UpdatePlayerCount); UpdatePlayerCount()
-
 pcall(function() RegionLabel.Text = game:GetService("LocalizationService").RobloxLocaleId end)
 
 task.spawn(function()
-    while task.wait(3) do
+    while task.wait(5) do
         pcall(function()
-            local friends = LocalPlayer:GetFriendsOnline(100) or {}
+            local friendsOnline = LocalPlayer:GetFriendsOnline(200) or {}
+            local success, friendPages = pcall(function() return Players:GetFriendsAsync(LocalPlayer.UserId) end)
+            local totalFriends = 0
+            if success then
+                while true do
+                    for _ in ipairs(friendPages:GetCurrentPage()) do totalFriends = totalFriends + 1 end
+                    if friendPages.IsFinished then break end
+                    friendPages:AdvanceToNextPageAsync()
+                end
+            end
+            
             local onlineCount = 0; local gameCount = 0
-            for _, info in ipairs(friends) do
+            for _, info in ipairs(friendsOnline) do
+                onlineCount = onlineCount + 1
                 if info.LocationType == 2 then gameCount = gameCount + 1 end
-                if info.IsOnline then onlineCount = onlineCount + 1 end
             end
             InServerFr.Text = tostring(gameCount) .. " " .. (CurrentLanguage == "TR" and "arkadaş" or "friends")
             OnlineFr.Text = tostring(onlineCount) .. " " .. (CurrentLanguage == "TR" and "Çevrimiçi" or "Online")
-            OfflineFr.Text = tostring(math.max(0, 100 - onlineCount)) .. " " .. (CurrentLanguage == "TR" and "Çevrimdışı" or "Offline")
-            AllFr.Text = "100 " .. (CurrentLanguage == "TR" and "Arkadaş" or "Friends")
+            OfflineFr.Text = tostring(math.max(0, totalFriends - onlineCount)) .. " " .. (CurrentLanguage == "TR" and "Çevrimdışı" or "Offline")
+            AllFr.Text = tostring(totalFriends) .. " " .. (CurrentLanguage == "TR" and "Arkadaş" or "Friends")
         end)
     end
 end)
