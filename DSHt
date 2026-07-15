@@ -30,7 +30,7 @@ local Translates = {
         InServer = "In Server",
         Offline = "Offline",
         Online = "Online",
-        All = "All",
+        All = "Total",
         DiscordDesc = "Tap to join the Discord Server",
         Copied = "Copied to clipboard!",
         ExecTitle = "Script Executor",
@@ -235,7 +235,7 @@ MainStroke.Color = Color3.fromRGB(255, 255, 255)
 MainStroke.Transparency = 0.94
 MainStroke.Parent = MainFrame
 
--- SÜRÜKLEME SİSTEMİ
+--SÜRÜKLEME SİSTEMİ
 local dragging, dragInput, dragStart, startPos
 MainFrame.InputBegan:Connect(function(input)
     if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) and not MainFrame:GetAttribute("Minimized") then
@@ -279,7 +279,7 @@ TopBarLine.BackgroundTransparency = 0.95
 TopBarLine.BorderSizePixel = 0
 
 local MoonIcon = Instance.new("ImageLabel")
-MoonIcon.Size = UDim2.new(0, 26, 0, 26) 
+MoonIcon.Size = UDim2.new(0, 26, 0, 26)
 MoonIcon.Position = UDim2.new(0, 15, 0.5, -13)
 MoonIcon.BackgroundTransparency = 1
 MoonIcon.Image = "rbxassetid://94035720579249" 
@@ -322,7 +322,7 @@ MinimizeBtn.Image = "rbxassetid://10751034456"
 MinimizeBtn.ImageColor3 = Color3.fromRGB(150, 151, 160)
 MinimizeBtn.ScaleType = Enum.ScaleType.Fit
 
--- SOL KENAR ÇUBUĞU (SIDEBAR)
+--SOL KENAR ÇUBUĞU (SIDEBAR)
 local SideBar = Instance.new("Frame", MainFrame)
 SideBar.Size = UDim2.new(0, 50, 1, -42)
 SideBar.Position = UDim2.new(0, 0, 0, 42)
@@ -346,7 +346,8 @@ ButtonLayout.Padding = UDim.new(0, 10)
 
 local TabButtons = {Selected = nil}
 
-local function CreateNavButton(name, iconId)
+--BOYUT AYARLI YENİ BUTON FONKSİYONU
+local function CreateNavButton(name, iconId, iconSize)
     local BtnContainer = Instance.new("Frame", ButtonList)
     BtnContainer.Size = UDim2.new(0, 34, 0, 34)
     BtnContainer.BackgroundTransparency = 1
@@ -358,11 +359,13 @@ local function CreateNavButton(name, iconId)
     Stroke.Transparency = 1
 
     local Icon = Instance.new("ImageButton", BtnContainer)
-    Icon.Size = UDim2.new(0, 16, 0, 16)
-    Icon.Position = UDim2.new(0.5, -8, 0.5, -8)
+    local size = iconSize or 16
+    Icon.Size = UDim2.new(0, size, 0, size)
+    Icon.Position = UDim2.new(0.5, -(size/2), 0.5, -(size/2))
     Icon.BackgroundTransparency = 1
     Icon.Image = iconId
     Icon.ImageColor3 = Color3.fromRGB(150, 151, 160)
+    Icon.ScaleType = Enum.ScaleType.Fit
     
     TabButtons[name] = Icon
 
@@ -379,16 +382,14 @@ local function CreateNavButton(name, iconId)
     return Icon
 end
 
--- =======================================================
--- BUTON SİMGELERİ (ID'leri buradaki tırnak içlerine yazmalısın)
--- =======================================================
-local HomeBtn = CreateNavButton("Home", "rbxassetid://EV_SİMGESİ_ID_BURAYA")          
-local ExecBtn = CreateNavButton("Executor", "rbxassetid://KOD_SİMGESİ_ID_BURAYA")      
-local MapBtn = CreateNavButton("Teleport", "rbxassetid://KONUM_SİMGESİ_ID_BURAYA")       
-local FriendBtn = CreateNavButton("Friends", "rbxassetid://İNSAN_KAFASI_ID_BURAYA")     
-local StarBtn = CreateNavButton("Stars", "rbxassetid://YILDIZ_SİMGESİ_ID_BURAYA")         
-local BellBtn = CreateNavButton("Notify", "rbxassetid://BİLDİRİM_SİMGESİ_ID_BURAYA")        
-local SettingBtn = CreateNavButton("Settings", "rbxassetid://AYARLAR_SİMGESİ_ID_BURAYA")   
+-- İKON GÜNCELLEMELERİ (Senin belirttiğin ID'ler ve boyutlar)
+local HomeBtn = CreateNavButton("Home", "rbxassetid://94035720579249")          -- Darker Logosu
+local ExecBtn = CreateNavButton("Executor", "rbxassetid://125081190503235") 
+local MapBtn = CreateNavButton("Teleport", "rbxassetid://86143271250497", 22)  -- Büyütüldü
+local FriendBtn = CreateNavButton("Friends", "rbxassetid://82208832868901")     
+local StarBtn = CreateNavButton("Stars", "rbxassetid://86950770485410", 22)    -- Büyütüldü
+local BellBtn = CreateNavButton("Notify", "rbxassetid://111094391421625")        
+local SettingBtn = CreateNavButton("Settings", "rbxassetid://10734950020")   
 
 local SideAvatarFrame = Instance.new("Frame", SideBar)
 SideAvatarFrame.Size = UDim2.new(0, 34, 0, 34)
@@ -431,13 +432,13 @@ local NotifyTab = CreatePage("Notify")
 local SettingsTab = CreatePage("Settings")
 
 -- =======================================================
--- MÜKEMMEL MİNİMİZE SİSTEMİ (KARE BÜYÜTÜLDÜ, LOGO TAM OTURTULDU)
+-- SMOOTH MİNİMİZE SİSTEMİ (Boyut ve Logo Düzeltildi)
 -- =======================================================
 local isMinimized = false
 local originalSize = UDim2.new(0, 680, 0, 420)
-local minimizedSize = UDim2.new(0, 65, 0, 65) -- Kare boyutunu 50'den 65'e çıkardık, daha ferah
+local minimizedSize = UDim2.new(0, 60, 0, 60) -- Biraz daha büyütüldü
 local originalCornerRadius = UDim.new(0, 14)
-local minimizedCornerRadius = UDim.new(0, 14) 
+local minimizedCornerRadius = UDim.new(0, 12)
 
 MinimizeBtn.MouseButton1Click:Connect(function()
     isMinimized = not isMinimized
@@ -454,22 +455,21 @@ MinimizeBtn.MouseButton1Click:Connect(function()
         SideBar.Visible = false
         PagesContainer.Visible = false
         
-        -- Logo karenin üstüne milimetrik olarak tam oturacak
-        MinimizeBtn.Position = UDim2.new(0, 0, 0, 0)
-        MinimizeBtn.Size = UDim2.new(1, 0, 1, 0)
-        MinimizeBtn.Image = "rbxassetid://94035720579249" -- Logomuz
-        MinimizeBtn.ScaleType = Enum.ScaleType.Crop -- Taşma veya boşluk kalmaması için kırparak tam oturtur
-        MinimizeBtn.ImageColor3 = Color3.fromRGB(255, 255, 255)
+        -- Logo milimetrik oturması için ayarlandı
+        MinimizeBtn.Position = UDim2.new(0, 10, 0, 10)
+        MinimizeBtn.Size = UDim2.new(1, -20, 1, -20)
+        MinimizeBtn.Image = "rbxassetid://94035720579249" -- MİNİMİZE LOGOSU
+        MinimizeBtn.ScaleType = Enum.ScaleType.Fit
         
         local tweenInfo = TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
         TweenService:Create(MainFrame, tweenInfo, {Size = minimizedSize}):Play()
         TweenService:Create(MainCorner, tweenInfo, {CornerRadius = minimizedCornerRadius}):Play()
     else
+        -- Eski haline döndürme
         MinimizeBtn.Position = UDim2.new(1, -52, 0.5, -8)
         MinimizeBtn.Size = UDim2.new(0, 16, 0, 16)
         MinimizeBtn.Image = "rbxassetid://10751034456"
         MinimizeBtn.ScaleType = Enum.ScaleType.Fit
-        MinimizeBtn.ImageColor3 = Color3.fromRGB(150, 151, 160)
         
         local tweenInfo = TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
         local sizeTween = TweenService:Create(MainFrame, tweenInfo, {Size = originalSize})
@@ -494,8 +494,10 @@ end)
 
 -- ==========================================
 -- TEMA (DALGALI ARKA PLAN) FONKSİYONU
--- local function ApplyWaveTheme(frame, color1, color2, strokeColor)
-    frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+-- ==========================================
+local function ApplyWaveTheme(frame, color1, color2, strokeColor)
+    frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255) 
+    
     local gradient = Instance.new("UIGradient", frame)
     gradient.Color = ColorSequence.new({
         ColorSequenceKeypoint.new(0, color1), 
@@ -504,7 +506,9 @@ end)
     gradient.Rotation = 45
 
     local stroke = frame:FindFirstChildOfClass("UIStroke")
-    if not stroke then stroke = Instance.new("UIStroke", frame) end
+    if not stroke then
+        stroke = Instance.new("UIStroke", frame)
+    end
     stroke.Color = strokeColor
     stroke.Thickness = 1.2
     stroke.Transparency = 0.8
@@ -549,6 +553,7 @@ SubText.Font = Enum.Font.GothamMedium
 SubText.TextSize = 11
 SubText.TextXAlignment = Enum.TextXAlignment.Left
 
+-- SERVER KARTI
 local ServerSection = Instance.new("Frame", HomeTab)
 ServerSection.Size = UDim2.new(0.55, -8, 0, 180)
 ServerSection.Position = UDim2.new(0, 5, 0, 90)
@@ -648,6 +653,7 @@ ES.TextSize = 9
 ES.TextXAlignment = Enum.TextXAlignment.Left
 ES.TextWrapped = true
 
+-- FRIENDS CARD
 local FriendsCard = Instance.new("Frame", HomeTab)
 FriendsCard.Size = UDim2.new(0.45, -8, 0, 160)
 FriendsCard.Position = UDim2.new(0.55, 3, 0, 185)
@@ -686,6 +692,7 @@ local OfflineFrTitle, OfflineFr = CreateInfoBox(FriendsGridContainer, "Çevrimd�
 local OnlineFrTitle, OnlineFr = CreateInfoBox(FriendsGridContainer, "Çevrimiçi", "Hesaplanıyor...")
 local AllFrTitle, AllFr = CreateInfoBox(FriendsGridContainer, "Toplam", "Hesaplanıyor...")
 
+-- DISCORD CARD
 local DiscordCard = Instance.new("Frame", HomeTab)
 DiscordCard.Size = UDim2.new(0.55, -8, 0, 70)
 DiscordCard.Position = UDim2.new(0, 5, 0, 275)
@@ -870,7 +877,7 @@ end)
 
 -- ==========================================
 -- [4] STARS TAB (ÖZELLİKLER & HİLELER)
--- ============-- ==========================================
+-- ==========================================
 local StarsTitle = Instance.new("TextLabel", StarsTab)
 StarsTitle.Size = UDim2.new(1, 0, 0, 30)
 StarsTitle.BackgroundTransparency = 1
@@ -890,6 +897,7 @@ local StarLayout = Instance.new("UIListLayout", StarScroll)
 StarLayout.Padding = UDim.new(0, 8)
 StarLayout.SortOrder = Enum.SortOrder.LayoutOrder
 
+-- ESP YENİ FİLTRE SİSTEMİ
 local ESPPickerFrame = Instance.new("Frame", MainFrame)
 ESPPickerFrame.Size = UDim2.new(0, 240, 0, 170)
 ESPPickerFrame.Position = UDim2.new(0.5, -120, 0.5, -85)
@@ -909,6 +917,7 @@ EPTitle.Font = Enum.Font.GothamBold
 EPTitle.TextSize = 12
 EPTitle.ZIndex = 10
 
+-- Filtre Modu Seçici
 local ESPModes = {"All", "Player", "NPC", "Specific"}
 local currentEspModeIdx = 1
 local ESPModeBtn = Instance.new("TextButton", ESPPickerFrame)
@@ -927,7 +936,7 @@ ESPSpecificBox.Size = UDim2.new(0, 125, 0, 25)
 ESPSpecificBox.Position = UDim2.new(0, 100, 0, 35)
 ESPSpecificBox.BackgroundColor3 = Color3.fromRGB(30, 31, 38)
 ESPSpecificBox.Text = ""
-ESPSpecificBox.PlaceholderText = "İsim girin"
+ESPSpecificBox.PlaceholderText = "İsim girin (Specific)"
 ESPSpecificBox.TextColor3 = Color3.fromRGB(255, 255, 255)
 ESPSpecificBox.Font = Enum.Font.GothamMedium
 ESPSpecificBox.TextSize = 10
@@ -1100,6 +1109,7 @@ local function CreateModPanel(name, hasSlider, maxSliderVal, defaultSliderVal, o
     table.insert(panelsList, {Label = Lbl, Key = name})
 end
 
+---- Fly Sistemi
 local isFlying = false
 local flySpeed = 50
 local flyBV, flyBG, flyLoop
@@ -1129,7 +1139,7 @@ local function StartFly()
         if moveDir.Magnitude > 0 then moveDir = moveDir.Unit end
         flyBV.Velocity = moveDir * flySpeed
     end)
-   ShowNotification("Fly", Translates[CurrentLanguage].FlyActive, 3)
+    ShowNotification("Fly", Translates[CurrentLanguage].FlyActive, 3)
 end
 local function StopFly()
     isFlying = false
@@ -1141,6 +1151,7 @@ local function StopFly()
 end
 CreateModPanel("Fly Hack", true, 500, 50, function(active) if active then StartFly() else StopFly() end end, function(val) flySpeed = val end)
 
+-- FLOATING PLATFORM SİSTEMİ
 local PlatformEnabled = false
 local PlatformOffset = -3.5
 local FloatPart = Instance.new("Part")
@@ -1150,6 +1161,7 @@ FloatPart.BrickColor = BrickColor.new("Bright blue")
 FloatPart.Anchored = true
 FloatPart.CanCollide = true
 
+-- Up/Down Butonları
 local FloatControls = Instance.new("Frame", ScreenGui)
 FloatControls.Size = UDim2.new(0, 55, 0, 120)
 FloatControls.Position = UDim2.new(1, -70, 0.5, -60)
@@ -1190,9 +1202,11 @@ CreateModPanel("Floating Platform", false, 0, 0, function(active)
     if active then FloatPart.Parent = workspace else FloatPart.Parent = nil end
 end, nil)
 
+-- ESP Filtreli Çizim
 local espEnabled = false
 local ESPFolder = Instance.new("Folder", CoreGui)
 ESPFolder.Name = "HiddenDarkerESP"
+
 local function CheckESPTarget(model)
     local mode = ESPModes[currentEspModeIdx]
     if mode == "All" then return true end
@@ -1201,9 +1215,11 @@ local function CheckESPTarget(model)
     if mode == "Specific" then return string.find(string.lower(model.Name), string.lower(ESPSpecificBox.Text)) ~= nil end
     return false
 end
+
 local function ApplyESPToAll()
     ESPFolder:ClearAllChildren()
     if not espEnabled then return end
+    
     for _, model in ipairs(workspace:GetDescendants()) do
         if model:IsA("Model") and model ~= LocalPlayer.Character and model:FindFirstChild("HumanoidRootPart") then
             if CheckESPTarget(model) then
@@ -1217,11 +1233,13 @@ local function ApplyESPToAll()
         end
     end
 end
+
 ApplyESPBtn.MouseButton1Click:Connect(function()
     ESPPickerFrame.Visible = false
     ApplyESPToAll()
     ShowNotification("ESP", Translates[CurrentLanguage].EspApplied, 3)
 end)
+
 CreateModPanel("ESP", false, 0, 0, function(active)
     espEnabled = active
     if active then ESPPickerFrame.Visible = true else ESPPickerFrame.Visible = false; ESPFolder:ClearAllChildren() end
@@ -1235,6 +1253,7 @@ end, function(val)
     local h = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid")
     if h then h.WalkSpeed = val end
 end)
+
 CreateModPanel("JumpPower", true, 500, 50, function(active)
     local h = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid")
     if h then h.UseJumpPower = true; h.JumpPower = active and 150 or 50 end
@@ -1243,6 +1262,7 @@ end, function(val)
     local h = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid")
     if h then h.UseJumpPower = true; h.JumpPower = val end
 end)
+
 local infJumpEnabled = false
 UserInputService.JumpRequest:Connect(function()
     if infJumpEnabled then
@@ -1274,6 +1294,7 @@ CreateModPanel("Noclip", false, 0, 0, function(active)
     end
 end, nil)
 
+-- SPAM MESSAGE PANEL
 layoutCounter = layoutCounter + 1
 local SpamPanel = Instance.new("Frame", StarScroll)
 SpamPanel.Size = UDim2.new(1, -6, 0, 55)
@@ -1361,10 +1382,14 @@ SpamToggleBtn.MouseButton1Click:Connect(function()
     else
         SpamToggleBtn.Text = Translates[CurrentLanguage].Start
         SpamToggleBtn.BackgroundColor3 = Color3.fromRGB(40, 42, 50)
-        if spamThread then task.cancel(spamThread); spamThread = nil end
+        if spamThread then
+            task.cancel(spamThread)
+            spamThread = nil
+        end
     end
 end)
 
+-- SPECTATE PANEL
 layoutCounter = layoutCounter + 1
 local SpecPanel = Instance.new("Frame", StarScroll)
 SpecPanel.Size = UDim2.new(1, -6, 0, 110)
@@ -1464,7 +1489,7 @@ end)
 
 -- ==========================================
 -- [4] FRIENDS TAB
----- ==========================================
+--==========================================
 local FriendsTabTitle = Instance.new("TextLabel", FriendsTabPage)
 FriendsTabTitle.Size = UDim2.new(1, 0, 0, 30)
 FriendsTabTitle.BackgroundTransparency = 1
@@ -1600,24 +1625,27 @@ ChangelogText.TextSize = 11
 ChangelogText.TextXAlignment = Enum.TextXAlignment.Left
 ChangelogText.TextYAlignment = Enum.TextYAlignment.Top
 ChangelogText.TextWrapped = true
+
 ChangelogText.Text = [[
-[Darker Hub V2.3 - Changelog]
+[Darker Hub V2.2 - Changelog]
 
-• Settings Theme Fix:
-  - Settings now uses the sleek Discord Wave aesthetic properly.
+• Smooth Transitions & Effects:
+  - All pages now have a slide-in transition.
+  - Added new UIGradients / Discord Wave design to Cards.
 
-• Minimized Perfect Fit:
-  - Scaled the minimized UI square larger (65x65) for breathability.
-  - Logo scaled and cropped precisely to fit the square edge-to-edge.
+• Added "Floating Platform":
+  - Active via Features tab. Up/Down Roblox-bubble UI provided.
 
-• Advanced Friends Tracker:
-  - Accurate fetching for Offline, Online, and In-Game total counts implemented directly from Roblox API.
-  - Shows precise counts flawlessly in the Home tab.
+• Spam Delay Added:
+  - You can now specify the exact second delay inside the Spam Message Panel.
+  
+• ESP System Upgrades:
+  - Dropdown Mode (All, Player, NPC, Specific Target) implemented into ESP picker!
 ]]
 
 -- ==========================================
--- [7] AYARLAR (SETTINGS TAB)
----- ==========================================
+-- [7] AYARLAR (SETTINGS TAB) Turuncu-Siyah Tema
+-- ==========================================
 local SettingsTitle = Instance.new("TextLabel", SettingsTab)
 SettingsTitle.Size = UDim2.new(1, 0, 0, 30)
 SettingsTitle.BackgroundTransparency = 1
@@ -1631,8 +1659,7 @@ local LangContainer = Instance.new("Frame", SettingsTab)
 LangContainer.Size = UDim2.new(1, -10, 0, 120)
 LangContainer.Position = UDim2.new(0, 5, 0, 45)
 Instance.new("UICorner", LangContainer).CornerRadius = UDim.new(0, 10)
--- Dalgalı ayarlar Wave
-ApplyWaveTheme(LangContainer, Color3.fromRGB(88, 101, 242), Color3.fromRGB(20, 21, 35), Color3.fromRGB(114, 137, 218))
+ApplyWaveTheme(LangContainer, Color3.fromRGB(255, 115, 0), Color3.fromRGB(10, 10, 10), Color3.fromRGB(200, 90, 0))
 
 local LangHeader = Instance.new("TextLabel", LangContainer)
 LangHeader.Size = UDim2.new(0, 200, 0, 30)
@@ -1725,7 +1752,7 @@ TurBtn.MouseButton1Click:Connect(function() UpdateUILanguage("TR") end)
 UpdateUILanguage("TR")
 
 -- ==========================================
--- SEKMELER ARASI GEÇİŞ MANTİĞİ 
+-- SEKMELER ARASI GEÇİŞ MANTİĞİ
 -- ==========================================
 local function SwitchToPage(pageName)
     local targetBtn = TabButtons[pageName]
@@ -1756,7 +1783,9 @@ local function SwitchToPage(pageName)
                 local hideTween = TweenService:Create(page, TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.In), {Position = UDim2.new(1, 0, 0, 0)})
                 hideTween:Play()
                 hideTween.Completed:Connect(function()
-                    if TabButtons.Selected ~= TabButtons[name] then page.Visible = false end
+                    if TabButtons.Selected ~= TabButtons[name] then
+                        page.Visible = false
+                    end
                 end)
             end
         end
@@ -1770,27 +1799,17 @@ FriendBtn.MouseButton1Click:Connect(function() SwitchToPage("Friends") end)
 StarBtn.MouseButton1Click:Connect(function() SwitchToPage("Stars") end)
 BellBtn.MouseButton1Click:Connect(function() SwitchToPage("Notify") end)
 SettingBtn.MouseButton1Click:Connect(function() SwitchToPage("Settings") end)
+
 SwitchToPage("Home")
 
 -- ==========================================
--- SAYAÇLAR VE GELİŞMİŞ ARKADAŞ HESAPLAMA SİSTEMİ
--- ==========================================
-local TotalFriendsCount = 0
-
--- Sayfa yüklendiğinde arka planda sadece 1 kere oyuncunun toplam arkadaş sayısını tarayıp değişkene atar.
-task.spawn(function()
-    pcall(function()
-        local page = Players:GetFriendsAsync(LocalPlayer.UserId)
-        local count = 0
-        while true do
-            count = count + #page:GetCurrentPage()
-            if page.IsFinished then break end
-            page:AdvanceToNextPageAsync()
-        end
-        TotalFriendsCount = count
-    end)
+-- SAYAÇLAR VE SUNUCU BİLGİSİ (Arkadaş Sistemi Düzenlendi)
+---- ==========================================
+local fpsTable = {}
+RunService.RenderStepped:Connect(function(dt)
+    table.insert(fpsTable, dt)
+    if #fpsTable > 100 then table.remove(fpsTable, 1) end
 end)
-
 local joinTime = os.time()
 local function UpdatePlayerCount()
     PlayersLabel.Text = tostring(#Players:GetPlayers()) .. " / " .. tostring(Players.MaxPlayers)
@@ -1802,31 +1821,41 @@ UpdatePlayerCount()
 
 pcall(function() RegionLabel.Text = game:GetService("LocalizationService").RobloxLocaleId end)
 
+-- Gerçek Toplam Arkadaş Sayısını bir kere arka planda hesaplama işlemi (Spam atıp sistemi yormamak için)
+local cachedTotalFriends = 0
+task.spawn(function()
+    pcall(function()
+        local page = Players:GetFriendsAsync(LocalPlayer.UserId)
+        local count = 0
+        while true do
+            count = count + #page:GetCurrentPage()
+            if not page.IsFinished then 
+                page:AdvanceToNextPageAsync() 
+            else 
+                break 
+            end
+        end
+        cachedTotalFriends = count
+    end)
+end)
+
 task.spawn(function()
     while task.wait(3) do
         pcall(function()
             local friends = LocalPlayer:GetFriendsOnline(200) or {}
-            local onlineCount = #friends
-            local gameCount = 0
-            
+            local onlineCount, gameCount = 0, 0
             for _, info in ipairs(friends) do
-                -- LocationType: 2 veya 3 oyuncunun oyunda/stüdyoda olduğunu gösterir
-                if info.LocationType == 2 or info.LocationType == 3 then 
-                    gameCount = gameCount + 1 
-                end
+                if info.LocationType == 2 then gameCount = gameCount + 1 end
+                if info.IsOnline then onlineCount = onlineCount + 1 end
             end
             
-            InServerFr.Text = tostring(gameCount) .. " " .. (CurrentLanguage == "TR" and "Oyunda" or "In Game")
+            -- Hata payını sıfıra indiren offline hesabı
+            local offlineCount = math.max(0, cachedTotalFriends - onlineCount)
+            
+            InServerFr.Text = tostring(gameCount) .. " " .. (CurrentLanguage == "TR" and "arkadaş" or "friends")
             OnlineFr.Text = tostring(onlineCount) .. " " .. (CurrentLanguage == "TR" and "Çevrimiçi" or "Online")
-            
-            -- Gerçek toplam arkadaştan, çevrimiçi olanları çıkarırsak çevrimdışıları buluruz
-            local offlineCount = TotalFriendsCount - onlineCount
-            if offlineCount < 0 then offlineCount = 0 end 
-            
             OfflineFr.Text = tostring(offlineCount) .. " " .. (CurrentLanguage == "TR" and "Çevrimdışı" or "Offline")
-            
-            -- Gerçek toplam sayıyı yazar
-            AllFr.Text = tostring(TotalFriendsCount) .. " " .. (CurrentLanguage == "TR" and "Arkadaş" or "Friends")
+            AllFr.Text = tostring(cachedTotalFriends) .. " " .. (CurrentLanguage == "TR" and "Toplam" or "Total")
         end)
     end
 end)
