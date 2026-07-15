@@ -39,7 +39,7 @@ local Translates = {
         Friends = "Arkadaşlar", FriendsDesc = "Arkadaşlarınızın şu anda ne yaptığını öğrenin", InServer = "Sunucuda",
         Offline = "Çevrimdışı", Online = "Çevrimiçi", All = "Toplam", DiscordDesc = "Discord Sunucusuna katılmak için tıklayın",
         Copied = "Panoya kopyalandı!", ExecTitle = "Script Çalıştırıcı", EnterScript = "-- Scriptinizi buraya yazın...",
-        Execute = "Çalıştır", Clear = "Temizle", ExecSuccess = "Başarıyla çalıştırıldı!", TpTitle = "Oyuncu Işınlanma",
+        Execute = "Çalir", Clear = "Temizle", ExecSuccess = "Başarıyla çalıştırıldı!", TpTitle = "Oyuncu Işınlanma",
         TypeUser = "Kullanıcı Adı Yazın...", Teleport = "Işınlan", TpLast = "Son Hedefe Işınlan", TpRandom = "Rastgele Işınlan",
         TpError = "Oyuncu bulunamadı veya ölü!", TpSuccess = "Şuraya ışınlanıldı: ", NoOtherPlrs = "Sunucuda başka oyuncu yok!",
         FeaturesTitle = "Özellikler & Hileler", EspColorTitle = "ESP Rengini Seçin", Apply = "Uygula", EspApplied = "ESP Rengi Uygulandı!",
@@ -112,6 +112,7 @@ local function ShowNotification(title, text, duration)
 
     TweenService:Create(Frame, TweenInfo.new(0.3), {BackgroundTransparency = 0.15}):Play()
     task.delay(duration or 3, function()
+        if not Frame or not Frame.Parent then return end
         TweenService:Create(Frame, TweenInfo.new(0.3), {BackgroundTransparency = 1}):Play()
         TweenService:Create(Stroke, TweenInfo.new(0.3), {Transparency = 1}):Play()
         TweenService:Create(TitleLbl, TweenInfo.new(0.3), {TextTransparency = 1}):Play()
@@ -235,7 +236,7 @@ local function CreateNavButton(name, iconId)
     return Icon
 end
 
--- YENİ NAVİGASYON SİMGELERİ
+-- NAVİGASYON SİMGELERİ
 local HomeBtn = CreateNavButton("Home", "rbxassetid://110705725860423")
 local ExecBtn = CreateNavButton("Executor", "rbxassetid://125081190503235")
 local MapBtn = CreateNavButton("Teleport", "rbxassetid://86143271250497")
@@ -260,7 +261,7 @@ end)
 local PagesContainer = Instance.new("Frame", MainFrame)
 PagesContainer.Size = UDim2.new(1, -66, 1, -58); PagesContainer.Position = UDim2.new(0, 58, 0, 50)
 PagesContainer.BackgroundTransparency = 1
-PagesContainer.ClipsDescendants = true -- Taşmaları ve kayma animasyonlarını sınırlandırmak için aktif edildi!
+PagesContainer.ClipsDescendants = true 
 
 local Pages = {}
 local function CreatePage(name)
@@ -278,9 +279,7 @@ local StarsTab = CreatePage("Stars")
 local NotifyTab = CreatePage("Notify")
 local SettingsTab = CreatePage("Settings")
 
--- =======================================================
--- SMOOTH MİNİMİZE SİSTEMİ (Tam Oturan Logo Düzeltmesiyle)
--- =======================================================
+-- SMOOTH MİNİMİZE SİSTEMİ
 local isMinimized = false
 local originalSize = UDim2.new(0, 680, 0, 420)
 local minimizedSize = UDim2.new(0, 50, 0, 50)
@@ -294,7 +293,6 @@ MinimizeBtn.MouseButton1Click:Connect(function()
         TitleLabel.TextTransparency = 1; SubTitleLabel.TextTransparency = 1; MoonIcon.ImageTransparency = 1; CloseBtn.ImageTransparency = 1
         SideBar.Visible = false; PagesContainer.Visible = false
         
-        -- Logo tam kareye oturtuldu
         MinimizeBtn.Size = UDim2.new(1, 0, 1, 0)
         MinimizeBtn.Position = UDim2.new(0, 0, 0, 0)
         MinimizeBtn.Image = "rbxassetid://94035720579249"
@@ -346,7 +344,7 @@ SubText.Size = UDim2.new(1, -85, 0, 18); SubText.Position = UDim2.new(0, 78, 0, 
 SubText.BackgroundTransparency = 1; SubText.Text = LocalPlayer.Name .. " - Darker"
 SubText.TextColor3 = Color3.fromRGB(130, 131, 140); SubText.Font = Enum.Font.GothamMedium; SubText.TextSize = 11; SubText.TextXAlignment = Enum.TextXAlignment.Left
 
--- SERVER KARTI (Koyu Yeşil -> Siyah)
+-- SERVER KARTI
 local ServerSection = Instance.new("Frame", HomeTab)
 ServerSection.Size = UDim2.new(0.55, -8, 0, 180); ServerSection.Position = UDim2.new(0, 5, 0, 90)
 ApplyWaveGradient(ServerSection, Color3.fromRGB(0, 70, 0), Color3.fromRGB(15, 15, 20))
@@ -383,7 +381,7 @@ local RegionTitleLbl, RegionLabel = CreateInfoBox(ServerContainer, "Sunucu Bölg
 local TimeTitleLbl, TimeLabel = CreateInfoBox(ServerContainer, "Sunucuda geçen süre", "00:00:00")
 local JoinScriptTitleLbl, JoinScriptLabel = CreateInfoBox(ServerContainer, "Giriş Scripti", "Kopyalamak için dokunun")
 
--- WAVE KARTI (Koyu Kırmızı -> Siyah)
+-- WAVE KARTI
 local ExecCard = Instance.new("Frame", HomeTab)
 ExecCard.Size = UDim2.new(0.45, -8, 0, 85); ExecCard.Position = UDim2.new(0.55, 3, 0, 90)
 ApplyWaveGradient(ExecCard, Color3.fromRGB(100, 0, 0), Color3.fromRGB(15, 15, 20))
@@ -397,7 +395,7 @@ local ES = Instance.new("TextLabel", ExecCard)
 ES.Size = UDim2.new(1, -20, 0, 40); ES.Position = UDim2.new(0, 12, 0, 30); ES.BackgroundTransparency = 1
 ES.Text = "Executor'ınız bu scripti destekliyor gibi görünüyor."; ES.TextColor3 = Color3.fromRGB(230, 200, 200); ES.Font = Enum.Font.GothamMedium; ES.TextSize = 9; ES.TextXAlignment = Enum.TextXAlignment.Left; ES.TextWrapped = true
 
--- ARKADAŞLAR KARTI (Koyu Mor -> Siyah)
+-- ARKADAŞLAR KARTI
 local FriendsCard = Instance.new("Frame", HomeTab)
 FriendsCard.Size = UDim2.new(0.45, -8, 0, 160); FriendsCard.Position = UDim2.new(0.55, 3, 0, 185)
 ApplyWaveGradient(FriendsCard, Color3.fromRGB(70, 0, 100), Color3.fromRGB(15, 15, 20))
@@ -420,7 +418,7 @@ local OfflineFrTitle, OfflineFr = CreateInfoBox(FriendsGridContainer, "Çevrimd�
 local OnlineFrTitle, OnlineFr = CreateInfoBox(FriendsGridContainer, "Çevrimiçi", "Hesaplanıyor...")
 local AllFrTitle, AllFr = CreateInfoBox(FriendsGridContainer, "Toplam", "Hesaplanıyor...")
 
--- DISCORD KARTI (Koyu Mavi -> Siyah)
+-- DISCORD KARTI
 local DiscordCard = Instance.new("Frame", HomeTab)
 DiscordCard.Size = UDim2.new(0.55, -8, 0, 70); DiscordCard.Position = UDim2.new(0, 5, 0, 275)
 ApplyWaveGradient(DiscordCard, Color3.fromRGB(0, 0, 90), Color3.fromRGB(15, 15, 20))
@@ -444,7 +442,7 @@ DiscordBtn.MouseButton1Click:Connect(function()
 end)
 
 -- ==========================================
--- [2] EXECUTOR TAB (Açık Yeşil -> Siyah)
+-- [2] EXECUTOR TAB
 -- ==========================================
 local ExecTitle = Instance.new("TextLabel", ExecutorTab)
 ExecTitle.Size = UDim2.new(1, 0, 0, 30); ExecTitle.BackgroundTransparency = 1; ExecTitle.Text = "Script Çalıştırıcı"
@@ -478,7 +476,7 @@ Instance.new("UICorner", ClearActBtn).CornerRadius = UDim.new(0, 8)
 ClearActBtn.MouseButton1Click:Connect(function() CodeBox.Text = "" end)
 
 -- ==========================================
--- [3] TELEPORT TAB (Soluk Mavi -> Siyah Kartlı)
+-- [3] TELEPORT TAB
 -- ==========================================
 local TpTitle = Instance.new("TextLabel", TeleportTab)
 TpTitle.Size = UDim2.new(1, 0, 0, 30); TpTitle.BackgroundTransparency = 1; TpTitle.Text = "Oyuncu Işınlanma"
@@ -535,9 +533,6 @@ local function ExecuteTP(targetPlayer)
     end
 end
 
--- ==========================================
--- OYUNCU IŞINLANMA BUTON BAĞLANTILARI
--- ==========================================
 TpBtn.MouseButton1Click:Connect(function() ExecuteTP(GetPlayerFromPart(TpBox.Text)) end)
 TpLastBtn.MouseButton1Click:Connect(function() ExecuteTP(lastTPTarget) end)
 TpRandomBtn.MouseButton1Click:Connect(function()
@@ -680,7 +675,7 @@ CreateModPanel("Noclip", false, 0, 0, function(active)
     end
 end, nil)
 
--- SPAM & SPECTATE PANELS (Yine Koyu Kırmızı)
+-- SPAM & SPECTATE PANELS
 layoutCounter = layoutCounter + 1
 local SpamPanel = Instance.new("Frame", StarScroll); SpamPanel.Size = UDim2.new(1, -6, 0, 55); SpamPanel.LayoutOrder = layoutCounter
 ApplyWaveGradient(SpamPanel, Color3.fromRGB(80, 0, 0), Color3.fromRGB(15, 15, 20))
@@ -738,7 +733,7 @@ SpecLastBtn.MouseButton1Click:Connect(function() if lastLookatTarget then SetSpe
 SpecRandomBtn.MouseButton1Click:Connect(function() local plrs, valid = Players:GetPlayers(), {}; for _, p in ipairs(plrs) do if p ~= LocalPlayer then table.insert(valid, p) end end; if #valid > 0 then SetSpectate(valid[math.random(1, #valid)]) else ShowNotification("Error", "No other players found!", 2) end end)
 
 -- ==========================================
--- [5] FRIENDS TAB - TÜM ARKADAŞLARI VE DURUMLARINI GÖSTERME (DETAYLANDIRILMIŞ & SIRALANMIŞ YENİ SÜRÜM)
+-- [5] FRIENDS TAB (GÜNCELLENMİŞ VE DÜZELTİLMİŞ)
 -- ==========================================
 local FriendsTabTitle = Instance.new("TextLabel", FriendsTabPage)
 FriendsTabTitle.Size = UDim2.new(1, 0, 0, 30); FriendsTabTitle.BackgroundTransparency = 1; FriendsTabTitle.Text = "Arkadaşlar"
@@ -756,7 +751,7 @@ local function PopulateFriendsList()
     end
     
     task.spawn(function()
-        -- Çevrimiçi arkadaşların anlık detaylarını çek (LocationType, PlaceId, GameName)
+        -- Çevrimiçi arkadaşların anlık detaylarını çek
         local onlineData = {}
         pcall(function()
             local friendsOnline = LocalPlayer:GetFriendsOnline(200) or {}
@@ -771,7 +766,6 @@ local function PopulateFriendsList()
         
         local rawFriendsList = {}
         
-        -- Arkadaşları bir tabloya toplayalım
         while true do
             for _, friend in ipairs(friendPages:GetCurrentPage()) do
                 local fId = friend.Id
@@ -779,26 +773,36 @@ local function PopulateFriendsList()
                 local displayName = friend.DisplayName or username
                 
                 local isOnline = false
-                local locationType = 0
+                local isGame = false
+                local isStudio = false
                 local gameName = ""
                 local placeId = 0
                 
                 if onlineData[fId] then
-                    isOnline = true
-                    locationType = onlineData[fId].LocationType
+                    local rawLocationType = onlineData[fId].LocationType
                     gameName = onlineData[fId].LastLocation or ""
                     placeId = onlineData[fId].PlaceId or 0
-                end
-                
-                -- Durumları tespit et (Doğru Eşleştirme & Geliştirilmiş Çift Kontrol Algoritması)
-                local isGame = false
-                local isStudio = false
-                
-                if isOnline then
-                    if locationType == 3 or (placeId > 0 and gameName ~= "Website" and gameName ~= "Studio" and gameName ~= "") then
-                        isGame = true
-                    elseif locationType == 2 or gameName == "Studio" then
+                    
+                    -- GÜVENLİ DURUM AYRIŞTIRMA (BUG DÜZELTMESİ)
+                    local locVal = -1
+                    if typeof(rawLocationType) == "EnumItem" then
+                        locVal = rawLocationType.Value
+                    elseif type(rawLocationType) == "number" then
+                        locVal = rawLocationType
+                    end
+                    
+                    -- Roblox Studio veya Düzenleme tespiti
+                    local isStudioLocation = string.find(string.lower(gameName), "studio") or string.find(string.lower(gameName), "editing")
+                    -- Web sitesi tespiti
+                    local isWebsite = (gameName == "Website" or gameName == "Mobile Website")
+                    
+                    if locVal == 3 or isStudioLocation then
                         isStudio = true
+                    elseif (locVal == 2 or placeId > 0) and not isStudioLocation and not isWebsite then
+                        isGame = true
+                    else
+                        -- Eğer ne oyunda ne stüdyoda ise, sadece çevrimiçidir.
+                        isOnline = true
                     end
                 end
                 
@@ -836,22 +840,18 @@ local function PopulateFriendsList()
             
             -- Duruma göre Dinamik Wave Gradient ve Kenarlık Rengi Belirleme
             if friend.IsGame then
-                -- Canlı Yeşil Wave (Oyundakiler için)
                 ApplyWaveGradient(Row, Color3.fromRGB(0, 110, 30), Color3.fromRGB(15, 20, 15))
                 local rStr = Instance.new("UIStroke", Row)
                 rStr.Color = Color3.fromRGB(0, 255, 100); rStr.Transparency = 0.6
             elseif friend.IsStudio then
-                -- Yaratıcı Turuncu Wave (Roblox Studio'da çalışanlar için)
                 ApplyWaveGradient(Row, Color3.fromRGB(140, 60, 0), Color3.fromRGB(20, 15, 15))
                 local rStr = Instance.new("UIStroke", Row)
                 rStr.Color = Color3.fromRGB(255, 150, 0); rStr.Transparency = 0.6
             elseif friend.IsOnline then
-                -- Tatlı Mavi Wave (Roblox App/Sitede takılanlar için)
                 ApplyWaveGradient(Row, Color3.fromRGB(0, 70, 120), Color3.fromRGB(15, 15, 20))
                 local rStr = Instance.new("UIStroke", Row)
                 rStr.Color = Color3.fromRGB(100, 200, 255); rStr.Transparency = 0.8
             else
-                -- Koyu Gri/Siyah Wave (Çevrimdışı arkadaşlar için)
                 ApplyWaveGradient(Row, Color3.fromRGB(35, 35, 40), Color3.fromRGB(15, 15, 15))
                 local rStr = Instance.new("UIStroke", Row)
                 rStr.Color = Color3.fromRGB(110, 110, 110); rStr.Transparency = 0.9
@@ -879,7 +879,7 @@ local function PopulateFriendsList()
             NameLbl.TextColor3 = Color3.fromRGB(255, 255, 255); NameLbl.Font = Enum.Font.GothamBold; NameLbl.TextSize = 11; NameLbl.TextXAlignment = Enum.TextXAlignment.Left
             NameLbl.TextTruncate = Enum.TextTruncate.AtEnd
             
-            -- Detaylı Durum Yazısı (Oyun isimleri için uzunluk korumalı)
+            -- Detaylı Durum Yazısı
             local StatusLbl = Instance.new("TextLabel", Row)
             StatusLbl.Size = UDim2.new(1, -150, 0, 15); StatusLbl.Position = UDim2.new(0, 56, 0, 26); StatusLbl.BackgroundTransparency = 1
             StatusLbl.Font = Enum.Font.GothamMedium; StatusLbl.TextSize = 9; StatusLbl.TextXAlignment = Enum.TextXAlignment.Left
@@ -922,7 +922,7 @@ end
 FriendBtn.MouseButton1Click:Connect(function() PopulateFriendsList() end)
 
 -- ==========================================
--- [6] NOTIFY TAB - BİLDİRİMLER VE GÜNCELLEMELER
+-- [6] NOTIFY TAB
 -- ==========================================
 local NotifyTitle = Instance.new("TextLabel", NotifyTab)
 NotifyTitle.Size = UDim2.new(1, 0, 0, 30); NotifyTitle.BackgroundTransparency = 1; NotifyTitle.Text = "Güncellemeler & Yenilikler"
@@ -953,7 +953,7 @@ ChangelogText.Text = [[
 ]]
 
 -- ==========================================
--- [7] AYARLAR - DİL DEĞİŞTİRME SEÇENEKLERİ (Koyu Turuncu -> Siyah)
+-- [7] AYARLAR - DİL SEÇENEKLERİ
 -- ==========================================
 local SettingsTitle = Instance.new("TextLabel", SettingsTab)
 SettingsTitle.Size = UDim2.new(1, 0, 0, 30); SettingsTitle.BackgroundTransparency = 1; SettingsTitle.Text = "Dil Seçeneği"
@@ -1046,7 +1046,7 @@ local function SwitchToPage(pageName)
         end)
     end
     
-    -- 2. Diğer tüm pasif sayfaları anında sağda konumlandır ve gizle (Görsel hataları önler)
+    -- 2. Diğer tüm pasif sayfaları anında sağda konumlandır ve gizle
     for name, page in pairs(Pages) do
         if name ~= pageName and name ~= oldPageName then
             page.Visible = false
@@ -1101,16 +1101,20 @@ task.spawn(function()
             for _, info in ipairs(friendsOnline) do
                 onlineCount = onlineCount + 1
                 
-                -- Ana Ekrandaki Sayaç İçin Durum Tespiti
-                local isFriendInGame = false
-                local friendLocation = info.LastLocation or ""
-                local friendPlace = info.PlaceId or 0
-                
-                if info.LocationType == 3 or (friendPlace > 0 and friendLocation ~= "Website" and friendLocation ~= "Studio" and friendLocation ~= "") then
-                    isFriendInGame = true
+                -- ANA SAYFA ARKADAŞ STATÜSÜ GÜNCELLEME DÜZELTMESİ
+                local locVal = -1
+                if typeof(info.LocationType) == "EnumItem" then
+                    locVal = info.LocationType.Value
+                elseif type(info.LocationType) == "number" then
+                    locVal = info.LocationType
                 end
                 
-                if isFriendInGame then gameCount = gameCount + 1 end
+                local isStudioLoc = string.find(string.lower(info.LastLocation or ""), "studio") or string.find(string.lower(info.LastLocation or ""), "editing")
+                local isWeb = (info.LastLocation == "Website" or info.LastLocation == "Mobile Website")
+                
+                if (locVal == 2 or (info.PlaceId and info.PlaceId > 0)) and not isStudioLoc and not isWeb then
+                    gameCount = gameCount + 1
+                end
             end
             InServerFr.Text = tostring(gameCount) .. " " .. (CurrentLanguage == "TR" and "arkadaş" or "friends")
             OnlineFr.Text = tostring(onlineCount) .. " " .. (CurrentLanguage == "TR" and "Çevrimiçi" or "Online")
