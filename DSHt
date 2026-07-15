@@ -207,21 +207,24 @@ SideBarLine.Size = UDim2.new(0, 1, 1, 0); SideBarLine.Position = UDim2.new(1, -1
 SideBarLine.BackgroundColor3 = Color3.fromRGB(255, 255, 255); SideBarLine.BackgroundTransparency = 0.96; SideBarLine.BorderSizePixel = 0
 
 local ButtonList = Instance.new("Frame", SideBar)
-ButtonList.Size = UDim2.new(1, 0, 1, -60); ButtonList.Position = UDim2.new(0, 0, 0, 12); ButtonList.BackgroundTransparency = 1
+ButtonList.Size = UDim2.new(1, 0, 0, 318) -- Sabit dikey alan belirlendi (Dengeli yerleşim)
+ButtonList.Position = UDim2.new(0, 0, 0, 6) -- Üstten hafif boşluk
+ButtonList.BackgroundTransparency = 1
 local ButtonLayout = Instance.new("UIListLayout", ButtonList)
-ButtonLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center; ButtonLayout.Padding = UDim.new(0, 8) -- 10'dan 8'e düşürüldü (Taşmayı önlemek için)
+ButtonLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+ButtonLayout.Padding = UDim.new(0, 4) -- Butonlar arası boşluk 4px yapıldı (Taşmayı önlemek için)
 
 local TabButtons = {Selected = nil}
 
 local function CreateNavButton(name, iconId)
     local BtnContainer = Instance.new("Frame", ButtonList)
-    BtnContainer.Size = UDim2.new(0, 38, 0, 38); BtnContainer.BackgroundTransparency = 1 -- 34'ten 38'e yükseltildi
-    Instance.new("UICorner", BtnContainer).CornerRadius = UDim.new(0, 10) -- Köşe yumuşatma ayarlandı
+    BtnContainer.Size = UDim2.new(0, 42, 0, 42); BtnContainer.BackgroundTransparency = 1 -- 38'den 42'ye çıkarıldı
+    Instance.new("UICorner", BtnContainer).CornerRadius = UDim.new(0, 10)
     local Stroke = Instance.new("UIStroke", BtnContainer)
     Stroke.Thickness = 1; Stroke.Color = Color3.fromRGB(255, 255, 255); Stroke.Transparency = 1
 
     local Icon = Instance.new("ImageButton", BtnContainer)
-    Icon.Size = UDim2.new(0, 20, 0, 20); Icon.Position = UDim2.new(0.5, -10, 0.5, -10) -- Simgeler 16'dan 20'ye yükseltildi
+    Icon.Size = UDim2.new(0, 28, 0, 28); Icon.Position = UDim2.new(0.5, -14, 0.5, -14) -- Simgeler 20'den 28'e çıkarıldı ve ortalandı!
     Icon.BackgroundTransparency = 1; Icon.Image = iconId; Icon.ImageColor3 = Color3.fromRGB(150, 151, 160)
     
     TabButtons[name] = Icon
@@ -245,7 +248,7 @@ local BellBtn = CreateNavButton("Notify", "rbxassetid://111094391421625")
 local SettingBtn = CreateNavButton("Settings", "rbxassetid://10734950020")
 
 local SideAvatarFrame = Instance.new("Frame", SideBar)
-SideAvatarFrame.Size = UDim2.new(0, 38, 0, 38); SideAvatarFrame.Position = UDim2.new(0.5, -19, 1, -48) -- 34'ten 38'e çıkarıldı ve konum güncellendi
+SideAvatarFrame.Size = UDim2.new(0, 42, 0, 42); SideAvatarFrame.Position = UDim2.new(0.5, -21, 1, -46) -- Butonlarla uyumlu olarak 42x42 yapıldı
 SideAvatarFrame.BackgroundColor3 = Color3.fromRGB(20, 21, 26)
 Instance.new("UICorner", SideAvatarFrame).CornerRadius = UDim.new(0, 10)
 local SideAvatar = Instance.new("ImageLabel", SideAvatarFrame)
@@ -464,7 +467,7 @@ CodeBox.ClearTextOnFocus = false; CodeBox.MultiLine = true; CodeBox.TextXAlignme
 
 local ExecActBtn = Instance.new("TextButton", ExecutorTab)
 ExecActBtn.Size = UDim2.new(0, 110, 0, 35); ExecActBtn.Position = UDim2.new(0, 5, 0, 280)
-ExecActBtn.BackgroundColor3 = Color3.fromRGB(30, 110, 60); ExecActBtn.Text = "Çaimitir"; ExecActBtn.TextColor3 = Color3.fromRGB(255, 255, 255); ExecActBtn.Font = Enum.Font.GothamBold; ExecActBtn.TextSize = 12
+ExecActBtn.BackgroundColor3 = Color3.fromRGB(30, 110, 60); ExecActBtn.Text = "Çalıştır"; ExecActBtn.TextColor3 = Color3.fromRGB(255, 255, 255); ExecActBtn.Font = Enum.Font.GothamBold; ExecActBtn.TextSize = 12
 Instance.new("UICorner", ExecActBtn).CornerRadius = UDim.new(0, 8)
 ExecActBtn.MouseButton1Click:Connect(function()
     local s, e = pcall(function() loadstring(CodeBox.Text)() end)
@@ -511,6 +514,7 @@ TpLastBtn.BackgroundColor3 = Color3.fromRGB(40, 42, 50); TpLastBtn.Text = "Son H
 Instance.new("UICorner", TpLastBtn).CornerRadius = UDim.new(0, 6)
 
 local TpRandomBtn = Instance.new("TextButton", TpCard)
+Keep = Instance.new("TextButton", TpCard)
 TpRandomBtn.Size = UDim2.new(0, 170, 0, 40); TpRandomBtn.Position = UDim2.new(0, 190, 0, 80)
 TpRandomBtn.BackgroundColor3 = Color3.fromRGB(40, 42, 50); TpRandomBtn.Text = "Rastgele Işınlan"; TpRandomBtn.TextColor3 = Color3.fromRGB(200, 200, 200); TpRandomBtn.Font = Enum.Font.GothamBold; TpRandomBtn.TextSize = 12
 Instance.new("UICorner", TpRandomBtn).CornerRadius = UDim.new(0, 6)
