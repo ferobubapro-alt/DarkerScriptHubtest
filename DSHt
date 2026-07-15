@@ -1,4 +1,4 @@
---SERVICES
+-- SERVICES
 local Players = game:GetService("Players")
 local TweenService = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
@@ -298,17 +298,18 @@ TopBarLine.BackgroundTransparency = 0.95
 TopBarLine.BorderSizePixel = 0
 TopBarLine.Parent = TopBar
 
--- Profil Fotoğrafı Logosu (Darker Logo - Ana Menü Simgesi)
+-- Profil Fotoğrafı Logosu (Büyütüldü)
 local MoonIcon = Instance.new("ImageLabel")
-MoonIcon.Size = UDim2.new(0, 24, 0, 24)
-MoonIcon.Position = UDim2.new(0, 15, 0.5, -12)
+MoonIcon.Size = UDim2.new(0, 32, 0, 32)
+MoonIcon.Position = UDim2.new(0, 10, 0.5, -16)
 MoonIcon.BackgroundTransparency = 1
-MoonIcon.Image = "rbxassetid://94035720579249" -- Belirttiğin logo ID'si
+MoonIcon.Image = "rbxassetid://94035720579249"
+MoonIcon.ScaleType = Enum.ScaleType.Fit
 MoonIcon.Parent = TopBar
 
 local TitleLabel = Instance.new("TextLabel")
 TitleLabel.Size = UDim2.new(0, 300, 1, 0)
-TitleLabel.Position = UDim2.new(0, 48, 0, 0)
+TitleLabel.Position = UDim2.new(0, 50, 0, 0)
 TitleLabel.BackgroundTransparency = 1
 TitleLabel.Text = "Darker"
 TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -412,14 +413,14 @@ local function CreateNavButton(name, iconId)
     return Icon
 end
 
--- NAVİGASYON SİMGELERİ (Ana menü simgesini senin logun ile değiştirdim)
-local HomeBtn = CreateNavButton("Home", "rbxassetid://94035720579249")         -- Yeni Logo Simgesi
-local ExecBtn = CreateNavButton("Executor", "rbxassetid://10747373176")     -- Kod / Konsol
-local MapBtn = CreateNavButton("Teleport", "rbxassetid://10734919379")      -- Konum / Teleport
-local FriendBtn = CreateNavButton("Friends", "rbxassetid://10747383845")    -- Arkadaşlar
-local StarBtn = CreateNavButton("Stars", "rbxassetid://10734949856")        -- Yıldız / Hackler
-local BellBtn = CreateNavButton("Notify", "rbxassetid://11545465997")       -- Alarm / Yeni Bildirim Simgesi
-local SettingBtn = CreateNavButton("Settings", "rbxassetid://10734950020")   -- Ayarlar Çark Simgesi
+-- NAVİGASYON SİMGELERİ (Yeni İstenen ID'ler)
+local HomeBtn = CreateNavButton("Home", "rbxassetid://110705725860423")
+local ExecBtn = CreateNavButton("Executor", "rbxassetid://125081190503235")
+local MapBtn = CreateNavButton("Teleport", "rbxassetid://86143271250497")
+local FriendBtn = CreateNavButton("Friends", "rbxassetid://82208832868901")
+local StarBtn = CreateNavButton("Stars", "rbxassetid://86950770485410")
+local BellBtn = CreateNavButton("Notify", "rbxassetid://111094391421625")
+local SettingBtn = CreateNavButton("Settings", "rbxassetid://10734950020")
 
 -- Sol Alt Köşedeki Profil Kartı (Avatar)
 local SideAvatarFrame = Instance.new("Frame", SideBar)
@@ -464,8 +465,10 @@ local TeleportTab = CreatePage("Teleport")
 local FriendsTabPage = CreatePage("Friends")
 local StarsTab = CreatePage("Stars")
 local NotifyTab = CreatePage("Notify")
-local SettingsTab = CreatePage("Settings")-- =======================================================
--- SMOOTH MİNİMİZE SİSTEMİ
+local SettingsTab = CreatePage("Settings")
+
+-- =======================================================
+-- SMOOTH MİNİMİZE SİSTEMİ (Minimize ikonu tam kareye oturacak)
 -- =======================================================
 local isMinimized = false
 local originalSize = UDim2.new(0, 680, 0, 420)
@@ -488,9 +491,12 @@ MinimizeBtn.MouseButton1Click:Connect(function()
         SideBar.Visible = false
         PagesContainer.Visible = false
         
-        MinimizeBtn.Position = UDim2.new(0.5, -17, 0.5, -17)
-        MinimizeBtn.Size = UDim2.new(0, 34, 0, 34)
+        -- İkonu tam kareye oturtma
+        MinimizeBtn.Position = UDim2.new(0, 0, 0, 0)
+        MinimizeBtn.Size = UDim2.new(1, 0, 1, 0)
         MinimizeBtn.Image = "rbxassetid://94035720579249"
+        MinimizeBtn.ScaleType = Enum.ScaleType.Fit
+        MinimizeBtn.ImageColor3 = Color3.fromRGB(255, 255, 255)
         
         local tweenInfo = TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
         TweenService:Create(MainFrame, tweenInfo, {Size = minimizedSize}):Play()
@@ -499,6 +505,8 @@ MinimizeBtn.MouseButton1Click:Connect(function()
         MinimizeBtn.Position = UDim2.new(1, -52, 0.5, -8)
         MinimizeBtn.Size = UDim2.new(0, 16, 0, 16)
         MinimizeBtn.Image = "rbxassetid://10751034456"
+        MinimizeBtn.ScaleType = Enum.ScaleType.Stretch
+        MinimizeBtn.ImageColor3 = Color3.fromRGB(150, 151, 160)
         
         local tweenInfo = TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
         local sizeTween = TweenService:Create(MainFrame, tweenInfo, {Size = originalSize})
@@ -525,7 +533,8 @@ end)
 -- ==========================================
 -- [1] HOME TAB
 -- ==========================================
- Hoşgeldiniz Üst Kartı (UserCard)
+
+-- Hoşgeldiniz Üst Kartı (UserCard)
 local UserCard = Instance.new("Frame", HomeTab)
 UserCard.Size = UDim2.new(1, -10, 0, 75)
 UserCard.Position = UDim2.new(0, 5, 0, 5)
@@ -565,20 +574,20 @@ SubText.Font = Enum.Font.GothamMedium
 SubText.TextSize = 11
 SubText.TextXAlignment = Enum.TextXAlignment.Left
 
--- [SOL TARAFTAKİ SERVER KARTI]
+-- [SOL TARAFTAKİ SERVER KARTI] (Koyu Yeşilden Siyaha Wave Gradient)
 local ServerSection = Instance.new("Frame", HomeTab)
 ServerSection.Size = UDim2.new(0.55, -8, 0, 180)
 ServerSection.Position = UDim2.new(0, 5, 0, 90)
-ServerSection.BackgroundColor3 = Color3.fromRGB(20, 25, 45)
+ServerSection.BackgroundColor3 = Color3.fromRGB(20, 25, 20)
 Instance.new("UICorner", ServerSection).CornerRadius = UDim.new(0, 12)
 local ServStroke = Instance.new("UIStroke", ServerSection)
 ServStroke.Transparency = 0.92
-ServStroke.Color = Color3.fromRGB(100, 150, 255)
+ServStroke.Color = Color3.fromRGB(100, 255, 100)
 
 local SrvGrad = Instance.new("UIGradient", ServerSection)
 SrvGrad.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(25, 35, 65)), 
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(15, 18, 26))
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 60, 20)), 
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(10, 10, 10))
 })
 SrvGrad.Rotation = 45
 
@@ -597,7 +606,7 @@ SrvDesc.Size = UDim2.new(1, -20, 0, 15)
 SrvDesc.Position = UDim2.new(0, 12, 0, 28)
 SrvDesc.BackgroundTransparency = 1
 SrvDesc.Text = "Şu anda içinde bulunduğunuz oturumun bilgileri"
-SrvDesc.TextColor3 = Color3.fromRGB(160, 175, 220)
+SrvDesc.TextColor3 = Color3.fromRGB(160, 220, 160)
 SrvDesc.Font = Enum.Font.GothamMedium
 SrvDesc.TextSize = 8
 SrvDesc.TextXAlignment = Enum.TextXAlignment.Left
@@ -614,6 +623,7 @@ SrvGrid.CellPadding = UDim2.new(0, 8, 0, 6)
 local function CreateInfoBox(parent, title, val)
     local Box = Instance.new("Frame", parent)
     Box.BackgroundColor3 = Color3.fromRGB(30, 31, 38)
+    Box.BackgroundTransparency = 0.5
     Instance.new("UICorner", Box).CornerRadius = UDim.new(0, 8)
     local bStr = Instance.new("UIStroke", Box)
     bStr.Transparency = 0.96
@@ -648,7 +658,7 @@ local RegionTitleLbl, RegionLabel = CreateInfoBox(ServerContainer, "Sunucu Bölg
 local TimeTitleLbl, TimeLabel = CreateInfoBox(ServerContainer, "Sunucuda geçen süre", "00:00:00")
 local JoinScriptTitleLbl, JoinScriptLabel = CreateInfoBox(ServerContainer, "Giriş Scripti", "Kopyalamak için dokunun")
 
--- [SAĞ ÜST DALGALI KIRMIZI KART]
+-- [SAĞ ÜST DALGALI KIRMIZI KART] (Koyu Kırmızıdan Siyaha Wave Gradient)
 local ExecCard = Instance.new("Frame", HomeTab)
 ExecCard.Size = UDim2.new(0.45, -8, 0, 85)
 ExecCard.Position = UDim2.new(0.55, 3, 0, 90)
@@ -660,8 +670,8 @@ ExStroke.Transparency = 0.92
 
 local EG = Instance.new("UIGradient", ExecCard)
 EG.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(150, 40, 40)), 
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(25, 12, 12))
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(150, 0, 0)), 
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(10, 10, 10))
 })
 EG.Rotation = 45
 
@@ -686,7 +696,7 @@ ES.TextSize = 9
 ES.TextXAlignment = Enum.TextXAlignment.Left
 ES.TextWrapped = true
 
--- [SAĞ ALT ARKADAŞLAR KARTI]
+-- [SAĞ ALT ARKADAŞLAR KARTI] (Koyu Mordan Siyaha Wave Gradient)
 local FriendsCard = Instance.new("Frame", HomeTab)
 FriendsCard.Size = UDim2.new(0.45, -8, 0, 160)
 FriendsCard.Position = UDim2.new(0.55, 3, 0, 185)
@@ -698,8 +708,8 @@ FrStroke.Transparency = 0.92
 
 local FrGrad = Instance.new("UIGradient", FriendsCard)
 FrGrad.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(60, 30, 80)), 
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(20, 12, 30))
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(80, 0, 120)), 
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(10, 10, 10))
 })
 FrGrad.Rotation = 45
 
@@ -737,11 +747,11 @@ local OfflineFrTitle, OfflineFr = CreateInfoBox(FriendsGridContainer, "Çevrimd�
 local OnlineFrTitle, OnlineFr = CreateInfoBox(FriendsGridContainer, "Çevrimiçi", "Hesaplanıyor...")
 local AllFrTitle, AllFr = CreateInfoBox(FriendsGridContainer, "Toplam", "Hesaplanıyor...")
 
--- [SOL ALT DİSCORD KARTI]
+-- [SOL ALT DİSCORD KARTI] (Koyu Maviden Siyaha Wave Gradient)
 local DiscordCard = Instance.new("Frame", HomeTab)
 DiscordCard.Size = UDim2.new(0.55, -8, 0, 70)
 DiscordCard.Position = UDim2.new(0, 5, 0, 275)
-DiscordCard.BackgroundColor3 = Color3.fromRGB(20, 21, 26)
+DiscordCard.BackgroundColor3 = Color3.fromRGB(20, 21, 35)
 Instance.new("UICorner", DiscordCard).CornerRadius = UDim.new(0, 12)
 local DiStroke = Instance.new("UIStroke", DiscordCard)
 DiStroke.Color = Color3.fromRGB(114, 137, 218)
@@ -749,8 +759,8 @@ DiStroke.Transparency = 0.9
 
 local DGrad = Instance.new("UIGradient", DiscordCard)
 DGrad.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(88, 101, 242)), 
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(20, 21, 35))
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 40, 150)), 
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(10, 10, 10))
 })
 DGrad.Rotation = 45
 
@@ -798,19 +808,29 @@ ExecTitle.Font = Enum.Font.GothamBold
 ExecTitle.TextSize = 16
 ExecTitle.TextXAlignment = Enum.TextXAlignment.Left
 
+-- Executor Arka Plan (Açık Yeşilden Siyaha Wave Gradient)
 local TextBoxBg = Instance.new("Frame", ExecutorTab)
 TextBoxBg.Size = UDim2.new(1, -10, 0, 230)
 TextBoxBg.Position = UDim2.new(0, 5, 0, 40)
-TextBoxBg.BackgroundColor3 = Color3.fromRGB(20, 21, 26)
+TextBoxBg.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 Instance.new("UICorner", TextBoxBg).CornerRadius = UDim.new(0, 10)
-Instance.new("UIStroke", TextBoxBg).Transparency = 0.95
+local ExecBgStroke = Instance.new("UIStroke", TextBoxBg)
+ExecBgStroke.Color = Color3.fromRGB(255,255,255)
+ExecBgStroke.Transparency = 0.8
+
+local ExecGradBg = Instance.new("UIGradient", TextBoxBg)
+ExecGradBg.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(20, 120, 40)), 
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(10, 10, 10))
+})
+ExecGradBg.Rotation = 45
 
 local CodeBox = Instance.new("TextBox", TextBoxBg)
 CodeBox.Size = UDim2.new(1, -20, 1, -20)
 CodeBox.Position = UDim2.new(0, 10, 0, 10)
 CodeBox.BackgroundTransparency = 1
 CodeBox.Text = "-- Scriptinizi buraya yazın..."
-CodeBox.TextColor3 = Color3.fromRGB(140, 200, 140)
+CodeBox.TextColor3 = Color3.fromRGB(140, 255, 140)
 CodeBox.Font = Enum.Font.Code
 CodeBox.TextSize = 11
 CodeBox.ClearTextOnFocus = false
@@ -859,9 +879,27 @@ TpTitle.Font = Enum.Font.GothamBold
 TpTitle.TextSize = 16
 TpTitle.TextXAlignment = Enum.TextXAlignment.Left
 
-local TpSearchBg = Instance.new("Frame", TeleportTab)
+-- Teleport Wrapper (Soluk Maviden Siyaha Wave Gradient)
+local TpWrapper = Instance.new("Frame", TeleportTab)
+TpWrapper.Size = UDim2.new(1, -10, 1, -50)
+TpWrapper.Position = UDim2.new(0, 5, 0, 40)
+TpWrapper.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Instance.new("UICorner", TpWrapper).CornerRadius = UDim.new(0, 12)
+
+local TpStroke = Instance.new("UIStroke", TpWrapper)
+TpStroke.Color = Color3.fromRGB(100, 150, 255)
+TpStroke.Transparency = 0.5
+
+local TpGrad = Instance.new("UIGradient", TpWrapper)
+TpGrad.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(50, 100, 150)), 
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(10, 10, 10))
+})
+TpGrad.Rotation = 45
+
+local TpSearchBg = Instance.new("Frame", TpWrapper)
 TpSearchBg.Size = UDim2.new(0, 250, 0, 40)
-TpSearchBg.Position = UDim2.new(0, 5, 0, 40)
+TpSearchBg.Position = UDim2.new(0, 15, 0, 20)
 TpSearchBg.BackgroundColor3 = Color3.fromRGB(20, 21, 26)
 Instance.new("UICorner", TpSearchBg).CornerRadius = UDim.new(0, 8)
 Instance.new("UIStroke", TpSearchBg).Transparency = 0.95
@@ -877,9 +915,9 @@ TpBox.Font = Enum.Font.GothamMedium
 TpBox.TextSize = 12
 TpBox.TextXAlignment = Enum.TextXAlignment.Left
 
-local TpBtn = Instance.new("TextButton", TeleportTab)
+local TpBtn = Instance.new("TextButton", TpWrapper)
 TpBtn.Size = UDim2.new(0, 100, 0, 40)
-TpBtn.Position = UDim2.new(0, 265, 0, 40)
+TpBtn.Position = UDim2.new(0, 280, 0, 20)
 TpBtn.BackgroundColor3 = Color3.fromRGB(30, 90, 150)
 TpBtn.Text = "Işınlan"
 TpBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -887,9 +925,9 @@ TpBtn.Font = Enum.Font.GothamBold
 TpBtn.TextSize = 12
 Instance.new("UICorner", TpBtn).CornerRadius = UDim.new(0, 8)
 
-local TpLastBtn = Instance.new("TextButton", TeleportTab)
+local TpLastBtn = Instance.new("TextButton", TpWrapper)
 TpLastBtn.Size = UDim2.new(0, 170, 0, 40)
-TpLastBtn.Position = UDim2.new(0, 5, 0, 90)
+TpLastBtn.Position = UDim2.new(0, 15, 0, 75)
 TpLastBtn.BackgroundColor3 = Color3.fromRGB(40, 42, 50)
 TpLastBtn.Text = "Son Hedefe Işınlan"
 TpLastBtn.TextColor3 = Color3.fromRGB(200, 200, 200)
@@ -897,9 +935,9 @@ TpLastBtn.Font = Enum.Font.GothamBold
 TpLastBtn.TextSize = 12
 Instance.new("UICorner", TpLastBtn).CornerRadius = UDim.new(0, 6)
 
-local TpRandomBtn = Instance.new("TextButton", TeleportTab)
+local TpRandomBtn = Instance.new("TextButton", TpWrapper)
 TpRandomBtn.Size = UDim2.new(0, 170, 0, 40)
-TpRandomBtn.Position = UDim2.new(0, 185, 0, 90)
+TpRandomBtn.Position = UDim2.new(0, 195, 0, 75)
 TpRandomBtn.BackgroundColor3 = Color3.fromRGB(40, 42, 50)
 TpRandomBtn.Text = "Rastgele Işınlan"
 TpRandomBtn.TextColor3 = Color3.fromRGB(200, 200, 200)
@@ -1042,12 +1080,21 @@ local function CreateModPanel(name, hasSlider, maxSliderVal, defaultSliderVal, o
     layoutCounter = layoutCounter + 1
     local Container = Instance.new("Frame", StarScroll)
     Container.Size = UDim2.new(1, -6, 0, 45)
-    Container.BackgroundColor3 = Color3.fromRGB(20, 21, 26)
+    Container.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     Container.LayoutOrder = layoutCounter
     Instance.new("UICorner", Container).CornerRadius = UDim.new(0, 8)
+    
+    -- Koyu Kırmızıdan Siyaha Wave Gradient
+    local pGrad = Instance.new("UIGradient", Container)
+    pGrad.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(120, 10, 10)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(10, 10, 10))
+    })
+    pGrad.Rotation = 45
+
     local cStr = Instance.new("UIStroke", Container)
     cStr.Color = Color3.fromRGB(255, 255, 255)
-    cStr.Transparency = 0.95
+    cStr.Transparency = 0.8
     
     local Lbl = Instance.new("TextLabel", Container)
     Lbl.Size = UDim2.new(0.6, 0, 0, 45)
@@ -1091,7 +1138,7 @@ local function CreateModPanel(name, hasSlider, maxSliderVal, defaultSliderVal, o
         local SliderFill = Instance.new("Frame", SliderBg)
         local startPct = defaultSliderVal / maxSliderVal
         SliderFill.Size = UDim2.new(startPct, 0, 1, 0)
-        SliderFill.BackgroundColor3 = Color3.fromRGB(50, 120, 220)
+        SliderFill.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
         Instance.new("UICorner", SliderFill).CornerRadius = UDim.new(1, 0)
         
         local SVal = Instance.new("TextLabel", SliderFrame)
@@ -1133,7 +1180,7 @@ local function CreateModPanel(name, hasSlider, maxSliderVal, defaultSliderVal, o
     Switch.MouseButton1Click:Connect(function()
         isActive = not isActive
         TweenService:Create(Dot, TweenInfo.new(0.2, Enum.EasingStyle.Quart), {Position = isActive and UDim2.new(1, -16, 0.5, -7) or UDim2.new(0, 2, 0.5, -7)}):Play()
-        TweenService:Create(Switch, TweenInfo.new(0.2, Enum.EasingStyle.Quart), {BackgroundColor3 = isActive and Color3.fromRGB(40, 150, 80) or Color3.fromRGB(40, 41, 48)}):Play()
+        TweenService:Create(Switch, TweenInfo.new(0.2, Enum.EasingStyle.Quart), {BackgroundColor3 = isActive and Color3.fromRGB(200, 50, 50) or Color3.fromRGB(40, 41, 48)}):Play()
         
         if SliderFrame then
             SliderFrame.Visible = isActive
@@ -1287,16 +1334,24 @@ end, nil)
 -- ==========================================
 -- SPAMMER & SPECTATE PANELS
 -- ==========================================
+
 -- [1] SPAM MESSAGE PANEL
 layoutCounter = layoutCounter + 1
 local SpamPanel = Instance.new("Frame", StarScroll)
 SpamPanel.Size = UDim2.new(1, -6, 0, 55)
-SpamPanel.BackgroundColor3 = Color3.fromRGB(20, 21, 26)
+SpamPanel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 SpamPanel.LayoutOrder = layoutCounter
 Instance.new("UICorner", SpamPanel).CornerRadius = UDim.new(0, 8)
 local spStr = Instance.new("UIStroke", SpamPanel)
 spStr.Color = Color3.fromRGB(255, 255, 255)
-spStr.Transparency = 0.95
+spStr.Transparency = 0.8
+
+local spmGrad = Instance.new("UIGradient", SpamPanel)
+spmGrad.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(120, 10, 10)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(10, 10, 10))
+})
+spmGrad.Rotation = 45
 
 local SpamLbl = Instance.new("TextLabel", SpamPanel)
 SpamLbl.Size = UDim2.new(0.3, 0, 1, 0)
@@ -1345,7 +1400,7 @@ SpamToggleBtn.MouseButton1Click:Connect(function()
     spamming = not spamming
     if spamming then
         SpamToggleBtn.Text = Translates[CurrentLanguage].Stop
-        SpamToggleBtn.BackgroundColor3 = Color3.fromRGB(150, 40, 40)
+        SpamToggleBtn.BackgroundColor3 = Color3.fromRGB(200, 50, 50)
         spamThread = task.spawn(function()
             while spamming do
                 local msg = SpamBox.Text
@@ -1376,16 +1431,24 @@ SpamToggleBtn.MouseButton1Click:Connect(function()
         end
     end
 end)
+
 -- [2] SPECTATE / LOOKAT PLAYER PANEL
 layoutCounter = layoutCounter + 1
 local SpecPanel = Instance.new("Frame", StarScroll)
 SpecPanel.Size = UDim2.new(1, -6, 0, 110)
-SpecPanel.BackgroundColor3 = Color3.fromRGB(20, 21, 26)
+SpecPanel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 SpecPanel.LayoutOrder = layoutCounter
 Instance.new("UICorner", SpecPanel).CornerRadius = UDim.new(0, 8)
 local scStr = Instance.new("UIStroke", SpecPanel)
 scStr.Color = Color3.fromRGB(255, 255, 255)
-scStr.Transparency = 0.95
+scStr.Transparency = 0.8
+
+local spcGrad = Instance.new("UIGradient", SpecPanel)
+spcGrad.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(120, 10, 10)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(10, 10, 10))
+})
+spcGrad.Rotation = 45
 
 local SpecLbl = Instance.new("TextLabel", SpecPanel)
 SpecLbl.Size = UDim2.new(0.3, 0, 0, 50)
@@ -1493,7 +1556,7 @@ SpecRandomBtn.MouseButton1Click:Connect(function()
 end)
 
 -- ==========================================
--- [GELİŞMİŞ] (4) FRIENDS TAB - ARKADAŞ DURUMU GÖRME
+-- [GELİŞMİŞ] (4) FRIENDS TAB - TÜM ARKADAŞLARI GÖRME
 -- ==========================================
 local FriendsTabTitle = Instance.new("TextLabel", FriendsTabPage)
 FriendsTabTitle.Size = UDim2.new(1, 0, 0, 30)
@@ -1524,31 +1587,63 @@ local function PopulateFriendsList()
     end
     
     task.spawn(function()
-        local success, result = pcall(function()
-            -- Sadece Online/Oyunda olanları değil, tüm arkadaşlar listesini sorgulamak için Roblox API'si
-            return LocalPlayer:GetFriendsOnline(100) or {}
+        -- Çevrimiçi olanların anlık "oyunda" statüsünü ve oyun isimlerini almak için
+        local onlineData = {}
+        pcall(function()
+            for _, f in ipairs(LocalPlayer:GetFriendsOnline(200) or {}) do
+                onlineData[f.VisitorId] = f
+            end
+        end)
+
+        -- GetFriendsAsync ile TÜM arkadaş listesini (Çevrimdışı olanlar dahil) almak için
+        local allFriendsList = {}
+        pcall(function()
+            local friendPages = Players:GetFriendsAsync(LocalPlayer.UserId)
+            while true do
+                for _, friend in ipairs(friendPages:GetCurrentPage()) do
+                    table.insert(allFriendsList, friend)
+                end
+                if friendPages.IsFinished then break end
+                friendPages:AdvanceToNextPageAsync()
+            end
         end)
         
-        if not success then return end
-        
-        for idx, item in ipairs(result) do
-            local friendId = item.VisitorId
-            local displayName = item.LastLocation ~= "" and item.LastLocation or "User"
-            local username = item.UserName
-            local isOnline = item.IsOnline
-            local locationType = item.LocationType -- 2: Oyunda, 4: Sitede/Online
-            local placeId = item.PlaceId
-            local gameName = item.LastLocation -- Oynadığı oyunun adı
+        -- Arayüzü oluştur
+        for idx, friend in ipairs(allFriendsList) do
+            local friendId = friend.Id
+            local username = friend.Username
+            
+            -- Online datasından eşleştirme yap (varsa online, yoksa offline kabul edilir)
+            local isOnline = false
+            local locationType = 0
+            local placeId = nil
+            local gameName = ""
+            
+            if onlineData[friendId] then
+                isOnline = onlineData[friendId].IsOnline
+                locationType = onlineData[friendId].LocationType
+                placeId = onlineData[friendId].PlaceId
+                gameName = onlineData[friendId].LastLocation ~= "" and onlineData[friendId].LastLocation or "Unknown"
+            end
             
             -- Frame
             local Row = Instance.new("Frame", FriendsScroll)
             Row.Size = UDim2.new(1, -10, 0, 55)
-            Row.BackgroundColor3 = Color3.fromRGB(20, 21, 26)
+            Row.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
             Row.LayoutOrder = idx
             Instance.new("UICorner", Row).CornerRadius = UDim.new(0, 8)
+            
+            -- Arkadaş Kartları için Koyu Yeşilden Siyaha Wave Gradient
+            local rGrad = Instance.new("UIGradient", Row)
+            rGrad.Color = ColorSequence.new({
+                ColorSequenceKeypoint.new(0, Color3.fromRGB(10, 80, 20)),
+                ColorSequenceKeypoint.new(1, Color3.fromRGB(10, 10, 10))
+            })
+            rGrad.Rotation = 45
+
             local rStr = Instance.new("UIStroke", Row)
             rStr.Color = Color3.fromRGB(255, 255, 255)
-            rStr.Transparency = 0.95
+            rStr.Transparency = 0.8
             
             -- Profil Fotoğrafı
             local Avatar = Instance.new("ImageLabel", Row)
@@ -1583,8 +1678,8 @@ local function PopulateFriendsList()
             StatusLbl.TextXAlignment = Enum.TextXAlignment.Left
             
             if locationType == 2 then -- Oyunda
-                StatusLbl.Text = (CurrentLanguage == "TR" and "Oyunda: " or "In Game: ") .. (gameName ~= "" and gameName or "Unknown")
-                StatusLbl.TextColor3 = Color3.fromRGB(46, 204, 113) -- Yeşil
+                StatusLbl.Text = (CurrentLanguage == "TR" and "Oyunda: " or "In Game: ") .. gameName
+                StatusLbl.TextColor3 = Color3.fromRGB(80, 255, 120) -- Yeşil
                 
                 -- Katılma (Join) Butonu
                 local JoinBtn = Instance.new("TextButton", Row)
@@ -1604,10 +1699,10 @@ local function PopulateFriendsList()
                 end)
             elseif isOnline then -- Sitede / Online
                 StatusLbl.Text = Translates[CurrentLanguage].FriendStatusOnline
-                StatusLbl.TextColor3 = Color3.fromRGB(52, 152, 219) -- Mavi
+                StatusLbl.TextColor3 = Color3.fromRGB(100, 200, 255) -- Mavi
             else -- Çevrimdışı
                 StatusLbl.Text = Translates[CurrentLanguage].FriendStatusOffline
-                StatusLbl.TextColor3 = Color3.fromRGB(149, 165, 166) -- Gri
+                StatusLbl.TextColor3 = Color3.fromRGB(150, 150, 160) -- Gri
             end
         end
     end)
@@ -1618,9 +1713,8 @@ FriendBtn.MouseButton1Click:Connect(function()
     PopulateFriendsList()
 end)
 
-
 -- ==========================================
--- [YENİ] (6) NOTIFY TAB - BİLDİRİMLER VE GÜNCELLEMELER
+-- [6] NOTIFY TAB - BİLDİRİMLER VE GÜNCELLEMELER
 -- ==========================================
 local NotifyTitle = Instance.new("TextLabel", NotifyTab)
 NotifyTitle.Size = UDim2.new(1, 0, 0, 30)
@@ -1661,26 +1755,25 @@ ChangelogText.TextXAlignment = Enum.TextXAlignment.Left
 ChangelogText.TextYAlignment = Enum.TextYAlignment.Top
 ChangelogText.TextWrapped = true
 
--- İstediğin gibi güncellemeler İngilizce (English) olarak ayarlandı
 ChangelogText.Text = [[
-[Darker Hub V2.1 - Changelog]
+[Darker Hub V2.2 - Wave Update]
 
-• Added "Friends Status Tracker":
-  - You can now see your friends' profile photos, display names, and real-time status.
-  - Added "Join" feature to immediately jump into your friend's current server!
+• Complete UI Overhaul:
+  - Integrated beautiful wave gradients across the panels (Dark Red, Purple, Blue, Green).
+  - Teleport Tab and Executor Tab now feature striking background gradients.
   
-• Multi-Language Support (Localization):
-  - Added dynamic English and Turkish support. Every button, alert, and label translates instantly.
+• Advanced Friends Tracker:
+  - You can now see ALL of your friends (Offline and Online).
+  - Accurate game presence detection.
   
-• UI Changes & Optimizations:
-  - Swapped the notification page icon with a beautiful bell.
-  - Upgraded the home page icon to Darker's official premium logo.
-  - Optimized system resource usage and code size.
+• Icon Updates:
+  - The menu logo properly scales when minimized.
+  - Replaced all sidebar tab icons with new premium assets.
 ]]
 
 
 -- ==========================================
--- [YENİ] (7) AYARLAR - DİL DEĞİŞTİRME SEÇENEKLERİ
+-- [7] AYARLAR - DİL DEĞİŞTİRME SEÇENEKLERİ
 -- ==========================================
 local SettingsTitle = Instance.new("TextLabel", SettingsTab)
 SettingsTitle.Size = UDim2.new(1, 0, 0, 30)
@@ -1691,14 +1784,23 @@ SettingsTitle.Font = Enum.Font.GothamBold
 SettingsTitle.TextSize = 16
 SettingsTitle.TextXAlignment = Enum.TextXAlignment.Left
 
+-- Ayarlar / Dil Kartı (Koyu Turuncudan Siyaha Wave Gradient)
 local LangContainer = Instance.new("Frame", SettingsTab)
 LangContainer.Size = UDim2.new(1, -10, 0, 120)
 LangContainer.Position = UDim2.new(0, 5, 0, 45)
-LangContainer.BackgroundColor3 = Color3.fromRGB(20, 21, 26)
+LangContainer.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 Instance.new("UICorner", LangContainer).CornerRadius = UDim.new(0, 10)
+
+local LangGrad = Instance.new("UIGradient", LangContainer)
+LangGrad.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(180, 70, 0)), 
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(10, 10, 10))
+})
+LangGrad.Rotation = 45
+
 local lStr = Instance.new("UIStroke", LangContainer)
 lStr.Color = Color3.fromRGB(255, 255, 255)
-lStr.Transparency = 0.95
+lStr.Transparency = 0.8
 
 -- Sol Üst Language Yazısı
 local LangHeader = Instance.new("TextLabel", LangContainer)
@@ -1886,12 +1988,12 @@ end)
 
 -- Ana Sayfadaki Arkadaş Sayaçları Güncellemesi
 task.spawn(function()
-    while task.wait(3) do
+    while task.wait(5) do
         pcall(function()
-            local friends = LocalPlayer:GetFriendsOnline(100) or {}
+            -- Arkadaş verilerini çekiyoruz
             local onlineCount = 0
             local gameCount = 0
-            for _, info in ipairs(friends) do
+            for _, info in ipairs(LocalPlayer:GetFriendsOnline(200) or {}) do
                 if info.LocationType == 2 then
                     gameCount = gameCount + 1
                 end
@@ -1899,10 +2001,22 @@ task.spawn(function()
                     onlineCount = onlineCount + 1
                 end
             end
+            
+            -- Toplam arkadaş sayısı bulma (sayfaları dolaş)
+            local totalCount = 0
+            pcall(function()
+                local friendPages = Players:GetFriendsAsync(LocalPlayer.UserId)
+                while true do
+                    totalCount = totalCount + #friendPages:GetCurrentPage()
+                    if friendPages.IsFinished then break end
+                    friendPages:AdvanceToNextPageAsync()
+                end
+            end)
+
             InServerFr.Text = tostring(gameCount) .. " " .. (CurrentLanguage == "TR" and "arkadaş" or "friends")
             OnlineFr.Text = tostring(onlineCount) .. " " .. (CurrentLanguage == "TR" and "Çevrimiçi" or "Online")
-            OfflineFr.Text = tostring(math.max(0, 100 - onlineCount)) .. " " .. (CurrentLanguage == "TR" and "Çevrimdışı" or "Offline")
-            AllFr.Text = "100 " .. (CurrentLanguage == "TR" and "Arkadaş" or "Friends")
+            OfflineFr.Text = tostring(math.max(0, totalCount - onlineCount)) .. " " .. (CurrentLanguage == "TR" and "Çevrimdışı" or "Offline")
+            AllFr.Text = tostring(totalCount) .. " " .. (CurrentLanguage == "TR" and "Arkadaş" or "Friends")
         end)
     end
 end)
