@@ -209,19 +209,19 @@ SideBarLine.BackgroundColor3 = Color3.fromRGB(255, 255, 255); SideBarLine.Backgr
 local ButtonList = Instance.new("Frame", SideBar)
 ButtonList.Size = UDim2.new(1, 0, 1, -60); ButtonList.Position = UDim2.new(0, 0, 0, 12); ButtonList.BackgroundTransparency = 1
 local ButtonLayout = Instance.new("UIListLayout", ButtonList)
-ButtonLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center; ButtonLayout.Padding = UDim.new(0, 10)
+ButtonLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center; ButtonLayout.Padding = UDim.new(0, 8) -- 10'dan 8'e düşürüldü (Taşmayı önlemek için)
 
 local TabButtons = {Selected = nil}
 
 local function CreateNavButton(name, iconId)
     local BtnContainer = Instance.new("Frame", ButtonList)
-    BtnContainer.Size = UDim2.new(0, 34, 0, 34); BtnContainer.BackgroundTransparency = 1
-    Instance.new("UICorner", BtnContainer).CornerRadius = UDim.new(0, 8)
+    BtnContainer.Size = UDim2.new(0, 38, 0, 38); BtnContainer.BackgroundTransparency = 1 -- 34'ten 38'e yükseltildi
+    Instance.new("UICorner", BtnContainer).CornerRadius = UDim.new(0, 10) -- Köşe yumuşatma ayarlandı
     local Stroke = Instance.new("UIStroke", BtnContainer)
     Stroke.Thickness = 1; Stroke.Color = Color3.fromRGB(255, 255, 255); Stroke.Transparency = 1
 
     local Icon = Instance.new("ImageButton", BtnContainer)
-    Icon.Size = UDim2.new(0, 16, 0, 16); Icon.Position = UDim2.new(0.5, -8, 0.5, -8)
+    Icon.Size = UDim2.new(0, 20, 0, 20); Icon.Position = UDim2.new(0.5, -10, 0.5, -10) -- Simgeler 16'dan 20'ye yükseltildi
     Icon.BackgroundTransparency = 1; Icon.Image = iconId; Icon.ImageColor3 = Color3.fromRGB(150, 151, 160)
     
     TabButtons[name] = Icon
@@ -245,12 +245,12 @@ local BellBtn = CreateNavButton("Notify", "rbxassetid://111094391421625")
 local SettingBtn = CreateNavButton("Settings", "rbxassetid://10734950020")
 
 local SideAvatarFrame = Instance.new("Frame", SideBar)
-SideAvatarFrame.Size = UDim2.new(0, 34, 0, 34); SideAvatarFrame.Position = UDim2.new(0.5, -17, 1, -45)
+SideAvatarFrame.Size = UDim2.new(0, 38, 0, 38); SideAvatarFrame.Position = UDim2.new(0.5, -19, 1, -48) -- 34'ten 38'e çıkarıldı ve konum güncellendi
 SideAvatarFrame.BackgroundColor3 = Color3.fromRGB(20, 21, 26)
-Instance.new("UICorner", SideAvatarFrame).CornerRadius = UDim.new(0, 8)
+Instance.new("UICorner", SideAvatarFrame).CornerRadius = UDim.new(0, 10)
 local SideAvatar = Instance.new("ImageLabel", SideAvatarFrame)
 SideAvatar.Size = UDim2.new(1, 0, 1, 0); SideAvatar.BackgroundTransparency = 1
-Instance.new("UICorner", SideAvatar).CornerRadius = UDim.new(0, 8)
+Instance.new("UICorner", SideAvatar).CornerRadius = UDim.new(0, 10)
 task.spawn(function()
     local content, ready = Players:GetUserThumbnailAsync(LocalPlayer.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420)
     if ready then SideAvatar.Image = content end
@@ -464,7 +464,7 @@ CodeBox.ClearTextOnFocus = false; CodeBox.MultiLine = true; CodeBox.TextXAlignme
 
 local ExecActBtn = Instance.new("TextButton", ExecutorTab)
 ExecActBtn.Size = UDim2.new(0, 110, 0, 35); ExecActBtn.Position = UDim2.new(0, 5, 0, 280)
-ExecActBtn.BackgroundColor3 = Color3.fromRGB(30, 110, 60); ExecActBtn.Text = "Çalıştır"; ExecActBtn.TextColor3 = Color3.fromRGB(255, 255, 255); ExecActBtn.Font = Enum.Font.GothamBold; ExecActBtn.TextSize = 12
+ExecActBtn.BackgroundColor3 = Color3.fromRGB(30, 110, 60); ExecActBtn.Text = "Çaimitir"; ExecActBtn.TextColor3 = Color3.fromRGB(255, 255, 255); ExecActBtn.Font = Enum.Font.GothamBold; ExecActBtn.TextSize = 12
 Instance.new("UICorner", ExecActBtn).CornerRadius = UDim.new(0, 8)
 ExecActBtn.MouseButton1Click:Connect(function()
     local s, e = pcall(function() loadstring(CodeBox.Text)() end)
@@ -675,7 +675,6 @@ CreateModPanel("Noclip", false, 0, 0, function(active)
     if active then
         noclipConnection = RunService.Stepped:Connect(function() if LocalPlayer.Character then for _, part in ipairs(LocalPlayer.Character:GetDescendants()) do if part:IsA("BasePart") then part.CanCollide = false end end end end)
         ShowNotification("Noclip", Translates[CurrentLanguage].NoclipActive, 2)
-    -- Fixed logic syntax error on the original code (replacing single line dynamic block)
     else 
         if noclipConnection then noclipConnection:Disconnect() end; ShowNotification("Noclip", Translates[CurrentLanguage].NoclipDeactive, 2) 
     end
