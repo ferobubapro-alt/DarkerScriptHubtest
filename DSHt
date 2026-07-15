@@ -214,24 +214,37 @@ ButtonLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center; ButtonLayout
 
 local TabButtons = {Selected = nil}
 
+-- ============================
+-- GÜNCELLENMİŞ CreateNavButton (Simgeler 24x24)
+-- ============================
 local function CreateNavButton(name, iconId)
     local BtnContainer = Instance.new("Frame", ButtonList)
-    BtnContainer.Size = UDim2.new(0, 34, 0, 34); BtnContainer.BackgroundTransparency = 1
+    BtnContainer.Size = UDim2.new(0, 34, 0, 34)
+    BtnContainer.BackgroundTransparency = 1
     Instance.new("UICorner", BtnContainer).CornerRadius = UDim.new(0, 8)
     local Stroke = Instance.new("UIStroke", BtnContainer)
-    Stroke.Thickness = 1; Stroke.Color = Color3.fromRGB(255, 255, 255); Stroke.Transparency = 1
+    Stroke.Thickness = 1
+    Stroke.Color = Color3.fromRGB(255, 255, 255)
+    Stroke.Transparency = 1
 
     local Icon = Instance.new("ImageButton", BtnContainer)
-    Icon.Size = UDim2.new(0, 16, 0, 16); Icon.Position = UDim2.new(0.5, -8, 0.5, -8)
-    Icon.BackgroundTransparency = 1; Icon.Image = iconId; Icon.ImageColor3 = Color3.fromRGB(150, 151, 160)
+    Icon.Size = UDim2.new(0, 24, 0, 24)
+    Icon.Position = UDim2.new(0.5, -12, 0.5, -12)
+    Icon.BackgroundTransparency = 1
+    Icon.Image = iconId
+    Icon.ImageColor3 = Color3.fromRGB(150, 151, 160)
     
     TabButtons[name] = Icon
 
     Icon.MouseEnter:Connect(function()
-        if TabButtons.Selected ~= Icon then TweenService:Create(Icon, TweenInfo.new(0.2), {ImageColor3 = Color3.fromRGB(220, 221, 230)}):Play() end
+        if TabButtons.Selected ~= Icon then
+            TweenService:Create(Icon, TweenInfo.new(0.2), {ImageColor3 = Color3.fromRGB(220, 221, 230)}):Play()
+        end
     end)
     Icon.MouseLeave:Connect(function()
-        if TabButtons.Selected ~= Icon then TweenService:Create(Icon, TweenInfo.new(0.2), {ImageColor3 = Color3.fromRGB(150, 151, 160)}):Play() end
+        if TabButtons.Selected ~= Icon then
+            TweenService:Create(Icon, TweenInfo.new(0.2), {ImageColor3 = Color3.fromRGB(150, 151, 160)}):Play()
+        end
     end)
     return Icon
 end
@@ -739,7 +752,7 @@ local FriendsTabTitle = Instance.new("TextLabel", FriendsTabPage)
 FriendsTabTitle.Size = UDim2.new(1, 0, 0, 30); FriendsTabTitle.BackgroundTransparency = 1; FriendsTabTitle.Text = "Arkadaşlar"
 FriendsTabTitle.TextColor3 = Color3.fromRGB(255, 255, 255); FriendsTabTitle.Font = Enum.Font.GothamBold; FriendsTabTitle.TextSize = 16; FriendsTabTitle.TextXAlignment = Enum.TextXAlignment.Left
 
--- *** GÜNCELLENEN KISIM: AutomaticCanvasSize ile sonsuz kaydırma ***
+-- GÜNCELLENEN KISIM: AutomaticCanvasSize ile sonsuz kaydırma
 local FriendsScroll = Instance.new("ScrollingFrame", FriendsTabPage)
 FriendsScroll.Size = UDim2.new(1, -10, 1, -40)
 FriendsScroll.Position = UDim2.new(0, 5, 0, 40)
@@ -747,7 +760,6 @@ FriendsScroll.BackgroundTransparency = 1
 FriendsScroll.BorderSizePixel = 0
 FriendsScroll.ScrollBarThickness = 4
 FriendsScroll.ScrollBarImageColor3 = Color3.fromRGB(100, 100, 110)
--- Otomatik canvas yüksekliği (kartlar eklendikçe uzar)
 FriendsScroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
 FriendsScroll.CanvasSize = UDim2.new(0, 0, 0, 0)
 
@@ -962,6 +974,7 @@ ChangelogText.Text = [[
   - Gorgeous new Wave Gradients for Cards, Hack Panels, Teleport, and Settings.
   - Perfected minimize icon padding.
   - Brand new sleek Sidebar Icons for navigation.
+  - Sidebar icons enlarged to 24x24 for better visibility.
 ]]
 
 -- ==========================================
