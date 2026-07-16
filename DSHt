@@ -96,7 +96,7 @@ local function ShowNotification(title, text, duration)
 
     Instance.new("UICorner", Frame).CornerRadius = UDim.new(0, 10)
     local Stroke = Instance.new("UIStroke", Frame)
-    Stroke.Thickness = 1; Stroke.Color = Color3.fromRGB(255, 255, 255); Stroke.Transparency = 0.85 -- GÜNCELLENDİ: beyaz, ince, parlak
+    Stroke.Thickness = 1; Stroke.Color = Color3.fromRGB(255, 255, 255); Stroke.Transparency = 0.9
 
     local TitleLbl = Instance.new("TextLabel", Frame)
     TitleLbl.Size = UDim2.new(1, -20, 0, 20); TitleLbl.Position = UDim2.new(0, 10, 0, 8)
@@ -121,28 +121,34 @@ local function ShowNotification(title, text, duration)
     end)
 end
 
--- ==========================================
--- ANA PENCERE (MAIN FRAME) - KOYU MOR-SİYAH WAVE GRADIENT
--- ==========================================
+-- =============================================
+-- ANA PENCERE (MAIN FRAME) – YENİ ARKA PLAN
+-- =============================================
 local MainFrame = Instance.new("Frame")
 MainFrame.Name = "MainFrame"
 MainFrame.Size = UDim2.new(0, 680, 0, 420)
 MainFrame.Position = UDim2.new(0.5, -340, 0.5, -210)
--- YENİ: Koyu Mor-Siyah Wave Gradient
-MainFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-ApplyWaveGradient(MainFrame, Color3.fromRGB(35, 10, 45), Color3.fromRGB(8, 5, 10)) 
+MainFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255) -- UIGradient için beyaz zemin
 MainFrame.ClipsDescendants = true
 MainFrame.Active = true
 MainFrame.Parent = ScreenGui
 
+-- DERİN GECE MAVİSİ ↔ SİYAH WAVE GRADIENT
+local WaveGradient = Instance.new("UIGradient", MainFrame)
+WaveGradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0.00, Color3.fromRGB(15, 20, 35)),
+    ColorSequenceKeypoint.new(1.00, Color3.fromRGB(5, 5, 10))
+})
+WaveGradient.Rotation = 45
+
 local MainCorner = Instance.new("UICorner", MainFrame)
 MainCorner.CornerRadius = UDim.new(0, 14)
 
--- PARILTILI İNCE BEYAZ DIŞ ÇİZGİ (ANA ÇERÇEVE)
+-- NEON BEYAZ DIŞ ÇİZGİ (ANA ÇERÇEVE)
 local MainStroke = Instance.new("UIStroke", MainFrame)
-MainStroke.Thickness = 1
+MainStroke.Thickness = 1.2
 MainStroke.Color = Color3.fromRGB(255, 255, 255)
-MainStroke.Transparency = 0.85
+MainStroke.Transparency = 0.7
 
 -- SÜRÜKLEME SİSTEMİ
 local dragging, dragInput, dragStart, startPos
@@ -162,13 +168,13 @@ UserInputService.InputChanged:Connect(function(input)
     end
 end)
 
--- ==========================================
--- ÜST BAR (TITLEBAR) - YARI SAYDAM CAM EFECT
--- ==========================================
+-- =============================================
+-- ÜST BAR (TITLEBAR) – YARI SAYDAM CAM
+-- =============================================
 local TopBar = Instance.new("Frame")
 TopBar.Size = UDim2.new(1, 0, 0, 42)
 TopBar.BackgroundColor3 = Color3.fromRGB(30, 31, 38)
-TopBar.BackgroundTransparency = 0.4 -- YARI SAYDAM
+TopBar.BackgroundTransparency = 0.4
 TopBar.BorderSizePixel = 0
 TopBar.Parent = MainFrame
 Instance.new("UICorner", TopBar).CornerRadius = UDim.new(0, 14)
@@ -182,18 +188,16 @@ local TopBarLine = Instance.new("Frame", TopBar)
 TopBarLine.Size = UDim2.new(1, 0, 0, 1); TopBarLine.Position = UDim2.new(0, 0, 1, 0)
 TopBarLine.BackgroundColor3 = Color3.fromRGB(255, 255, 255); TopBarLine.BackgroundTransparency = 0.95; TopBarLine.BorderSizePixel = 0
 
--- ==========================================
--- YENİ LOGO (BÜYÜK) - TAM OTURAN
--- ==========================================
+-- YENİ LOGO (BÜYÜK) – TAM OTURAN
 local MoonIcon = Instance.new("ImageLabel", TopBar)
-MoonIcon.Size = UDim2.new(0, 38, 0, 38) -- 38x38
+MoonIcon.Size = UDim2.new(0, 38, 0, 38)
 MoonIcon.Position = UDim2.new(0, 10, 0.5, -19)
 MoonIcon.BackgroundTransparency = 1
-MoonIcon.Image = "rbxassetid://126964821713679" -- YENİ LOGO ID
-MoonIcon.ScaleType = Enum.ScaleType.Fit -- TAM OTURUR
+MoonIcon.Image = "rbxassetid://126964821713679"  -- YENİ LOGO ID
+MoonIcon.ScaleType = Enum.ScaleType.Fit
 
 local TitleLabel = Instance.new("TextLabel", TopBar)
-TitleLabel.Size = UDim2.new(0, 300, 1, 0); TitleLabel.Position = UDim2.new(0, 56, 0, 0)
+TitleLabel.Size = UDim2.new(0, 300, 1, 0); TitleLabel.Position = UDim2.new(0, 55, 0, 0)
 TitleLabel.BackgroundTransparency = 1; TitleLabel.Text = "Darker"
 TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255); TitleLabel.Font = Enum.Font.GothamBold
 TitleLabel.TextSize = 14; TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
@@ -215,9 +219,9 @@ MinimizeBtn.Size = UDim2.new(0, 16, 0, 16); MinimizeBtn.Position = UDim2.new(1, 
 MinimizeBtn.BackgroundTransparency = 1; MinimizeBtn.Image = "rbxassetid://10751034456"
 MinimizeBtn.ImageColor3 = Color3.fromRGB(150, 151, 160)
 
--- ==========================================
--- SOL KENAR ÇUBUĞU (SIDEBAR) - YARI SAYDAM
--- ==========================================
+-- =============================================
+-- SOL KENAR ÇUBUĞU (SIDEBAR) – YARI SAYDAM
+-- =============================================
 local SideBar = Instance.new("Frame", MainFrame)
 SideBar.Size = UDim2.new(0, 50, 1, -42); SideBar.Position = UDim2.new(0, 0, 0, 42)
 SideBar.BackgroundColor3 = Color3.fromRGB(28, 29, 36)
@@ -257,7 +261,7 @@ local function CreateNavButton(name, iconId)
     return Icon
 end
 
--- NAVİGASYON SİMGELERİ (değişmedi)
+-- NAVİGASYON SİMGELERİ
 local HomeBtn = CreateNavButton("Home", "rbxassetid://110705725860423")
 local ExecBtn = CreateNavButton("Executor", "rbxassetid://125081190503235")
 local MapBtn = CreateNavButton("Teleport", "rbxassetid://86143271250497")
@@ -314,11 +318,10 @@ MinimizeBtn.MouseButton1Click:Connect(function()
         TitleLabel.TextTransparency = 1; SubTitleLabel.TextTransparency = 1; MoonIcon.ImageTransparency = 1; CloseBtn.ImageTransparency = 1
         SideBar.Visible = false; PagesContainer.Visible = false
         
-        -- YENİ: küçültülmüş buton, logo tam oturuyor
         MinimizeBtn.Size = UDim2.new(1, 0, 1, 0)
         MinimizeBtn.Position = UDim2.new(0, 0, 0, 0)
-        MinimizeBtn.Image = "rbxassetid://126964821713679" -- YENİ LOGO ID
-        MinimizeBtn.ScaleType = Enum.ScaleType.Fit
+        MinimizeBtn.Image = "rbxassetid://126964821713679"  -- YENİ LOGO ID
+        MinimizeBtn.ScaleType = Enum.ScaleType.Fit          -- TAM OTURTMA
         
         TweenService:Create(MainFrame, TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Size = minimizedSize}):Play()
         TweenService:Create(MainCorner, TweenInfo.new(0.4), {CornerRadius = UDim.new(0, 12)}):Play()
@@ -326,7 +329,7 @@ MinimizeBtn.MouseButton1Click:Connect(function()
         MinimizeBtn.Position = UDim2.new(1, -52, 0.5, -8)
         MinimizeBtn.Size = UDim2.new(0, 16, 0, 16)
         MinimizeBtn.Image = "rbxassetid://10751034456"
-        MinimizeBtn.ScaleType = Enum.ScaleType.Fit -- güvenlik için
+        MinimizeBtn.ScaleType = Enum.ScaleType.Fit -- emniyet olsun
         
         local sizeTween = TweenService:Create(MainFrame, TweenInfo.new(0.4, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Size = originalSize})
         sizeTween:Play()
@@ -369,7 +372,7 @@ SubText.Size = UDim2.new(1, -85, 0, 18); SubText.Position = UDim2.new(0, 78, 0, 
 SubText.BackgroundTransparency = 1; SubText.Text = LocalPlayer.Name .. " - Darker"
 SubText.TextColor3 = Color3.fromRGB(130, 131, 140); SubText.Font = Enum.Font.GothamMedium; SubText.TextSize = 11; SubText.TextXAlignment = Enum.TextXAlignment.Left
 
--- SERVER KARTI (Renkler aynı kalabilir, çizgi güncellendi)
+-- SERVER KARTI
 local ServerSection = Instance.new("Frame", HomeTab)
 ServerSection.Size = UDim2.new(0.55, -8, 0, 180); ServerSection.Position = UDim2.new(0, 5, 0, 90)
 ApplyWaveGradient(ServerSection, Color3.fromRGB(0, 70, 0), Color3.fromRGB(15, 15, 20))
@@ -482,8 +485,8 @@ local TextBoxBg = Instance.new("Frame", ExecutorTab)
 TextBoxBg.Size = UDim2.new(1, -10, 0, 230); TextBoxBg.Position = UDim2.new(0, 5, 0, 40)
 ApplyWaveGradient(TextBoxBg, Color3.fromRGB(50, 150, 50), Color3.fromRGB(15, 15, 15))
 Instance.new("UICorner", TextBoxBg).CornerRadius = UDim.new(0, 10)
-local tbStroke = Instance.new("UIStroke", TextBoxBg)
-tbStroke.Color = Color3.fromRGB(255, 255, 255); tbStroke.Transparency = 0.85; tbStroke.Thickness = 1
+local TbStroke = Instance.new("UIStroke", TextBoxBg)
+TbStroke.Color = Color3.fromRGB(255, 255, 255); TbStroke.Transparency = 0.85; TbStroke.Thickness = 1
 
 local CodeBox = Instance.new("TextBox", TextBoxBg)
 CodeBox.Size = UDim2.new(1, -20, 1, -20); CodeBox.Position = UDim2.new(0, 10, 0, 10)
@@ -523,8 +526,8 @@ tpStr.Color = Color3.fromRGB(255, 255, 255); tpStr.Transparency = 0.85; tpStr.Th
 local TpSearchBg = Instance.new("Frame", TpCard)
 TpSearchBg.Size = UDim2.new(0, 250, 0, 40); TpSearchBg.Position = UDim2.new(0, 10, 0, 20)
 TpSearchBg.BackgroundColor3 = Color3.fromRGB(20, 21, 26); Instance.new("UICorner", TpSearchBg).CornerRadius = UDim.new(0, 8)
-local tsStroke = Instance.new("UIStroke", TpSearchBg)
-tsStroke.Color = Color3.fromRGB(255, 255, 255); tsStroke.Transparency = 0.85; tsStroke.Thickness = 1
+local TpSearchStroke = Instance.new("UIStroke", TpSearchBg)
+TpSearchStroke.Color = Color3.fromRGB(255, 255, 255); TpSearchStroke.Transparency = 0.85; TpSearchStroke.Thickness = 1
 
 local TpBox = Instance.new("TextBox", TpSearchBg)
 TpBox.Size = UDim2.new(1, -20, 1, 0); TpBox.Position = UDim2.new(0, 10, 0, 0)
@@ -586,12 +589,11 @@ StarScroll.Size = UDim2.new(1, -10, 1, -40); StarScroll.Position = UDim2.new(0, 
 StarScroll.BackgroundTransparency = 1; StarScroll.BorderSizePixel = 0; StarScroll.ScrollBarThickness = 3
 local StarLayout = Instance.new("UIListLayout", StarScroll); StarLayout.Padding = UDim.new(0, 8); StarLayout.SortOrder = Enum.SortOrder.LayoutOrder
 
--- ESP Seçici (çizgisi güncellendi)
+-- ESP Seçici
 local ESPPickerFrame = Instance.new("Frame", MainFrame)
 ESPPickerFrame.Size = UDim2.new(0, 220, 0, 140); ESPPickerFrame.Position = UDim2.new(0.5, -110, 0.5, -70); ESPPickerFrame.BackgroundColor3 = Color3.fromRGB(20, 21, 26); ESPPickerFrame.Visible = false; ESPPickerFrame.ZIndex = 10
 Instance.new("UICorner", ESPPickerFrame).CornerRadius = UDim.new(0, 8)
-local espStroke = Instance.new("UIStroke", ESPPickerFrame)
-espStroke.Color = Color3.fromRGB(255, 255, 255); espStroke.Transparency = 0.85; espStroke.Thickness = 1
+local EspStr = Instance.new("UIStroke", ESPPickerFrame); EspStr.Color = Color3.fromRGB(255, 255, 255); EspStr.Transparency = 0.85; EspStr.Thickness = 1
 local EPTitle = Instance.new("TextLabel", ESPPickerFrame); EPTitle.Size = UDim2.new(1, 0, 0, 30); EPTitle.BackgroundTransparency = 1; EPTitle.Text = "ESP Rengini Seçin"; EPTitle.TextColor3 = Color3.fromRGB(255,255,255); EPTitle.Font = Enum.Font.GothamBold; EPTitle.TextSize = 12; EPTitle.ZIndex = 10
 local HueFrame = Instance.new("Frame", ESPPickerFrame); HueFrame.Size = UDim2.new(1, -20, 0, 30); HueFrame.Position = UDim2.new(0, 10, 0, 40); HueFrame.ZIndex = 10
 local HueGrad = Instance.new("UIGradient", HueFrame); HueGrad.Color = ColorSequence.new({ColorSequenceKeypoint.new(0, Color3.new(1,0,0)), ColorSequenceKeypoint.new(0.16, Color3.new(1,1,0)), ColorSequenceKeypoint.new(0.33, Color3.new(0,1,0)), ColorSequenceKeypoint.new(0.5, Color3.new(0,1,1)), ColorSequenceKeypoint.new(0.66, Color3.new(0,0,1)), ColorSequenceKeypoint.new(0.83, Color3.new(1,0,1)), ColorSequenceKeypoint.new(1, Color3.new(1,0,0))})
@@ -660,7 +662,7 @@ local function CreateModPanel(name, hasSlider, maxSliderVal, defaultSliderVal, o
     table.insert(panelsList, {Label = Lbl, Key = name})
 end
 
--- Fly, ESP, WalkSpeed, JumpPower, InfJump, Noclip Mantıkları (değişmedi)
+-- Fly, ESP, WalkSpeed, JumpPower, InfJump, Noclip Mantıkları
 local isFlying, flySpeed, flyBV, flyBG, flyLoop = false, 50, nil, nil, nil
 local function StartFly()
     local char = LocalPlayer.Character
@@ -711,17 +713,17 @@ CreateModPanel("Noclip", false, 0, 0, function(active)
     end
 end, nil)
 
--- SPAM & SPECTATE PANELS (çizgiler güncellendi)
+-- SPAM & SPECTATE PANELS
 layoutCounter = layoutCounter + 1
 local SpamPanel = Instance.new("Frame", StarScroll); SpamPanel.Size = UDim2.new(1, -6, 0, 55); SpamPanel.LayoutOrder = layoutCounter
 ApplyWaveGradient(SpamPanel, Color3.fromRGB(80, 0, 0), Color3.fromRGB(15, 15, 20))
 Instance.new("UICorner", SpamPanel).CornerRadius = UDim.new(0, 8)
 local spStr = Instance.new("UIStroke", SpamPanel)
 spStr.Color = Color3.fromRGB(255, 255, 255); spStr.Transparency = 0.85; spStr.Thickness = 1
+
 local SpamLbl = Instance.new("TextLabel", SpamPanel); SpamLbl.Size = UDim2.new(0.3, 0, 1, 0); SpamLbl.Position = UDim2.new(0, 12, 0, 0); SpamLbl.BackgroundTransparency = 1; SpamLbl.Text = "Mesaj Spamlayıcı"; SpamLbl.TextColor3 = Color3.fromRGB(235, 235, 240); SpamLbl.Font = Enum.Font.GothamBold; SpamLbl.TextSize = 11; SpamLbl.TextXAlignment = Enum.TextXAlignment.Left
 local SpamBoxBg = Instance.new("Frame", SpamPanel); SpamBoxBg.Size = UDim2.new(0.45, 0, 0, 32); SpamBoxBg.Position = UDim2.new(0.32, 0, 0.5, -16); SpamBoxBg.BackgroundColor3 = Color3.fromRGB(30, 31, 38); Instance.new("UICorner", SpamBoxBg).CornerRadius = UDim.new(0, 6)
-local sbStroke = Instance.new("UIStroke", SpamBoxBg)
-sbStroke.Color = Color3.fromRGB(255, 255, 255); sbStroke.Transparency = 0.85; sbStroke.Thickness = 1
+local SpamBoxStroke = Instance.new("UIStroke", SpamBoxBg); SpamBoxStroke.Color = Color3.fromRGB(255, 255, 255); SpamBoxStroke.Transparency = 0.85; SpamBoxStroke.Thickness = 1
 local SpamBox = Instance.new("TextBox", SpamBoxBg); SpamBox.Size = UDim2.new(1, -16, 1, 0); SpamBox.Position = UDim2.new(0, 8, 0, 0); SpamBox.BackgroundTransparency = 1; SpamBox.PlaceholderText = "Mesaj yazın..."; SpamBox.Text = ""; SpamBox.TextColor3 = Color3.fromRGB(255, 255, 255); SpamBox.Font = Enum.Font.GothamMedium; SpamBox.TextSize = 10; SpamBox.TextXAlignment = Enum.TextXAlignment.Left
 local SpamToggleBtn = Instance.new("TextButton", SpamPanel); SpamToggleBtn.Size = UDim2.new(0.2, 0, 0, 32); SpamToggleBtn.Position = UDim2.new(0.78, 0, 0.5, -16); SpamToggleBtn.BackgroundColor3 = Color3.fromRGB(40, 42, 50); SpamToggleBtn.Text = "Başlat"; SpamToggleBtn.TextColor3 = Color3.fromRGB(255, 255, 255); SpamToggleBtn.Font = Enum.Font.GothamBold; SpamToggleBtn.TextSize = 11; Instance.new("UICorner", SpamToggleBtn).CornerRadius = UDim.new(0, 6)
 local spamming, spamThread = false, nil
@@ -753,10 +755,10 @@ ApplyWaveGradient(SpecPanel, Color3.fromRGB(80, 0, 0), Color3.fromRGB(15, 15, 20
 Instance.new("UICorner", SpecPanel).CornerRadius = UDim.new(0, 8)
 local scStr = Instance.new("UIStroke", SpecPanel)
 scStr.Color = Color3.fromRGB(255, 255, 255); scStr.Transparency = 0.85; scStr.Thickness = 1
+
 local SpecLbl = Instance.new("TextLabel", SpecPanel); SpecLbl.Size = UDim2.new(0.3, 0, 0, 50); SpecLbl.Position = UDim2.new(0, 12, 0, 0); SpecLbl.BackgroundTransparency = 1; SpecLbl.Text = "Oyuncuya Odaklan"; SpecLbl.TextColor3 = Color3.fromRGB(235, 235, 240); SpecLbl.Font = Enum.Font.GothamBold; SpecLbl.TextSize = 11; SpecLbl.TextXAlignment = Enum.TextXAlignment.Left
 local SpecBoxBg = Instance.new("Frame", SpecPanel); SpecBoxBg.Size = UDim2.new(0.45, 0, 0, 32); SpecBoxBg.Position = UDim2.new(0.32, 0, 0, 10); SpecBoxBg.BackgroundColor3 = Color3.fromRGB(30, 31, 38); Instance.new("UICorner", SpecBoxBg).CornerRadius = UDim.new(0, 6)
-local spbStroke = Instance.new("UIStroke", SpecBoxBg)
-spbStroke.Color = Color3.fromRGB(255, 255, 255); spbStroke.Transparency = 0.85; spbStroke.Thickness = 1
+local SpecBoxStroke = Instance.new("UIStroke", SpecBoxBg); SpecBoxStroke.Color = Color3.fromRGB(255, 255, 255); SpecBoxStroke.Transparency = 0.85; SpecBoxStroke.Thickness = 1
 local SpecBox = Instance.new("TextBox", SpecBoxBg); SpecBox.Size = UDim2.new(1, -16, 1, 0); SpecBox.Position = UDim2.new(0, 8, 0, 0); SpecBox.BackgroundTransparency = 1; SpecBox.PlaceholderText = "Oyuncu Adı..."; SpecBox.Text = ""; SpecBox.TextColor3 = Color3.fromRGB(255, 255, 255); SpecBox.Font = Enum.Font.GothamMedium; SpecBox.TextSize = 10; SpecBox.TextXAlignment = Enum.TextXAlignment.Left
 local SpecToggleBtn = Instance.new("TextButton", SpecPanel); SpecToggleBtn.Size = UDim2.new(0.2, 0, 0, 32); SpecToggleBtn.Position = UDim2.new(0.78, 0, 0, 10); SpecToggleBtn.BackgroundColor3 = Color3.fromRGB(30, 90, 150); SpecToggleBtn.Text = "Odaklan"; SpecToggleBtn.TextColor3 = Color3.fromRGB(255, 255, 255); SpecToggleBtn.Font = Enum.Font.GothamBold; SpecToggleBtn.TextSize = 11; Instance.new("UICorner", SpecToggleBtn).CornerRadius = UDim.new(0, 6)
 local SpecLastBtn = Instance.new("TextButton", SpecPanel); SpecLastBtn.Size = UDim2.new(0.45, -5, 0, 32); SpecLastBtn.Position = UDim2.new(0.05, 0, 0, 65); SpecLastBtn.BackgroundColor3 = Color3.fromRGB(40, 42, 50); SpecLastBtn.Text = "Son Oyuncuya Odaklan"; SpecLastBtn.TextColor3 = Color3.fromRGB(200, 200, 200); SpecLastBtn.Font = Enum.Font.GothamBold; SpecLastBtn.TextSize = 10; Instance.new("UICorner", SpecLastBtn).CornerRadius = UDim.new(0, 6)
@@ -935,7 +937,7 @@ local function PopulateFriendsList()
                 JoinBtn.Text = Translates[CurrentLanguage].JoinFriend; JoinBtn.TextColor3 = Color3.fromRGB(255, 255, 255); JoinBtn.Font = Enum.Font.GothamBold; JoinBtn.TextSize = 11
                 Instance.new("UICorner", JoinBtn).CornerRadius = UDim.new(0, 6)
                 local btnStr = Instance.new("UIStroke", JoinBtn)
-                btnStr.Color = Color3.fromRGB(255, 255, 255); btnStr.Transparency = 0.85; btnStr.Thickness = 1
+                btnStr.Color = Color3.fromRGB(255, 255, 255); btnStr.Transparency = 0.8
                 JoinBtn.MouseButton1Click:Connect(function() 
                     if friend.PlaceId and friend.PlaceId ~= 0 then 
                         TeleportService:Teleport(friend.PlaceId, LocalPlayer) 
@@ -1133,7 +1135,6 @@ task.spawn(function()
             local onlineCount = 0; local gameCount = 0
             for _, info in ipairs(friendsOnline) do
                 onlineCount = onlineCount + 1
-                
                 local locVal = -1
                 if typeof(info.LocationType) == "EnumItem" then
                     locVal = info.LocationType.Value
